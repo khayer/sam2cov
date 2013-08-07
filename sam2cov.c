@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
+
 
 /*
 Code framework by Zed A. Shaw
@@ -134,7 +136,7 @@ void Chromosome_destroy(struct Chromosome *chr)
 {
   assert(chr != NULL);
 
-  free(chr->name);
+  //free(chr->name);
   free(chr);
 }
 
@@ -154,13 +156,14 @@ void Chromosome_update(struct Chromosome *chr, int pos){
 struct Chromosome *Chromosome_create(char *name, int chr_length)
 {
   /* data */
-  //struct Chromosome *chr = malloc(sizeof(struct Chromosome)+chr_length* sizeof(int));
-  //assert(chr != NULL);
-
-  chr -> name = strdup(name);
-  chr -> length = chr_length;
+  struct Chromosome *chr = malloc(sizeof(struct Chromosome)+chr_length* sizeof(int));
+  //struct Chromosome *chr = malloc(chr_length* sizeof(int));
+  assert(chr != NULL);
+  log_info("Creating chromose %s with %d length.", name, chr_length);
+  chr->name = name;
+  chr->length = chr_length;
   for (int i = 0; i < chr_length; i++) {
-    chr -> cov[i] = 0;
+    chr->cov[i] = 0;
   }
 
   return chr;
@@ -169,34 +172,105 @@ struct Chromosome *Chromosome_create(char *name, int chr_length)
 struct Genome
 {
   int size;
-  struct Chromosome chromosomes[];
+  struct Chromosome *chromosomes[];
   /* data */
 };
 
-struct Genome *Genome_create(int number_of_chr, char *names[], int legth_of_chromosomes[] )
+struct Genome *Genome_create(int number_of_chr, char **names, int length_of_chromosomes[] )
 {
-  int size_of_chromosomes = 0;
+  //int size_of_chromosomes = 0;
+  /*
   for (int i=0; i < number_of_chr; i++) {
     size_of_chromosomes = size_of_chromosomes + sizeof(struct Chromosome) + legth_of_chromosomes[i] * sizeof(int));
-  }
-  struct Genome *genome = malloc(sizeof(struct Genome)+size_of_chromosomes);
+  }*/
+  struct Genome *genome = malloc(sizeof(struct Genome)+number_of_chr*sizeof(struct Chromosome));
+  assert(genome != NULL);
   genome->size = number_of_chr;
   for (int i=0; i < number_of_chr; i++) {
-    genome->chromosomes[i] = Chromosome_create(names[i],legth_of_chromosomes[i]);
+    log_info("Creating chromose %s.", names[i]);
+    genome->chromosomes[i] = Chromosome_create(names[i],length_of_chromosomes[i]);
   }
   return genome;
 }
 
+void Genome_destroy(struct Genome *genome)
+{
+  assert(genome != NULL);
+
+
+  for (int i=0; i < genome->size; i++) {
+    Chromosome_destroy(genome->chromosomes[i]);
+  }
+  free(genome);
+}
+
+int number_of_chromosomes(char *file_name) {
+  FILE *file_handler = fopen(file_name,"r");
+  assert(!file_handler);
+  char line[128];
+  int number_of_lines = 0;
+  while (fgets( line, sizeof(line), file_handler) != NULL)
+  {
+    //fputs (line,stdout);
+    number_of_lines++;
+  }
+  fclose(file_handler);
+  log_info("There are %d scaffolds/chromosomes in your file.", number_of_lines);
+
+  return number_of_lines;
+}
+
+char **get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths) {
+  char **names = malloc(number_of_chromosomes * sizeof(char*));
+  FILE *file_handler = fopen(file_name,"r");
+  assert(!file_handler);
+  char line[128];
+  int i = 0;
+  char *sep = "\t";
+  char *splitted_line;
+  while (fgets( line, sizeof(line), file_handler) != NULL)
+  {
+    splitted_line = strtok(line,sep);
+    //names[i] = malloc(20 * sizeof(char));
+    names[i] = splitted_line;
+    log_info("Name of chromosome is %s.", names[i]);
+    splitted_line = strtok(NULL,sep);
+    chromo_lengths[i] = atoi(splitted_line);
+    log_info("Length of chromosome is %s.", splitted_line);
+    i++;
+  }
+  fclose(file_handler);
+
+  return names;
+}
 
 int main(int argc, char *argv[])
 {
-    check(argc == 2, "Need an argument.");
+    //char chromo_names[3][14];
+    int num_of_chr = number_of_chromosomes("/Users/hayer/Downloads/indexes/danRer7.fa.fai");
+    //char **chromo_names = malloc(num_of_chr * sizeof(char*));
+    int chromo_lengths[num_of_chr];
+    char **chromo_names = get_names("/Users/hayer/Downloads/indexes/danRer7.fa.fai",
+      num_of_chr,chromo_lengths);
+    log_info("Length of chromosome is %s. %d", chromo_names[1],chromo_lengths[0]);
 
-    struct Chromosome *chr = Chromosome_create("chr1",50);
-    Chromosome_update(chr,2);
-    Chromosome_update(chr,5);
-    Chromosome_print(chr);
-    Chromosome_destroy(chr);
+    //check(argc == 2, "Need an argument.");
+    //struct Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
+
+    //Chromosome_update(genome->chromosomes[2],2);
+    //Chromosome_update(genome->chromosomes[0],2);
+    //Chromosome_update(genome->chromosomes[1],12);
+
+    //Chromosome_print(genome->chromosomes[0]);
+    //Chromosome_print(genome->chromosomes[1]);
+    //Chromosome_print(genome->chromosomes[2]);
+    //Genome_destroy(genome);
+    //free(chromo_names);
+    //struct Chromosome *chr = Chromosome_create("chr1",50);
+    //Chromosome_update(chr,2);
+    //Chromosome_update(chr,5);
+    //Chromosome_print(chr);
+    //Chromosome_destroy(chr);
 
     test_debug();
     test_log_err();
