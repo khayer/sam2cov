@@ -3,10 +3,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
-#include <sys/time.h>
-#include <sys/resource.h>
+#include <unistd.h>
 
-#define MAX_STRING_LENGTH 200 
+#define MAX_STRING_LENGTH 200
 
 /*
 Code framework by Zed A. Shaw
@@ -234,10 +233,82 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
   fclose(file_handler);
 }
 
+struct Entry
+{
+  char *read_name;
+  char *chr_name;
+  int pos;
+  char *cigar_string;
+};
+
+struct Entry *Entry_create(char *read_name, char *chr_name, int pos, char *cigar){
+  struct Entry *entry = malloc(sizeof(struct Entry));
+  assert(entry != NULL);
+
+  entry->read_name = strdup(read_name);
+  entry->chr_name = strdup(chr_name);
+  entry->pos = pos;
+  entry->cigar_string = cigar;
+
+  return entry;
+}
+
+void Entry_destroy(struct Entry *entry) {
+  assert(entry != NULL);
+
+  free(entry->read_name);
+  free(entry->chr_name);
+  //free(entry->cigar_string);
+  free(entry);
+}
+
+struct Entry *make_entry_for_read(char *line) {
+  int i = 0;
+  char *sep = "\t";
+  char *ptr;
+  char read_name[100];
+  char chr_name[100];
+  int pos;
+  char cigar[100];
+  ptr = strtok(line,sep);
+  while (ptr != NULL) {
+    switch(i) {
+      case 0:
+        strcpy(read_name,ptr);
+      case 2:
+        strcpy(chr_name,ptr);
+      case 3:
+        pos = atoi(ptr);
+      case 5:
+        strcpy(cigar,ptr);
+    }
+    ptr = strtok(NULL,sep);
+    i++;
+  }
+  log_info("Name: %s, Chr: %s, Position: %d, Cigar: %s",read_name, chr_name, pos, cigar);
+  struct Entry *entry = Entry_create(read_name, chr_name, pos, cigar);
+  return entry;
+}
+
+
+void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
+  int *chromo_lengths,char **names, int num_of_chr){
+  struct Entry *entry_r1 = make_entry_for_read(r1_line);
+  struct Entry *entry_r2 = make_entry_for_read(r2_line);
+  assert(strcmp(entry_r1->read_name,entry_r2->read_name)!= 0);
+  int i = 0;
+  while (i < num_of_chr) {
+
+    i++;
+  }
+  Entry_destroy(entry_r1);
+  Entry_destroy(entry_r2);
+}
+
 int main(int argc, char *argv[])
 {
    //char chromo_names[3][14];
-    int num_of_chr = number_of_chromosomes("/Users/kat/danRer7_s.fa.fai");
+    int num_of_chr = number_of_chromosomes("/Users/hayer/Downloads/indexes/danRer7_s.fa.fai");
     //char **chromo_names = malloc(num_of_chr * sizeof(char*));
     int chromo_lengths[num_of_chr];
     //char **chromo_names[num_of_chr] = malloc(num_of_chr * 100 * sizeof(char*));
@@ -245,21 +316,64 @@ int main(int argc, char *argv[])
     for (int i=0; i<num_of_chr; ++i)
       chromo_names[i] = malloc(MAX_STRING_LENGTH);
 
-    get_names("/Users/kat/danRer7_s.fa.fai", num_of_chr,chromo_lengths,chromo_names);
+    get_names("/Users/hayer/Downloads/indexes/danRer7_s.fa.fai", num_of_chr,chromo_lengths,chromo_names);
     //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
     //log_info("Length of chromosome is nina %s",chromo_names[0]);
     //check(argc == 2, "Need an argument.");
     struct Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
 
-    Chromosome_update(genome->chromosomes[2],2);
-    Chromosome_update(genome->chromosomes[0],2);
-    Chromosome_update(genome->chromosomes[1],12);
+    //Chromosome_update(genome->chromosomes[2],2);
+    //Chromosome_update(genome->chromosomes[0],2);
+    //Chromosome_update(genome->chromosomes[1],12);
+    // OPEN SAM FILE
+
+    char cwd[256];
+    getcwd(cwd,sizeof(cwd));
+    char *file_name = "/test.sam";
+
+    char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
+    //in real code you would check for errors in malloc here
+    assert(!result);
+    strcpy(result, cwd);
+    strcat(result, file_name);
+    log_info("Name of sam file is %s.", result);
+
+    FILE *file_handler = fopen(result,"r");
+    assert(!file_handler);
+    char line[500];
+    char line_mate[500];
+    //int i = 0;
+    char *sep = "\t";
+    char *splitted_line;
+
+    while (fgets( line, sizeof(line), file_handler) != NULL)
+    {
+      //fputs (line,stdout);
+      sep = "NH:i:";
+      char *ptr;
+      ptr = strstr(line,sep);
+      splitted_line = strtok(ptr,"\t");
+      if (strcmp(splitted_line,"NH:i:1")==0) {
+        fgets( line_mate, sizeof(line_mate), file_handler);
+        add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          chromo_names,num_of_chr);
+      }
+      //splitted_line = strtok(line,sep);
+      fputs (splitted_line,stdout);
+      //strcpy(names[i],splitted_line);
+      //log_info("Name of chromosome is %s.", names[i]);
+      //chromo_lengths[i] = atoi(strtok(NULL,sep));
+      //log_info("Length of chromosome is %d.",chromo_lengths[i]);
+      //i++;
+    }
+    fclose(file_handler);
 
     //Chromosome_print(genome->chromosomes[0]);
     //Chromosome_print(genome->chromosomes[1]);
     //Chromosome_print(genome->chromosomes[2]);
     Genome_destroy(genome);
-    for (int i=0; i<num_of_chr; i++) { printf("%s\n", chromo_names[i]); free(chromo_names[i]); }
+    free(result);
+    for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
     //free(chromo_names);
     //struct Chromosome *chr = Chromosome_create("chr1",50);
     //Chromosome_update(chr,2);
