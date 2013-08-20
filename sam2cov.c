@@ -33,8 +33,6 @@ struct Person *Person_create(char *name, int age, int height, int weight)
 };
 */
 
-
-
 void test_debug()
 {
     // notice you don't need the \n
@@ -201,7 +199,7 @@ void Genome_destroy(struct Genome *genome)
 
 int number_of_chromosomes(char *file_name) {
   FILE *file_handler = fopen(file_name,"r");
-  assert(!file_handler);
+  assert(file_handler);
   char line[128];
   int number_of_lines = 0;
   while (fgets( line, sizeof(line), file_handler) != NULL)
@@ -216,7 +214,7 @@ int number_of_chromosomes(char *file_name) {
 
 void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,char **names) {
   FILE *file_handler = fopen(file_name,"r");
-  assert(!file_handler);
+  assert(file_handler);
   char line[90];
   int i = 0;
   char *sep = "\t";
@@ -238,17 +236,19 @@ struct Entry
   char *read_name;
   char *chr_name;
   int pos;
+  int chr_num;
   char *cigar_string;
 };
 
-struct Entry *Entry_create(char *read_name, char *chr_name, int pos, char *cigar){
+struct Entry *Entry_create(char *read_name, char *chr_name, int pos, int chr_num, char *cigar){
   struct Entry *entry = malloc(sizeof(struct Entry));
   assert(entry != NULL);
 
   entry->read_name = strdup(read_name);
   entry->chr_name = strdup(chr_name);
   entry->pos = pos;
-  entry->cigar_string = cigar;
+  entry->chr_num = chr_num;
+  entry->cigar_string = strdup(cigar);
 
   return entry;
 }
@@ -258,11 +258,11 @@ void Entry_destroy(struct Entry *entry) {
 
   free(entry->read_name);
   free(entry->chr_name);
-  //free(entry->cigar_string);
+  free(entry->cigar_string);
   free(entry);
 }
 
-struct Entry *make_entry_for_read(char *line) {
+struct Entry *make_entry_for_read(char *line, struct Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
@@ -285,22 +285,113 @@ struct Entry *make_entry_for_read(char *line) {
     ptr = strtok(NULL,sep);
     i++;
   }
-  log_info("Name: %s, Chr: %s, Position: %d, Cigar: %s",read_name, chr_name, pos, cigar);
-  struct Entry *entry = Entry_create(read_name, chr_name, pos, cigar);
-  return entry;
+  i = 0;
+  int current_chr_number = 123456;
+  int found = 0;
+  while (i < genome->size) {
+    if (strcmp(genome->chromosomes[i]->name,chr_name) == 0) {
+      current_chr_number = i;
+      found = 1;
+      break;
+    }
+    i++;
+  }
+  assert(found == 1);
+  if (found != 1) {
+    log_err("Could not find %s.", chr_name);
+    return NULL;
+  } else {
+    log_info("Chromo_num %d", current_chr_number);
+    log_info("Name: %s, Chr: %s, Position: %d, Chromosome Number: %d, Cigar: %s",read_name, chr_name, pos, current_chr_number, cigar);
+    struct Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
+    return entry;
+  }
 }
 
+int *interpret_cigar_string(struct Entry *entry) {
+  static int a[10];
+  a[0] = entry->pos;
+
+  char *sep_letters = "MIDNSHP";
+  char *ptr_letters;
+  char numbers[10][10];
+  char *cig = strdup(entry->cigar_string);
+  ptr_letters = strtok(cig,sep_letters);
+  int i = 0;
+  while (ptr_letters != NULL) {
+
+    log_info("I am at %s in %s.",ptr_letters,entry->cigar_string);
+    strcpy(numbers[i],ptr_letters);
+    ptr_letters = strtok(NULL,sep_letters);
+    i++;
+  }
+
+  char *sep_numbers = "0123456789";
+  char *ptr_numbers;
+  char letters[10][1];
+  char *cig2 = strdup(entry->cigar_string);
+  ptr_numbers = strtok(cig2,sep_numbers);
+  i = 0;
+  while (ptr_numbers != NULL) {
+
+    log_info("I am at %s in %s.",ptr_numbers,entry->cigar_string);
+    strcpy(letters[i],ptr_numbers);
+    ptr_numbers = strtok(NULL,sep_numbers);
+    i++;
+  }
+  /*
+  int j = 1;
+  for (i = 0; i < 10; i++) {
+    char letter = letters[i][0];
+    switch(letter) {
+      case "m":
+      case "M":
+        a[j] = a[j-1] + atoi(numbers[i]);
+        j++;
+      case "I":
+        printf("Nothing");
+      case "D":
+        printf("Nothing");
+      case "N":
+        a[j] = a[j-1] + atoi(numbers[i]);
+        j++;
+      case "S":
+        printf("Nothing");
+      case "H":
+        printf("Nothing");
+      case "P":
+        printf("Nothing");
+      default:
+        break;
+    }
+  }*/
+  for (i = 0; i < 10; i++) {
+    printf("Nummer %d: %s\n", i, numbers[i] );
+  }
+  for (i = 0; i < 10; i++) {
+    printf("Nummer %d: %s\n", i, letters[i] );
+  }
+  for (i = 0; i < 10; i++) {
+    printf("Nummer %d: %d\n", i, a[i] );
+  }
+  return a;
+}
 
 void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr){
-  struct Entry *entry_r1 = make_entry_for_read(r1_line);
-  struct Entry *entry_r2 = make_entry_for_read(r2_line);
-  assert(strcmp(entry_r1->read_name,entry_r2->read_name)!= 0);
-  int i = 0;
-  while (i < num_of_chr) {
-
-    i++;
+  struct Entry *entry_r1 = make_entry_for_read(r1_line,genome);
+  struct Entry *entry_r2 = make_entry_for_read(r2_line,genome);
+  if (entry_r1 == NULL || entry_r2 == NULL) {
+    log_err("Ending all processes");
+    Genome_destroy(genome);
+    for (int i=0; i<num_of_chr; i++) free(names[i]);
+    exit(1);
   }
+  assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
+  int *k;
+  k = interpret_cigar_string(entry_r1);
+  int *j;
+  j = interpret_cigar_string(entry_r2);
   Entry_destroy(entry_r1);
   Entry_destroy(entry_r2);
 }
@@ -333,13 +424,14 @@ int main(int argc, char *argv[])
 
     char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
     //in real code you would check for errors in malloc here
-    assert(!result);
+    assert(result != NULL);
     strcpy(result, cwd);
     strcat(result, file_name);
     log_info("Name of sam file is %s.", result);
 
     FILE *file_handler = fopen(result,"r");
-    assert(!file_handler);
+    free(result);
+    assert(file_handler);
     char line[500];
     char line_mate[500];
     //int i = 0;
@@ -366,13 +458,14 @@ int main(int argc, char *argv[])
       //log_info("Length of chromosome is %d.",chromo_lengths[i]);
       //i++;
     }
+    assert(file_handler);
     fclose(file_handler);
 
     //Chromosome_print(genome->chromosomes[0]);
     //Chromosome_print(genome->chromosomes[1]);
     //Chromosome_print(genome->chromosomes[2]);
     Genome_destroy(genome);
-    free(result);
+
     for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
     //free(chromo_names);
     //struct Chromosome *chr = Chromosome_create("chr1",50);
@@ -381,6 +474,7 @@ int main(int argc, char *argv[])
     //Chromosome_print(chr);
     //Chromosome_destroy(chr);
 
+/*
     test_debug();
     test_log_err();
     test_log_warn();
@@ -392,7 +486,7 @@ int main(int argc, char *argv[])
     check(test_sentinel(100) == -1, "test_sentinel failed.");
     check(test_check_mem() == -1, "test_check_mem failed.");
     check(test_check_debug() == -1, "test_check_debug failed.");
-
+*/
 
 
     return 0;
