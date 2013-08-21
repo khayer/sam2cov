@@ -309,13 +309,20 @@ struct Entry *make_entry_for_read(char *line, struct Genome *genome) {
 }
 
 int *interpret_cigar_string(struct Entry *entry) {
-  static int a[10];
+  int *a = malloc(10*sizeof(int));
+  for (int l = 0; l < 10; l++) {
+    a[l] = 0;
+  }
   a[0] = entry->pos;
 
   char *sep_letters = "MIDNSHP";
   char *ptr_letters;
-  char numbers[10][10];
-  char *cig = strdup(entry->cigar_string);
+  char *numbers[10];
+  for (int i=0; i<10; ++i)
+    numbers[i] = malloc(500);
+  char *cig = malloc(strlen(entry->cigar_string)+1);//+1 for the zero-terminator
+  assert(cig != NULL);
+  strcpy(cig,entry->cigar_string);
   ptr_letters = strtok(cig,sep_letters);
   int i = 0;
   while (ptr_letters != NULL) {
@@ -328,9 +335,11 @@ int *interpret_cigar_string(struct Entry *entry) {
 
   char *sep_numbers = "0123456789";
   char *ptr_numbers;
-  char letters[10][1];
-  char *cig2 = strdup(entry->cigar_string);
-  ptr_numbers = strtok(cig2,sep_numbers);
+  char *letters[10];
+  for (int i=0; i<10; ++i)
+    letters[i] = malloc(500);
+  strcpy(cig,entry->cigar_string);
+  ptr_numbers = strtok(cig,sep_numbers);
   i = 0;
   while (ptr_numbers != NULL) {
 
@@ -339,40 +348,81 @@ int *interpret_cigar_string(struct Entry *entry) {
     ptr_numbers = strtok(NULL,sep_numbers);
     i++;
   }
-  /*
+  free(cig);
+
   int j = 1;
   for (i = 0; i < 10; i++) {
     char letter = letters[i][0];
+    //printf("We are at %hhd!\n", letters[i][0]);
     switch(letter) {
-      case "m":
-      case "M":
+      case 'm':
+      case 'M':
+      case '=':
+      case 'X':
         a[j] = a[j-1] + atoi(numbers[i]);
         j++;
-      case "I":
-        printf("Nothing");
-      case "D":
-        printf("Nothing");
-      case "N":
+        break;
+      case 'N':
+      case 'D':
         a[j] = a[j-1] + atoi(numbers[i]);
         j++;
-      case "S":
-        printf("Nothing");
-      case "H":
-        printf("Nothing");
-      case "P":
-        printf("Nothing");
+        break;
+      case 'I':
+      case 'S':
+      case 'H':
+        break;
+      case 'P':
+        // DON'T KNOW WHAT DO HERE
+        break;
       default:
         break;
     }
-  }*/
+  }
   for (i = 0; i < 10; i++) {
     printf("Nummer %d: %s\n", i, numbers[i] );
   }
   for (i = 0; i < 10; i++) {
-    printf("Nummer %d: %s\n", i, letters[i] );
+    printf("Letter %d: %s\n", i, letters[i] );
   }
   for (i = 0; i < 10; i++) {
-    printf("Nummer %d: %d\n", i, a[i] );
+    printf("Nummer in a[] %d: %d\n", i, a[i] );
+  }
+  for (int i=0; i<10; i++) free(numbers[i]);
+  for (int i=0; i<10; i++) free(letters[i]);
+  return a;
+}
+
+int *combine_ranges(int *ranges_r1, int *ranges_r2) {
+  int *a = malloc(20*sizeof(int));
+  for (int l = 0; l < 20; l++) {
+    a[l] = 0;
+  }
+
+  int j = 0;
+  for (int i = 0; i < 10; i = i + 2)
+  {
+    for (int k = 0; k < 10; k = k + 2) {
+      if (ranges_r1[i] < ranges_r2[k]) {
+        a[j] = ranges_r1[i];
+        if (ranges_r1[i+1] < ranges_r2[k]) {
+          a[j+1] = ranges_r1[i+1];
+        } else {
+          a[j+1] = ranges_r2[i+1];
+        }
+        j = j + 2;
+      } else {
+        a[j] = ranges_r2[i];
+        if (ranges_r2[i+1] < ranges_r1[k]) {
+          a[j+1] = ranges_r2[i+1];
+        } else {
+          a[j+1] = ranges_r1[i+1];
+        }
+        j = j + 2;
+      }
+    }
+  }
+  for (int i = 0; i < 20; i++) {
+    printf("Combined in a[] %d: %d\n", i, a[i] );
   }
   return a;
 }
@@ -388,10 +438,24 @@ void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
     exit(1);
   }
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
-  int *k;
-  k = interpret_cigar_string(entry_r1);
-  int *j;
-  j = interpret_cigar_string(entry_r2);
+  int *ranges_r1;
+  ranges_r1 = interpret_cigar_string(entry_r1);
+  int *ranges_r2;
+  ranges_r2 = interpret_cigar_string(entry_r2);
+
+  if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
+    int *combinded_ranges;
+    combinded_ranges = combine_ranges(ranges_r1,ranges_r2);
+    //update_coverage(combinded_ranges,entry_r1);
+    free(combinded_ranges);
+  } else {
+    //update_coverage(ranges_r1,entry_r1);
+    //update_coverage(ranges_r2,entry_r2);
+  }
+
+
+  free(ranges_r2);
+  free(ranges_r1);
   Entry_destroy(entry_r1);
   Entry_destroy(entry_r2);
 }
