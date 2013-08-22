@@ -1,5 +1,6 @@
 #include "dbg.h"
 #include "entry.h"
+#include "chromosome.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -104,12 +105,12 @@ error:
     return -1;
 }
 
+/*
 struct Chromosome
 {
   char *name;
   int length;
   int cov[];
-  /* data */
 };
 
 void Chromosome_destroy(struct Chromosome *chr)
@@ -135,7 +136,6 @@ void Chromosome_update(struct Chromosome *chr, int pos){
 
 struct Chromosome *Chromosome_create(char *name, int chr_length)
 {
-  /* data */
   struct Chromosome *chr = malloc(sizeof(struct Chromosome)+chr_length* sizeof(int));
   //struct Chromosome *chr = malloc(chr_length* sizeof(int));
   assert(chr != NULL);
@@ -148,17 +148,18 @@ struct Chromosome *Chromosome_create(char *name, int chr_length)
 
   return chr;
 };
+*/
 
 struct Genome
 {
   int size;
-  struct Chromosome *chromosomes[];
+  Chromosome *chromosomes[];
   /* data */
 };
 
 struct Genome *Genome_create(int number_of_chr, char **names, int length_of_chromosomes[] )
 {
-  struct Genome *genome = malloc(sizeof(struct Genome)+number_of_chr*sizeof(struct Chromosome));
+  struct Genome *genome = malloc(sizeof(struct Genome)+number_of_chr*sizeof(Chromosome));
   assert(genome != NULL);
   genome->size = number_of_chr;
   for (int i=0; i < number_of_chr; i++) {
