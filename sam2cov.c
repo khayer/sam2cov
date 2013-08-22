@@ -1,12 +1,12 @@
 #include "dbg.h"
 #include "entry.h"
 #include "chromosome.h"
+#include "genome.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
 
@@ -105,79 +105,6 @@ error:
     return -1;
 }
 
-/*
-struct Chromosome
-{
-  char *name;
-  int length;
-  int cov[];
-};
-
-void Chromosome_destroy(struct Chromosome *chr)
-{
-  assert(chr != NULL);
-
-  //free(chr->name);
-  free(chr);
-}
-
-void Chromosome_print(struct Chromosome *chr)
-{
-  printf("Name: %s\n", chr->name);
-  printf("\tLength: %d\n", chr->length);
-  for(int i = 0; i<chr->length; i++) {
-    printf("\tCoverage at %d: %d\n",i, chr->cov[i]);
-  }
-}
-
-void Chromosome_update(struct Chromosome *chr, int pos){
-  chr->cov[pos] = chr->cov[pos]+1;
-}
-
-struct Chromosome *Chromosome_create(char *name, int chr_length)
-{
-  struct Chromosome *chr = malloc(sizeof(struct Chromosome)+chr_length* sizeof(int));
-  //struct Chromosome *chr = malloc(chr_length* sizeof(int));
-  assert(chr != NULL);
-  log_info("Creating chromose %s with %d length.", name, chr_length);
-  chr->name = name;
-  chr->length = chr_length;
-  for (int i = 0; i < chr_length; i++) {
-    chr->cov[i] = 0;
-  }
-
-  return chr;
-};
-*/
-
-struct Genome
-{
-  int size;
-  Chromosome *chromosomes[];
-  /* data */
-};
-
-struct Genome *Genome_create(int number_of_chr, char **names, int length_of_chromosomes[] )
-{
-  struct Genome *genome = malloc(sizeof(struct Genome)+number_of_chr*sizeof(Chromosome));
-  assert(genome != NULL);
-  genome->size = number_of_chr;
-  for (int i=0; i < number_of_chr; i++) {
-    log_info("Creating chromose %s.", names[i]);
-    genome->chromosomes[i] = Chromosome_create(names[i],length_of_chromosomes[i]);
-  }
-  return genome;
-}
-
-void Genome_destroy(struct Genome *genome)
-{
-  assert(genome != NULL);
-  for (int i=0; i < genome->size; i++) {
-    Chromosome_destroy(genome->chromosomes[i]);
-  }
-  free(genome);
-}
-
 int number_of_chromosomes(char *file_name) {
   FILE *file_handler = fopen(file_name,"r");
   assert(file_handler);
@@ -212,7 +139,7 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
   fclose(file_handler);
 }
 
-Entry *make_entry_for_read(char *line, struct Genome *genome) {
+Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
@@ -386,7 +313,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
   return a;
 }
 
-void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
+void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr){
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
@@ -437,7 +364,7 @@ int main(int argc, char *argv[])
     //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
     //log_info("Length of chromosome is nina %s",chromo_names[0]);
     //check(argc == 2, "Need an argument.");
-    struct Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
+    Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
 
     //Chromosome_update(genome->chromosomes[2],2);
     //Chromosome_update(genome->chromosomes[0],2);

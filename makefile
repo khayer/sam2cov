@@ -3,8 +3,8 @@ CFLAGS  = -Wall -g -DNDEBUG
 HEADERS = entry.h
 OBJECTS = entry.o
 CC 	    = cc
-DEPS = entry.h chromosome.h
-OBJ = sam2cov.o entry.o chromosome.o
+DEPS = entry.h chromosome.h genome.h
+OBJ = sam2cov.o entry.o chromosome.o genome.o
 
 
 %.o: %.c $(DEPS)
