@@ -1,4 +1,5 @@
 #include "dbg.h"
+#include "entry.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -209,38 +210,7 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
   fclose(file_handler);
 }
 
-struct Entry
-{
-  char *read_name;
-  char *chr_name;
-  int pos;
-  int chr_num;
-  char *cigar_string;
-};
-
-struct Entry *Entry_create(char *read_name, char *chr_name, int pos, int chr_num, char *cigar){
-  struct Entry *entry = malloc(sizeof(struct Entry));
-  assert(entry != NULL);
-
-  entry->read_name = strdup(read_name);
-  entry->chr_name = strdup(chr_name);
-  entry->pos = pos;
-  entry->chr_num = chr_num;
-  entry->cigar_string = strdup(cigar);
-
-  return entry;
-}
-
-void Entry_destroy(struct Entry *entry) {
-  assert(entry != NULL);
-
-  free(entry->read_name);
-  free(entry->chr_name);
-  free(entry->cigar_string);
-  free(entry);
-}
-
-struct Entry *make_entry_for_read(char *line, struct Genome *genome) {
+Entry *make_entry_for_read(char *line, struct Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
@@ -281,12 +251,12 @@ struct Entry *make_entry_for_read(char *line, struct Genome *genome) {
   } else {
     log_info("Chromo_num %d", current_chr_number);
     log_info("Name: %s, Chr: %s, Position: %d, Chromosome Number: %d, Cigar: %s",read_name, chr_name, pos, current_chr_number, cigar);
-    struct Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }
 
-void seperate_string(struct Entry *entry, char *sep, char **array)
+void seperate_string(Entry *entry, char *sep, char **array)
 {
   char *ptr;
   char *cig = malloc(strlen(entry->cigar_string)+1);//+1 for the zero-terminator
@@ -294,18 +264,20 @@ void seperate_string(struct Entry *entry, char *sep, char **array)
   strcpy(cig,entry->cigar_string);
   ptr = strtok(cig,sep);
   int i = 0;
-  while (ptr_letters != NULL) {
-    log_info("I am at %s in %s.",ptr_letters,entry->cigar_string);
+  while (ptr != NULL) {
+    log_info("I am at %s in %s.",ptr,entry->cigar_string);
     strcpy(array[i],ptr);
     ptr = strtok(NULL,sep);
     i++;
   }
   check(i < 10,"Cigar string too long: %s!", entry->cigar_string);
   free(cig);
+error:
+  if (cig) free(cig);
 }
 
 
-int *interpret_cigar_string(struct Entry *entry) {
+int *interpret_cigar_string(Entry *entry) {
   int *a = malloc(10*sizeof(int));
   for (int l = 0; l < 10; l++) {
     a[l] = 0;
@@ -403,8 +375,8 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
 
 void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr){
-  struct Entry *entry_r1 = make_entry_for_read(r1_line,genome);
-  struct Entry *entry_r2 = make_entry_for_read(r2_line,genome);
+  Entry *entry_r1 = make_entry_for_read(r1_line,genome);
+  Entry *entry_r2 = make_entry_for_read(r2_line,genome);
   if (entry_r1 == NULL || entry_r2 == NULL) {
     log_err("Ending all processes");
     Genome_destroy(genome);
