@@ -11,28 +11,6 @@
 Code framework by Zed A. Shaw
 */
 
-/*struct Person
-{
-  char *name;
-  int age;
-  int height;
-  int weight;
-};
-
-struct Person *Person_create(char *name, int age, int height, int weight)
-{
-  struct Person *who = malloc(sizeof(struct Person));
-  assert(who != NULL);
-
-  who -> name = strdup(name);
-  who -> age = age;
-  who -> height = height;
-  who -> weight = weight;
-
-  return who;
-};
-*/
-
 void test_debug()
 {
     // notice you don't need the \n
@@ -308,6 +286,25 @@ struct Entry *make_entry_for_read(char *line, struct Genome *genome) {
   }
 }
 
+void seperate_string(struct Entry *entry, char *sep, char **array)
+{
+  char *ptr;
+  char *cig = malloc(strlen(entry->cigar_string)+1);//+1 for the zero-terminator
+  assert(cig != NULL);
+  strcpy(cig,entry->cigar_string);
+  ptr = strtok(cig,sep);
+  int i = 0;
+  while (ptr_letters != NULL) {
+    log_info("I am at %s in %s.",ptr_letters,entry->cigar_string);
+    strcpy(array[i],ptr);
+    ptr = strtok(NULL,sep);
+    i++;
+  }
+  check(i < 10,"Cigar string too long: %s!", entry->cigar_string);
+  free(cig);
+}
+
+
 int *interpret_cigar_string(struct Entry *entry) {
   int *a = malloc(10*sizeof(int));
   for (int l = 0; l < 10; l++) {
@@ -316,42 +313,19 @@ int *interpret_cigar_string(struct Entry *entry) {
   a[0] = entry->pos;
 
   char *sep_letters = "MIDNSHP";
-  char *ptr_letters;
   char *numbers[10];
   for (int i=0; i<10; ++i)
     numbers[i] = malloc(500);
-  char *cig = malloc(strlen(entry->cigar_string)+1);//+1 for the zero-terminator
-  assert(cig != NULL);
-  strcpy(cig,entry->cigar_string);
-  ptr_letters = strtok(cig,sep_letters);
-  int i = 0;
-  while (ptr_letters != NULL) {
-
-    log_info("I am at %s in %s.",ptr_letters,entry->cigar_string);
-    strcpy(numbers[i],ptr_letters);
-    ptr_letters = strtok(NULL,sep_letters);
-    i++;
-  }
+  seperate_string(entry, sep_letters,numbers);
 
   char *sep_numbers = "0123456789";
-  char *ptr_numbers;
   char *letters[10];
   for (int i=0; i<10; ++i)
     letters[i] = malloc(500);
-  strcpy(cig,entry->cigar_string);
-  ptr_numbers = strtok(cig,sep_numbers);
-  i = 0;
-  while (ptr_numbers != NULL) {
-
-    log_info("I am at %s in %s.",ptr_numbers,entry->cigar_string);
-    strcpy(letters[i],ptr_numbers);
-    ptr_numbers = strtok(NULL,sep_numbers);
-    i++;
-  }
-  free(cig);
+  seperate_string(entry, sep_numbers,letters);
 
   int j = 1;
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     char letter = letters[i][0];
     //printf("We are at %hhd!\n", letters[i][0]);
     switch(letter) {
@@ -378,13 +352,13 @@ int *interpret_cigar_string(struct Entry *entry) {
         break;
     }
   }
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     printf("Nummer %d: %s\n", i, numbers[i] );
   }
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     printf("Letter %d: %s\n", i, letters[i] );
   }
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     printf("Nummer in a[] %d: %d\n", i, a[i] );
   }
   for (int i=0; i<10; i++) free(numbers[i]);
@@ -444,10 +418,12 @@ void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
   ranges_r2 = interpret_cigar_string(entry_r2);
 
   if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
+    /*
     int *combinded_ranges;
     combinded_ranges = combine_ranges(ranges_r1,ranges_r2);
     //update_coverage(combinded_ranges,entry_r1);
     free(combinded_ranges);
+    */
   } else {
     //update_coverage(ranges_r1,entry_r1);
     //update_coverage(ranges_r2,entry_r2);
@@ -462,6 +438,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, struct Genome *genome,
 
 int main(int argc, char *argv[])
 {
+
    //char chromo_names[3][14];
     int num_of_chr = number_of_chromosomes("/Users/hayer/Downloads/indexes/danRer7_s.fa.fai");
     //char **chromo_names = malloc(num_of_chr * sizeof(char*));
