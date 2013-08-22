@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
 
@@ -270,10 +271,14 @@ void seperate_string(Entry *entry, char *sep, char **array)
     ptr = strtok(NULL,sep);
     i++;
   }
-  check(i < 10,"Cigar string too long: %s!", entry->cigar_string);
+  while(i < 10) {
+    strcpy(array[i],"0");
+    i++;
+  }
+  //check(i < 10,"Cigar string too long: %s!", entry->cigar_string);
   free(cig);
-error:
-  if (cig) free(cig);
+//error:
+  //if (cig) free(cig);
 }
 
 
@@ -286,44 +291,48 @@ int *interpret_cigar_string(Entry *entry) {
 
   char *sep_letters = "MIDNSHP";
   char *numbers[10];
-  for (int i=0; i<10; ++i)
+  for (int i=0; i<10; i++)
     numbers[i] = malloc(500);
   seperate_string(entry, sep_letters,numbers);
 
   char *sep_numbers = "0123456789";
   char *letters[10];
-  for (int i=0; i<10; ++i)
+  for (int i=0; i<10; i++) {
     letters[i] = malloc(500);
+  }
   seperate_string(entry, sep_numbers,letters);
 
   int j = 1;
-  for (int i = 0; i < 10; i++) {
-    char letter = letters[i][0];
-    //printf("We are at %hhd!\n", letters[i][0]);
-    switch(letter) {
-      case 'm':
-      case 'M':
-      case '=':
-      case 'X':
-        a[j] = a[j-1] + atoi(numbers[i]);
-        j++;
-        break;
-      case 'N':
-      case 'D':
-        a[j] = a[j-1] + atoi(numbers[i]);
-        j++;
-        break;
-      case 'I':
-      case 'S':
-      case 'H':
-        break;
-      case 'P':
-        // DON'T KNOW WHAT DO HERE
-        break;
-      default:
-        break;
+  for (int i = 0; i < 10; i++)
+  {
+    if (letters[i][0] != 0) {
+      switch(letters[i][0]) {
+        case 'm':
+        case 'M':
+        case '=':
+        case 'X':
+          a[j] = a[j-1] + atoi(numbers[i]);
+          j++;
+          break;
+        case 'N':
+        case 'D':
+          a[j] = a[j-1] + atoi(numbers[i]);
+          j++;
+          break;
+        case 'I':
+        case 'S':
+        case 'H':
+          break;
+        case 'P':
+          // DON'T KNOW WHAT DO HERE
+          break;
+        default:
+          break;
+      }
     }
+    i++;
   }
+
   for (int i = 0; i < 10; i++) {
     printf("Nummer %d: %s\n", i, numbers[i] );
   }
@@ -335,6 +344,7 @@ int *interpret_cigar_string(Entry *entry) {
   }
   for (int i=0; i<10; i++) free(numbers[i]);
   for (int i=0; i<10; i++) free(letters[i]);
+
   return a;
 }
 
@@ -367,9 +377,11 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
       }
     }
   }
+  /*
   for (int i = 0; i < 20; i++) {
     printf("Combined in a[] %d: %d\n", i, a[i] );
   }
+  */
   return a;
 }
 

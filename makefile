@@ -1,8 +1,18 @@
-SHELL = /bin/sh
-CFLAGS=-Wall -g -DNDEBUG
+SHELL   = /bin/sh
+CFLAGS  = -Wall -g -DNDEBUG
+HEADERS = entry.h
+OBJECTS = entry.o
+CC 	    = cc
+DEPS = entry.h
+OBJ = sam2cov.o entry.o
 
-all: sam2cov
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+sam2cov: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
+	rm -f *.o
 	rm -f sam2cov
-	rm -r *.dSYM
