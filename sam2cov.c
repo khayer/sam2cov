@@ -201,6 +201,13 @@ int main(int argc, char *argv[])
     //Chromosome_print(genome->chromosomes[0]);
     //Chromosome_print(genome->chromosomes[1]);
     //Chromosome_print(genome->chromosomes[2]);
+    FILE *fp = fopen("test.cov","a");
+    for (int i = 0; i < num_of_chr; ++i)
+    {
+      Chromosome_print_to_file(genome->chromosomes[i], fp);
+    }
+
+
     Genome_destroy(genome);
 
     for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);

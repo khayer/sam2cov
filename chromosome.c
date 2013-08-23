@@ -20,6 +20,17 @@ void Chromosome_print(Chromosome *chr)
   }
 }
 
+void Chromosome_print_to_file(Chromosome *chr, FILE *file_handler)
+{
+  //printf("Name: %s\n", chr->name);
+  //printf("\tLength: %d\n", chr->length);
+  for(int i = 0; i<chr->length; i++) {
+    if (chr->cov[i] != 0) {
+      fprintf(file_handler,"%s\t%d\t%d\t%d\n",chr->name, i, i+1,chr->cov[i]);
+    }
+  }
+}
+
 void Chromosome_update(Chromosome *chr, int pos){
   chr->cov[pos] = chr->cov[pos]+1;
 }

@@ -14,6 +14,7 @@ typedef struct ChromosomeStruct
 Chromosome *Chromosome_create(char *name, int chr_length);
 void Chromosome_destroy(Chromosome *chr);
 void Chromosome_print(Chromosome *chr);
+void Chromosome_print_to_file(Chromosome *chr, FILE *file_handler);
 void Chromosome_update(Chromosome *chr, int pos);
 
 #endif
