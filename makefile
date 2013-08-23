@@ -1,10 +1,8 @@
 SHELL   = /bin/sh
 CFLAGS  = -Wall -g -DNDEBUG
-HEADERS = entry.h
-OBJECTS = entry.o
 CC 	    = cc
-DEPS = entry.h chromosome.h genome.h
-OBJ = sam2cov.o entry.o chromosome.o genome.o
+DEPS = entry.h chromosome.h genome.h functions.h
+OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
 
 
 %.o: %.c $(DEPS)

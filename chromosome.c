@@ -29,7 +29,7 @@ Chromosome *Chromosome_create(char *name, int chr_length)
   Chromosome *chr = malloc(sizeof(Chromosome)+chr_length* sizeof(int));
   //struct Chromosome *chr = malloc(chr_length* sizeof(int));
   assert(chr != NULL);
-  log_info("Creating chromose %s with %d length.", name, chr_length);
+  log_info("Creating chromosome %s with %d length.", name, chr_length);
   chr->name = name;
   chr->length = chr_length;
   for (int i = 0; i < chr_length; i++) {
