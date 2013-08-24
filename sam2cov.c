@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <ctype.h>
 #include <unistd.h>
 
 int *combine_ranges(int *ranges_r1, int *ranges_r2) {
@@ -138,15 +139,30 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
 int main(int argc, char *argv[])
 {
+    printf("%d\n",argc );
+      char *fai_file=NULL;
+      char *sam_file=NULL;
+      char *unique_file=NULL;
+
+      fai_file = argv[1];
+      sam_file = argv[2];
+      unique_file =argv[3];
+      
+      if (argc != 4) {
+        printf("Usage: sam2cov fai_file sam_file unique_file \n" );
+        exit(1);
+      }
+
+      
    //char chromo_names[3][14];
-    int num_of_chr = number_of_chromosomes("/Users/hayer/Downloads/indexes/danRer7_s.fa.fai");
+    int num_of_chr = number_of_chromosomes(fai_file);
     //char **chromo_names = malloc(num_of_chr * sizeof(char*));
     int chromo_lengths[num_of_chr];
     //char **chromo_names[num_of_chr] = malloc(num_of_chr * 100 * sizeof(char*));
     char* chromo_names[num_of_chr];
     for (int i=0; i<num_of_chr; ++i)
       chromo_names[i] = malloc(MAX_STRING_LENGTH);
-    get_names("/Users/hayer/Downloads/indexes/danRer7_s.fa.fai", num_of_chr,chromo_lengths,chromo_names);
+    get_names(fai_file, num_of_chr,chromo_lengths,chromo_names);
     //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
     //log_info("Length of chromosome is nina %s",chromo_names[0]);
     //check(argc == 2, "Need an argument.");
@@ -155,19 +171,18 @@ int main(int argc, char *argv[])
     //Chromosome_update(genome->chromosomes[0],2);
     //Chromosome_update(genome->chromosomes[1],12);
     // OPEN SAM FILE
-    char cwd[256];
-    getcwd(cwd,sizeof(cwd));
-    char *file_name = "/test.sam";
+    //char cwd[256];
+    //getcwd(cwd,sizeof(cwd));
+    //char *file_name = "/test.sam";
 
-    char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
+    //char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
     //in real code you would check for errors in malloc here
-    assert(result != NULL);
-    strcpy(result, cwd);
-    strcat(result, file_name);
-    log_info("Name of sam file is %s.", result);
+    //assert(result != NULL);
+    //strcpy(result, cwd);
+    //strcat(result, file_name);
+    //log_info("Name of sam file is %s.", result);
 
-    FILE *file_handler = fopen(result,"r");
-    free(result);
+    FILE *file_handler = fopen(sam_file,"r");
     assert(file_handler);
     char line[500];
     char line_mate[500];
@@ -201,7 +216,7 @@ int main(int argc, char *argv[])
     //Chromosome_print(genome->chromosomes[0]);
     //Chromosome_print(genome->chromosomes[1]);
     //Chromosome_print(genome->chromosomes[2]);
-    FILE *fp = fopen("test.cov","a");
+    FILE *fp = fopen(unique_file,"a");
     for (int i = 0; i < num_of_chr; ++i)
     {
       Chromosome_print_to_file(genome->chromosomes[i], fp);
@@ -231,7 +246,6 @@ int main(int argc, char *argv[])
     check(test_check_mem() == -1, "test_check_mem failed.");
     check(test_check_debug() == -1, "test_check_debug failed.");
 */
-
 
     return 0;
 
