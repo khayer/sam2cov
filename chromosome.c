@@ -30,7 +30,6 @@ void Chromosome_print_to_file(Chromosome *chr, FILE *file_handler)
   for(int i = 0; i<chr->length; i++) {
     if (chr->cov[i] != 0) {
       if (last_number == 0) {
-        printf("Scheisse\n");
         last_number = chr->cov[i];
         start_pos = i;
       }

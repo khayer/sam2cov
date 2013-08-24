@@ -139,7 +139,6 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
 int main(int argc, char *argv[])
 {
-    printf("%d\n",argc );
       char *fai_file=NULL;
       char *sam_file=NULL;
       char *unique_file=NULL;
