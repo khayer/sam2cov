@@ -192,15 +192,18 @@ int main(int argc, char *argv[])
     while (fgets( line, sizeof(line), file_handler) != NULL)
     {
       //fputs (line,stdout);
-      sep = "NH:i:";
-      char *ptr;
-      ptr = strstr(line,sep);
-      splitted_line = strtok(ptr,"\t");
-      if (strcmp(splitted_line,"NH:i:1")==0) {
-        fgets( line_mate, sizeof(line_mate), file_handler);
-        add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-          chromo_names,num_of_chr);
+      if (!strcmp(line[0],"@")==0) {
+        sep = "NH:i:";
+        char *ptr;
+        ptr = strstr(line,sep);
+        splitted_line = strtok(ptr,"\t");
+        if (strcmp(splitted_line,"NH:i:1")==0) {
+          fgets( line_mate, sizeof(line_mate), file_handler);
+          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+            chromo_names,num_of_chr);
+        }
       }
+      
       //splitted_line = strtok(line,sep);
       //fputs (splitted_line,stdout);
       //strcpy(names[i],splitted_line);
