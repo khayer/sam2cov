@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             add_reads_to_cov(line,line_mate,genome,chromo_lengths,
               chromo_names,num_of_chr);
           }
-        } else {
+        } else if (!(strcmp(entry->chr_name,"*")==0)) {
           sep = "IH:i:";
           char *ptr;
           ptr = strstr(line,sep);
