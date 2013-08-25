@@ -200,6 +200,8 @@ int main(int argc, char *argv[])
       char *dummy = malloc(10+1);//+1 for the zero-terminator
       assert(dummy != NULL);
       strncpy(dummy,line,1);
+      fputs (line,stdout);
+
       if (!strcmp(dummy,"@")==0) {
         if (rum != 1) {
           sep = "NH:i:";
