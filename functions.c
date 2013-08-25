@@ -249,6 +249,7 @@ int *interpret_cigar_string(Entry *entry) {
           j++;
           break;
         case 'I':
+        case '*':
         case 'S':
         case 'H':
           break;
