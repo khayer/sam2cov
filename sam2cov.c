@@ -201,10 +201,13 @@ int main(int argc, char *argv[])
       assert(dummy != NULL);
       strncpy(dummy,line,1);
       fputs (line,stdout);
+      char *line_cpy = malloc(strlen(line)+1);//+1 for the zero-terminator
+    //assert(result != NULL);
+      strcpy(line_cpy, line);
 
       if (!strcmp(dummy,"@")==0) {
-        Entry *entry = make_entry_for_read(line,genome);
-        if (rum != 1 && strcmp(entry->chr_name,"*")!=0) {
+        Entry *entry = make_entry_for_read(line_cpy,genome);
+        if (rum != 1 && !(strcmp(entry->chr_name,"*")==0)) {
           sep = "NH:i:";
           char *ptr;
           ptr = strstr(line,sep);
