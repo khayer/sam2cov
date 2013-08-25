@@ -142,15 +142,19 @@ int main(int argc, char *argv[])
       char *fai_file=NULL;
       char *sam_file=NULL;
       char *unique_file=NULL;
+      int rum;
+
+      if (argc != 5) {
+        printf("Usage: sam2cov fai_file sam_file unique_file rum? \n" );
+        exit(1);
+      }
 
       fai_file = argv[1];
       sam_file = argv[2];
       unique_file =argv[3];
+      rum = atoi(argv[4]);
       
-      if (argc != 4) {
-        printf("Usage: sam2cov fai_file sam_file unique_file \n" );
-        exit(1);
-      }
+      
 
       
    //char chromo_names[3][14];
@@ -165,7 +169,9 @@ int main(int argc, char *argv[])
     //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
     //log_info("Length of chromosome is nina %s",chromo_names[0]);
     //check(argc == 2, "Need an argument.");
+    
     Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
+    
     //Chromosome_update(genome->chromosomes[2],2);
     //Chromosome_update(genome->chromosomes[0],2);
     //Chromosome_update(genome->chromosomes[1],12);
@@ -191,19 +197,33 @@ int main(int argc, char *argv[])
 
     while (fgets( line, sizeof(line), file_handler) != NULL)
     {
-      //fputs (line,stdout);
-      if (!strcmp(line[0],"@")==0) {
-        sep = "NH:i:";
-        char *ptr;
-        ptr = strstr(line,sep);
-        splitted_line = strtok(ptr,"\t");
-        if (strcmp(splitted_line,"NH:i:1")==0) {
-          fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-            chromo_names,num_of_chr);
+      char *dummy = malloc(10+1);//+1 for the zero-terminator
+      assert(dummy != NULL);
+      strncpy(dummy,line,1);
+      if (!strcmp(dummy,"@")==0) {
+        if (rum != 1) {
+          sep = "NH:i:";
+          char *ptr;
+          ptr = strstr(line,sep);
+          splitted_line = strtok(ptr,"\t");
+          if (strcmp(splitted_line,"NH:i:1")==0) {
+            fgets( line_mate, sizeof(line_mate), file_handler);
+            add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+              chromo_names,num_of_chr);
+          }
+        } else {
+          sep = "IH:i:";
+          char *ptr;
+          ptr = strstr(line,sep);
+          splitted_line = strtok(ptr,"\t");
+          if (strcmp(splitted_line,"IH:i:1")==0) {
+            fgets( line_mate, sizeof(line_mate), file_handler);
+            add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+              chromo_names,num_of_chr);
         }
       }
-      
+      free(dummy);
+      }
       //splitted_line = strtok(line,sep);
       //fputs (splitted_line,stdout);
       //strcpy(names[i],splitted_line);
@@ -213,6 +233,7 @@ int main(int argc, char *argv[])
       //i++;
     }
     assert(file_handler);
+
     fclose(file_handler);
 
     //Chromosome_print(genome->chromosomes[0]);
