@@ -78,9 +78,9 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
   }
   free(starts_r1);free(stops_r1);
   free(starts_r2);free(stops_r2);
-  for (int i = 0; i < 20; i++) {
-    printf("Combined in a[] %d: %d\n", i, a[i] );
-  }
+  //for (int i = 0; i < 20; i++) {
+  //  printf("Combined in a[] %d: %d\n", i, a[i] );
+  //}
   return a;
 }
 

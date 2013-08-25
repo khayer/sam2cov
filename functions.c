@@ -179,8 +179,8 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    log_info("Chromo_num %d", current_chr_number);
-    log_info("Name: %s, Chr: %s, Position: %d, Chromosome Number: %d, Cigar: %s",read_name, chr_name, pos, current_chr_number, cigar);
+    //log_info("Chromo_num %d", current_chr_number);
+    //log_info("Name: %s, Chr: %s, Position: %d, Chromosome Number: %d, Cigar: %s",read_name, chr_name, pos, current_chr_number, cigar);
     Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
