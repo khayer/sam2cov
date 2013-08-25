@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 
       if (!strcmp(dummy,"@")==0) {
         Entry *entry = make_entry_for_read(line_cpy,genome);
-        printf("There you go %s\n",entry->chr_name );
+        fputs(entry->chr_name, stdout);
         if (rum != 1 && !(strcmp(entry->chr_name,"*")==0)) {
           sep = "NH:i:";
           char *ptr;
