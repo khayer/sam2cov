@@ -207,8 +207,8 @@ int main(int argc, char *argv[])
 
       if (!strcmp(dummy,"@")==0) {
         Entry *entry = make_entry_for_read(line_cpy,genome);
-        fputs(entry->chr_name, stdout);
-        if (rum != 1 && !(strcmp(entry->chr_name,"*")==0)) {
+        //fputs(entry->chr_name, stdout);
+        if (rum != 1 && entry!=NULL) {
           sep = "NH:i:";
           char *ptr;
           ptr = strstr(line,sep);
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
             add_reads_to_cov(line,line_mate,genome,chromo_lengths,
               chromo_names,num_of_chr);
           }
-        } else if (!(strcmp(entry->chr_name,"*")==0)) {
+        } else if (entry != NULL) {
           sep = "IH:i:";
           char *ptr;
           ptr = strstr(line,sep);
