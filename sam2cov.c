@@ -203,7 +203,8 @@ int main(int argc, char *argv[])
       fputs (line,stdout);
 
       if (!strcmp(dummy,"@")==0) {
-        if (rum != 1) {
+        Entry *entry = make_entry_for_read(line,genome);
+        if (rum != 1 && strcmp(entry->chr_name,"*")!=0) {
           sep = "NH:i:";
           char *ptr;
           ptr = strstr(line,sep);
@@ -224,7 +225,7 @@ int main(int argc, char *argv[])
               chromo_names,num_of_chr);
         }
       }
-      free(dummy);
+      free(dummy); free(entry);
       }
       //splitted_line = strtok(line,sep);
       //fputs (splitted_line,stdout);
