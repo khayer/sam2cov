@@ -230,7 +230,7 @@ int *interpret_cigar_string(Entry *entry) {
     letters[i] = malloc(500);
   }
   seperate_string(entry, sep_numbers,letters);
-
+  if (strcmp(&letters[0][0],"*") == 0) a[0] = 0;
   int j = 1;
   for (int i = 0; i < 10; i++)
   {
