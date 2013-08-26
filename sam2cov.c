@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
     FILE *fp = fopen(unique_file,"a");
     for (int i = 0; i < num_of_chr; ++i)
     {
-      Chromosome_print(genome->chromosomes[i]);
+      //Chromosome_print(genome->chromosomes[i]);
       Chromosome_print_to_file(genome->chromosomes[i], fp);
     }
 
