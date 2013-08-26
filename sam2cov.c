@@ -156,10 +156,10 @@ int main(int argc, char *argv[])
       sam_file = argv[2];
       unique_file =argv[3];
       rum = atoi(argv[4]);
-      
-      
 
-      
+
+
+
    //char chromo_names[3][14];
     int num_of_chr = number_of_chromosomes(fai_file);
     //char **chromo_names = malloc(num_of_chr * sizeof(char*));
@@ -172,9 +172,9 @@ int main(int argc, char *argv[])
     //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
     //log_info("Length of chromosome is nina %s",chromo_names[0]);
     //check(argc == 2, "Need an argument.");
-    
+
     Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
-    
+
     //Chromosome_update(genome->chromosomes[2],2);
     //Chromosome_update(genome->chromosomes[0],2);
     //Chromosome_update(genome->chromosomes[1],12);
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
               chromo_names,num_of_chr);
         }
       }
-      free(dummy); free(entry);
+      free(line_cpy);free(dummy); if (entry != NULL) Entry_destroy(entry);
       }
       //splitted_line = strtok(line,sep);
       //fputs (splitted_line,stdout);
@@ -252,6 +252,7 @@ int main(int argc, char *argv[])
     FILE *fp = fopen(unique_file,"a");
     for (int i = 0; i < num_of_chr; ++i)
     {
+      Chromosome_print(genome->chromosomes[i]);
       Chromosome_print_to_file(genome->chromosomes[i], fp);
     }
 
