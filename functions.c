@@ -240,12 +240,12 @@ int *interpret_cigar_string(Entry *entry) {
         case 'M':
         case '=':
         case 'X':
-          a[j] = a[j-1] + atoi(numbers[i]);
+          a[j] = a[j-1] + atoi(numbers[i])+1;
           j++;
           break;
         case 'N':
         case 'D':
-          a[j] = a[j-1] + atoi(numbers[i]);
+          a[j] = a[j-1] + atoi(numbers[i])+1;
           j++;
           break;
         case 'I':
