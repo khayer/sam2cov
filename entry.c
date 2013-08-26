@@ -11,7 +11,7 @@ Entry *Entry_create(char *read_name, char *chr_name, int pos, int chr_num, char 
 
   entry->read_name = strdup(read_name);
   entry->chr_name = strdup(chr_name);
-  entry->pos = pos;
+  entry->pos = pos-1;
   entry->chr_num = chr_num;
   entry->cigar_string = strdup(cigar);
 

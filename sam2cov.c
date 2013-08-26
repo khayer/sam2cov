@@ -200,16 +200,17 @@ int main(int argc, char *argv[])
 
     while (fgets( line, sizeof(line), file_handler) != NULL)
     {
-      char *dummy = malloc(10+1);//+1 for the zero-terminator
+      char *dummy = malloc(1+1);//+1 for the zero-terminator
       assert(dummy != NULL);
       strncpy(dummy,line,1);
       fputs (line,stdout);
+      Entry *entry = NULL;
       char *line_cpy = malloc(strlen(line)+1);//+1 for the zero-terminator
     //assert(result != NULL);
       strcpy(line_cpy, line);
 
       if (!strcmp(dummy,"@")==0) {
-        Entry *entry = make_entry_for_read(line_cpy,genome);
+        entry = make_entry_for_read(line_cpy,genome);
         //fputs(entry->chr_name, stdout);
         if (rum != 1 && entry!=NULL) {
           sep = "NH:i:";
@@ -230,10 +231,10 @@ int main(int argc, char *argv[])
             fgets( line_mate, sizeof(line_mate), file_handler);
             add_reads_to_cov(line,line_mate,genome,chromo_lengths,
               chromo_names,num_of_chr);
+          }
         }
       }
-      free(line_cpy);free(dummy); if (entry != NULL) Entry_destroy(entry);
-      }
+      free(dummy); free(line_cpy); if (entry != NULL) Entry_destroy(entry);
       //splitted_line = strtok(line,sep);
       //fputs (splitted_line,stdout);
       //strcpy(names[i],splitted_line);
