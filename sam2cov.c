@@ -96,6 +96,9 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome){
 
   int i = 0;
   while (starts[i] != 0) {
+    //fputs(starts[i],stdout);
+    printf("Starts %d \n", starts[i] );
+    printf("Stops %d \n", stops[i] );
     for (int k = starts[i]; k < stops[i]; k++) {
       Chromosome_update(genome->chromosomes[entry->chr_num], k);
     }
