@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
 
     while (fgets( line, sizeof(line), file_handler) != NULL)
     {
-      char *dummy = malloc(1+1);//+1 for the zero-terminator
+      char *dummy = malloc(strlen("@")+1);//+1 for the zero-terminator
       assert(dummy != NULL);
       strncpy(dummy,line,1);
       fputs (line,stdout);

@@ -31,7 +31,7 @@ void Chromosome_print_to_file(Chromosome *chr, FILE *file_handler)
   int start_pos = 0;
   for(int i = 0; i<chr->length; i++) {
     if (last_number != chr->cov[i] && last_number != 0) {
-      fprintf(file_handler,"%s\t%d\t%d\t%d\n",chr->name, start_pos-1, start_pos+range_length,last_number);
+      fprintf(file_handler,"%s\t%d\t%d\t%d\n",chr->name, start_pos, start_pos+range_length-1,last_number);
       start_pos = i;
       last_number = chr->cov[i];
       range_length = 0;
