@@ -58,7 +58,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
       }
     } else {
       a[c_a] = starts_r2[c_r2];
-      if (stops_r2[c_r2] <= starts_r1[c_r1] || starts_r1[c_r1 == 0]) {
+      if (stops_r2[c_r2] <= starts_r1[c_r1] || starts_r1[c_r1} == 0) {
         a[c_a + 1] = stops_r2[c_r2];
         c_a = c_a + 2;
         if (c_r2 < 4) c_r2++;
