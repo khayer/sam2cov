@@ -38,7 +38,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
   int c_r2 = 0;
   while(starts_r1[c_r1]!=0 || starts_r2[c_r2]!=0)
   {
-    if ((starts_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
+    if ((starts_r1[c_r1] <= starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
       a[c_a] = starts_r1[c_r1];
       if (stops_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) {
         a[c_a + 1] = stops_r1[c_r1];
