@@ -144,107 +144,99 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
 int main(int argc, char *argv[])
 {
-      char *fai_file=NULL;
-      char *sam_file=NULL;
-      char *unique_file=NULL;
-      int rum;
+  char *fai_file=NULL;
+  char *sam_file=NULL;
+  char *unique_file=NULL;
+  int rum;
+  if (argc != 5) {
+    printf("Usage: sam2cov fai_file sam_file unique_file rum? \n" );
+    exit(1);
+  }
 
-      if (argc != 5) {
-        printf("Usage: sam2cov fai_file sam_file unique_file rum? \n" );
-        exit(1);
-      }
+  fai_file = argv[1];
+  sam_file = argv[2];
+  unique_file =argv[3];
+  rum = atoi(argv[4]);
 
-      fai_file = argv[1];
-      sam_file = argv[2];
-      unique_file =argv[3];
-      rum = atoi(argv[4]);
+  //char chromo_names[3][14];
+  int num_of_chr = number_of_chromosomes(fai_file);
+  //char **chromo_names = malloc(num_of_chr * sizeof(char*));
+  int chromo_lengths[num_of_chr];
+  //char **chromo_names[num_of_chr] = malloc(num_of_chr * 100 * sizeof(char*));
+  char* chromo_names[num_of_chr];
+  for (int i=0; i<num_of_chr; ++i)
+    chromo_names[i] = malloc(MAX_STRING_LENGTH);
+  get_names(fai_file, num_of_chr,chromo_lengths,chromo_names);
+  //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
+  //log_info("Length of chromosome is nina %s",chromo_names[0]);
+  //check(argc == 2, "Need an argument.");
+  Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
 
+  //Chromosome_update(genome->chromosomes[2],2);
+  //Chromosome_update(genome->chromosomes[0],2);
+  //Chromosome_update(genome->chromosomes[1],12);
+  // OPEN SAM FILE
+  //char cwd[256];
+  //getcwd(cwd,sizeof(cwd));
+  //char *file_name = "/test.sam";
+  //char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
+  //in real code you would check for errors in malloc here
+  //assert(result != NULL);
+  //strcpy(result, cwd);
+  //strcat(result, file_name);
+  //log_info("Name of sam file is %s.", result);
 
-
-
-   //char chromo_names[3][14];
-    int num_of_chr = number_of_chromosomes(fai_file);
-    //char **chromo_names = malloc(num_of_chr * sizeof(char*));
-    int chromo_lengths[num_of_chr];
-    //char **chromo_names[num_of_chr] = malloc(num_of_chr * 100 * sizeof(char*));
-    char* chromo_names[num_of_chr];
-    for (int i=0; i<num_of_chr; ++i)
-      chromo_names[i] = malloc(MAX_STRING_LENGTH);
-    get_names(fai_file, num_of_chr,chromo_lengths,chromo_names);
-    //log_info("Length of chromosome is nina %d",chromo_lengths[0]);
-    //log_info("Length of chromosome is nina %s",chromo_names[0]);
-    //check(argc == 2, "Need an argument.");
-
-    Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
-
-    //Chromosome_update(genome->chromosomes[2],2);
-    //Chromosome_update(genome->chromosomes[0],2);
-    //Chromosome_update(genome->chromosomes[1],12);
-    // OPEN SAM FILE
-    //char cwd[256];
-    //getcwd(cwd,sizeof(cwd));
-    //char *file_name = "/test.sam";
-
-    //char *result = malloc(strlen(cwd)+strlen(file_name)+1);//+1 for the zero-terminator
-    //in real code you would check for errors in malloc here
-    //assert(result != NULL);
-    //strcpy(result, cwd);
-    //strcat(result, file_name);
-    //log_info("Name of sam file is %s.", result);
-
-    FILE *file_handler = fopen(sam_file,"r");
-    assert(file_handler);
-    char line[500];
-    char line_mate[500];
-    //int i = 0;
-    char *sep = "\t";
-    char *splitted_line;
-
-    while (fgets( line, sizeof(line), file_handler) != NULL)
-    {
-      char *dummy = malloc(strlen("@")+1);//+1 for the zero-terminator
-      assert(dummy != NULL);
-      strncpy(dummy,line,1);
-      fputs (line,stdout);
-      Entry *entry = NULL;
-      char *line_cpy = malloc(strlen(line)+1);//+1 for the zero-terminator
-    //assert(result != NULL);
-      strcpy(line_cpy, line);
-
-      if (!strcmp(dummy,"@")==0) {
-        entry = make_entry_for_read(line_cpy,genome);
-        //fputs(entry->chr_name, stdout);
-        if (rum != 1 && entry!=NULL) {
-          sep = "NH:i:";
-          char *ptr;
-          ptr = strstr(line,sep);
-          splitted_line = strtok(ptr,"\t");
-          if (strcmp(splitted_line,"NH:i:1")==0) {
-            fgets( line_mate, sizeof(line_mate), file_handler);
-            add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-              chromo_names,num_of_chr);
-          }
-        } else if (entry != NULL) {
-          sep = "IH:i:";
-          char *ptr;
-          ptr = strstr(line,sep);
-          splitted_line = strtok(ptr,"\t");
-          if (strcmp(splitted_line,"IH:i:1")==0) {
-            fgets( line_mate, sizeof(line_mate), file_handler);
-            add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-              chromo_names,num_of_chr);
-          }
+  FILE *file_handler = fopen(sam_file,"r");
+  assert(file_handler);
+  char line[500];
+  char line_mate[500];
+  //int i = 0;
+  char *sep = "\t";
+  char *splitted_line;
+  while (fgets( line, sizeof(line), file_handler) != NULL)
+  {
+    char *dummy = malloc(strlen("@")+1);//+1 for the zero-terminator
+    assert(dummy != NULL);
+    strncpy(dummy,line,1);
+    fputs (line,stdout);
+    Entry *entry = NULL;
+    char *line_cpy = malloc(strlen(line)+1);//+1 for the zero-terminator
+  //assert(result != NULL);
+    strcpy(line_cpy, line);
+    if (!strcmp(dummy,"@")==0) {
+      entry = make_entry_for_read(line_cpy,genome);
+      //fputs(entry->chr_name, stdout);
+      if (rum != 1 && entry!=NULL) {
+        sep = "NH:i:";
+        char *ptr;
+        ptr = strstr(line,sep);
+        splitted_line = strtok(ptr,"\t");
+        if (strcmp(splitted_line,"NH:i:1")==0) {
+          fgets( line_mate, sizeof(line_mate), file_handler);
+          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+            chromo_names,num_of_chr);
+        }
+      } else if (entry != NULL) {
+        sep = "IH:i:";
+        char *ptr;
+        ptr = strstr(line,sep);
+        splitted_line = strtok(ptr,"\t");
+        if (strcmp(splitted_line,"IH:i:1")==0) {
+          fgets( line_mate, sizeof(line_mate), file_handler);
+          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+            chromo_names,num_of_chr);
         }
       }
-      free(dummy); free(line_cpy); if (entry != NULL) Entry_destroy(entry);
-      //splitted_line = strtok(line,sep);
-      //fputs (splitted_line,stdout);
-      //strcpy(names[i],splitted_line);
-      //log_info("Name of chromosome is %s.", names[i]);
-      //chromo_lengths[i] = atoi(strtok(NULL,sep));
-      //log_info("Length of chromosome is %d.",chromo_lengths[i]);
-      //i++;
     }
+    free(dummy); free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    //splitted_line = strtok(line,sep);
+    //fputs (splitted_line,stdout);
+    //strcpy(names[i],splitted_line);
+    //log_info("Name of chromosome is %s.", names[i]);
+    //chromo_lengths[i] = atoi(strtok(NULL,sep));
+    //log_info("Length of chromosome is %d.",chromo_lengths[i]);
+    //i++;
+  }
     assert(file_handler);
 
     fclose(file_handler);
