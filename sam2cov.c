@@ -38,14 +38,14 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
   int c_r2 = 0;
   while(starts_r1[c_r1]!=0 || starts_r2[c_r2]!=0)
   {
-    if ((starts_r1[c_r1] <= starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
+    if ((starts_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
       a[c_a] = starts_r1[c_r1];
-      if (stops_r1[c_r1] <= starts_r2[c_r2] || starts_r2[c_r2] == 0) {
+      if (stops_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) {
         a[c_a + 1] = stops_r1[c_r1];
         c_a = c_a + 2;
         if (c_r1 < 4) c_r1++;
       } else {
-        if (stops_r1[c_r1] <= stops_r2[c_r2]) {
+        if (stops_r1[c_r1] < stops_r2[c_r2]) {
           a[c_a + 1] = stops_r2[c_r2];
           c_a = c_a + 2;
           if (c_r1 < 4) c_r1++;
@@ -58,12 +58,12 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2) {
       }
     } else if (starts_r2[c_r2]!=0) {
       a[c_a] = starts_r2[c_r2];
-      if (stops_r2[c_r2] <= starts_r1[c_r1] || starts_r1[c_r1] == 0) {
+      if (stops_r2[c_r2] < starts_r1[c_r1] || starts_r1[c_r1] == 0) {
         a[c_a + 1] = stops_r2[c_r2];
         c_a = c_a + 2;
         if (c_r2 < 4) c_r2++;
       } else {
-        if (stops_r2[c_r2] <= stops_r1[c_r1]) {
+        if (stops_r2[c_r2] < stops_r1[c_r1]) {
           a[c_a + 1] = stops_r1[c_r1];
           c_a = c_a + 2;
           if (c_r1 < 3) c_r1++;
