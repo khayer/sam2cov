@@ -11,6 +11,7 @@ typedef struct GenomeStruct
 
 Genome *Genome_create(int number_of_chr, char **names, int length_of_chromosomes[] );
 void Genome_destroy(Genome *genome);
+void Genome_reset(Genome *genome);
 
 #endif
 

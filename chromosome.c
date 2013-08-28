@@ -66,4 +66,10 @@ Chromosome *Chromosome_create(char *name, int chr_length)
   }
 
   return chr;
-};
+}
+
+void Chromosome_reset(Chromosome *chr) {
+  for (int i = 0; i < chr->length; i++) {
+    chr->cov[i] = 0;
+  }
+}

@@ -25,10 +25,12 @@ void run_sam2cov(Genome *genome, char *unique_file,
   char *splitted_line;
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
-    char *dummy = malloc(sizeof("@")+1);
+    char *dummy = malloc(strlen("@")+1);
+
     assert(dummy != NULL);
+    //dummy = "@";
     strncpy(dummy,line,1);
-    log_info("Compare of dummy %s and @ is %d.", dummy, strcmp(dummy,"@"));
+    //log_info("Compare of dummy %s and @ is %d.", dummy, strcmp(dummy,"@"));
     //fputs (strcmp(dummy,"@"), stdout);
     //fputs (dummy,stdout);
     fputs (line,stdout);
@@ -42,7 +44,8 @@ void run_sam2cov(Genome *genome, char *unique_file,
         char *ptr;
         ptr = strstr(line,sep);
         splitted_line = strtok(ptr,"\t");
-        if (strcmp(splitted_line,"NH:i:1")==0) {
+        if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
+          (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr);
@@ -52,7 +55,8 @@ void run_sam2cov(Genome *genome, char *unique_file,
         char *ptr;
         ptr = strstr(line,sep);
         splitted_line = strtok(ptr,"\t");
-        if (strcmp(splitted_line,"IH:i:1")==0) {
+        if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
+          (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr);
@@ -114,6 +118,10 @@ int main(int argc, char *argv[])
   run_sam2cov(genome, unique_file, sam_file,
     num_of_chr, chromo_lengths, chromo_names, unique_mode, rum);
 
+  Genome_reset(genome);
+
+  run_sam2cov(genome, non_unique_file, sam_file,
+    num_of_chr, chromo_lengths, chromo_names, 0, rum);
 
 
 

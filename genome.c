@@ -26,3 +26,11 @@ void Genome_destroy(Genome *genome)
   }
   free(genome);
 }
+
+void Genome_reset(Genome *genome)
+{
+  assert(genome != NULL);
+  for (int i=0; i < genome->size; i++) {
+    Chromosome_reset(genome->chromosomes[i]);
+  }
+}
