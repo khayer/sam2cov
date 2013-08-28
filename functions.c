@@ -232,6 +232,7 @@ int *interpret_cigar_string(Entry *entry) {
   seperate_string(entry, sep_numbers,letters);
   if (strcmp(&letters[0][0],"*") == 0) a[0] = 0;
   int j = 1;
+  int insertion = 0;
   for (int i = 0; i < 10; i++)
   {
     if (letters[i][0] != 0) {
@@ -240,7 +241,12 @@ int *interpret_cigar_string(Entry *entry) {
         case 'M':
         case '=':
         case 'X':
-          a[j] = a[j-1] + atoi(numbers[i]);
+          if (insertion == 0) {
+            a[j] = a[j-1] + atoi(numbers[i]);
+          } else {
+            a[j-1] = a[j-1] + atoi(numbers[i]);
+            insertion = 0;
+          }
           j++;
           break;
         case 'N':
@@ -249,7 +255,7 @@ int *interpret_cigar_string(Entry *entry) {
           j++;
           break;
         case 'I':
-          j--;
+          insertion = 1;
         case '*':
         case 'S':
         case 'H':
