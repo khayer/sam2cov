@@ -33,7 +33,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
-    if (!strcmp(dummy,"@")==0) {
+    if (!(strcmp(dummy,"@")==0)) {
       entry = make_entry_for_read(line_cpy,genome);
       if (rum != 1 && entry!=NULL) {
         sep = "NH:i:";
