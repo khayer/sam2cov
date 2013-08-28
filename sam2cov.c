@@ -28,7 +28,9 @@ void run_sam2cov(Genome *genome, char *unique_file,
     char *dummy = malloc(sizeof("@")+1);
     assert(dummy != NULL);
     strncpy(dummy,line,1);
-    fputs (dummy,stdout);
+    log_info("Compare of dummy %s and @ is %d.", dummy, strcmp(dummy,"@"));
+    //fputs (strcmp(dummy,"@"), stdout);
+    //fputs (dummy,stdout);
     fputs (line,stdout);
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
