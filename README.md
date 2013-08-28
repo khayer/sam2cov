@@ -4,13 +4,13 @@ This C programm creates coverage files for sam files. The sam format is specifie
 
 ## Usage
 
-  Usage: sam2cov fai_file sam_file unique_file non_unique_file rum?
+    Usage: sam2cov fai_file sam_file unique_file non_unique_file rum?
 
 ## Installation
 
-  git clone https://github.com/khayer/sam2cov.git
-  cd sam2cov
-  make
+    git clone https://github.com/khayer/sam2cov.git
+    cd sam2cov
+    make
 
 ## Limitations
 
