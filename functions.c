@@ -243,11 +243,12 @@ int *interpret_cigar_string(Entry *entry) {
         case 'X':
           if (insertion == 0) {
             a[j] = a[j-1] + atoi(numbers[i]);
+            j++;
           } else {
             a[j-1] = a[j-1] + atoi(numbers[i]);
             insertion = 0;
           }
-          j++;
+          
           break;
         case 'N':
         case 'D':
