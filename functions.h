@@ -19,9 +19,12 @@ void seperate_string(Entry *entry, char *sep, char **array);
 
 int *interpret_cigar_string(Entry *entry);
 
-//int *combine_ranges(int *ranges_r1, int *ranges_r2);
+int *combine_ranges(int *ranges_r1, int *ranges_r2);
 
-//void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
-//  int *chromo_lengths,char **names, int num_of_chr);
+void update_coverage(int *ranges, Entry *entry, Genome *genome);
+
+void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+  int *chromo_lengths,char **names, int num_of_chr);
+
 
 #endif

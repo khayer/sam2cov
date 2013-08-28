@@ -179,8 +179,6 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    //log_info("Chromo_num %d", current_chr_number);
-    //log_info("Name: %s, Chr: %s, Position: %d, Chromosome Number: %d, Cigar: %s",read_name, chr_name, pos, current_chr_number, cigar);
     Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
@@ -204,10 +202,8 @@ void seperate_string(Entry *entry, char *sep, char **array)
     strcpy(array[i],"0");
     i++;
   }
-  //check(i < 10,"Cigar string too long: %s!", entry->cigar_string);
+
   free(cig);
-//error:
-  //if (cig) free(cig);
 }
 
 
@@ -248,7 +244,7 @@ int *interpret_cigar_string(Entry *entry) {
             a[j-1] = a[j-1] + atoi(numbers[i]);
             insertion = 0;
           }
-          
+
           break;
         case 'N':
         case 'D':
@@ -283,5 +279,136 @@ int *interpret_cigar_string(Entry *entry) {
   for (int i=0; i<10; i++) free(letters[i]);
 
   return a;
+}
+
+int *combine_ranges(int *ranges_r1, int *ranges_r2) {
+  int *a = malloc(20*sizeof(int));
+  for (int l = 0; l < 20; l++) {
+    a[l] = 0;
+  }
+
+  int *starts_r1 = malloc(5*sizeof(int));
+  for (int l = 0; l < 5; l++) {
+    starts_r1[l] = ranges_r1[l*2];
+  }
+  int *starts_r2 = malloc(5*sizeof(int));
+  for (int l = 0; l < 5; l++) {
+    starts_r2[l] = ranges_r2[l*2];
+  }
+  int *stops_r1 = malloc(5*sizeof(int));
+  for (int l = 0; l < 5; l++) {
+    stops_r1[l] = ranges_r1[l*2+1];
+  }
+  int *stops_r2 = malloc(5*sizeof(int));
+  for (int l = 0; l < 5; l++) {
+    stops_r2[l] = ranges_r2[l*2+1];
+  }
+
+  int c_a = 0;
+  int c_r1 = 0;
+  int c_r2 = 0;
+  while(starts_r1[c_r1]!=0 || starts_r2[c_r2]!=0)
+  {
+    if ((starts_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
+      a[c_a] = starts_r1[c_r1];
+      if (stops_r1[c_r1] <= starts_r2[c_r2] || starts_r2[c_r2] == 0) {
+        a[c_a + 1] = stops_r1[c_r1];
+        c_a = c_a + 2;
+        if (c_r1 < 4) c_r1++;
+      } else {
+        if (stops_r1[c_r1] <= stops_r2[c_r2]) {
+          a[c_a + 1] = stops_r2[c_r2];
+          c_a = c_a + 2;
+          if (c_r1 < 4) c_r1++;
+          if (c_r2 < 4) c_r2++;
+        } else {
+          a[c_a + 1] = stops_r1[c_r1];
+          c_a = c_a + 2;
+          if (c_r1 < 4) c_r1++;
+          if (c_r2 < 4) c_r2++;
+        }
+      }
+    } else if (starts_r2[c_r2]!=0) {
+      a[c_a] = starts_r2[c_r2];
+      if (stops_r2[c_r2] <= starts_r1[c_r1] || starts_r1[c_r1] == 0) {
+        a[c_a + 1] = stops_r2[c_r2];
+        c_a = c_a + 2;
+        if (c_r2 < 4) c_r2++;
+      } else {
+        if (stops_r2[c_r2] <= stops_r1[c_r1]) {
+          a[c_a + 1] = stops_r1[c_r1];
+          c_a = c_a + 2;
+          if (c_r1 < 4) c_r1++;
+          if (c_r2 < 4) c_r2++;
+        } else {
+          a[c_a + 1] = stops_r2[c_r2];
+          c_a = c_a + 2;
+          if (c_r2 < 4) c_r2++;
+          if (c_r1 < 4) c_r1++;
+        }
+      }
+    }
+  }
+  free(starts_r1);free(stops_r1);
+  free(starts_r2);free(stops_r2);
+  for (int i = 0; i < 20; i++) {
+    printf("Combined in a[] %d: %d\n", i, a[i] );
+  }
+  return a;
+}
+
+void update_coverage(int *ranges, Entry *entry, Genome *genome){
+  int *starts = malloc(10*sizeof(int));
+  for (int l = 0; l < 10; l++) {
+    starts[l] = ranges[l*2];
+  }
+  int *stops = malloc(10*sizeof(int));
+  for (int l = 0; l < 10; l++) {
+    stops[l] = ranges[l*2+1];
+  }
+
+  int i = 0;
+  while (starts[i] != 0) {
+    printf("Starts %d \n", starts[i] );
+    printf("Stops %d \n", stops[i] );
+    for (int k = starts[i]; k < stops[i]; k++) {
+      Chromosome_update(genome->chromosomes[entry->chr_num], k);
+    }
+    i++;
+  }
+  free(starts); free(stops);
+}
+
+void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+  int *chromo_lengths,char **names, int num_of_chr){
+  Entry *entry_r1 = make_entry_for_read(r1_line,genome);
+  Entry *entry_r2 = make_entry_for_read(r2_line,genome);
+  if (entry_r1 == NULL || entry_r2 == NULL) {
+    log_err("Ending all processes");
+    Genome_destroy(genome);
+    for (int i=0; i<num_of_chr; i++) free(names[i]);
+    exit(1);
+  }
+  assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
+  int *ranges_r1;
+  ranges_r1 = interpret_cigar_string(entry_r1);
+  int *ranges_r2;
+  ranges_r2 = interpret_cigar_string(entry_r2);
+
+  if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
+
+    int *combinded_ranges;
+    combinded_ranges = combine_ranges(ranges_r1,ranges_r2);
+    update_coverage(combinded_ranges,entry_r1, genome);
+    free(combinded_ranges);
+  } else {
+    update_coverage(ranges_r1,entry_r1,genome);
+    update_coverage(ranges_r2,entry_r2,genome);
+  }
+
+  free(ranges_r2);
+  free(ranges_r1);
+  Entry_destroy(entry_r1);
+  Entry_destroy(entry_r2);
 }
 
