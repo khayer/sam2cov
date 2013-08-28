@@ -25,7 +25,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
   char *splitted_line;
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
-    char *dummy = malloc(strlen("@")+1);
+    char *dummy = malloc(sizeof("@")+1);
     assert(dummy != NULL);
     strncpy(dummy,line,1);
     fputs (line,stdout);
