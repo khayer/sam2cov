@@ -19,8 +19,8 @@ void run_sam2cov(Genome *genome, char *unique_file,
 
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
-  char line[500];
-  char line_mate[500];
+  char line[5000];
+  char line_mate[5000];
   char *sep = "\t";
   char *splitted_line;
   while (fgets( line, sizeof(line), file_handler) != NULL)
