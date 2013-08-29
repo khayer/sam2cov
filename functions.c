@@ -312,11 +312,11 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
   int c_a = 0;
   int c_r1 = 0;
   int c_r2 = 0;
-  while(starts_r1[c_r1]!=0 || starts_r2[c_r2]!=0)
+  while(stops_r1[c_r1]!=0 || stops_r2[c_r2]!=0)
   {
-    if ((starts_r1[c_r1] < starts_r2[c_r2] || starts_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
+    if ((starts_r1[c_r1] < starts_r2[c_r2] || stops_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
       a[c_a] = starts_r1[c_r1];
-      if (stops_r1[c_r1] <= starts_r2[c_r2] || starts_r2[c_r2] == 0) {
+      if (stops_r1[c_r1] <= starts_r2[c_r2] || stops_r2[c_r2] == 0) {
         a[c_a + 1] = stops_r1[c_r1];
         c_a = c_a + 2;
         if (c_r1 < size_of_array/2) c_r1++;
@@ -333,9 +333,9 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
           if (c_r2 < size_of_array/2) c_r2++;
         }
       }
-    } else if (starts_r2[c_r2]!=0) {
+    } else if (stops_r2[c_r2]!=0) {
       a[c_a] = starts_r2[c_r2];
-      if (stops_r2[c_r2] <= starts_r1[c_r1] || starts_r1[c_r1] == 0) {
+      if (stops_r2[c_r2] <= starts_r1[c_r1] || stops_r1[c_r1] == 0) {
         a[c_a + 1] = stops_r2[c_r2];
         c_a = c_a + 2;
         if (c_r2 < size_of_array/2) c_r2++;
@@ -374,7 +374,7 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
   }
 
   int i = 0;
-  while (starts[i] != 0) {
+  while (stops[i] != 0) {
     //printf("Starts %d \n", starts[i] );
     //printf("Stops %d \n", stops[i] );
     for (int k = starts[i]; k < stops[i]; k++) {
