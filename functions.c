@@ -194,7 +194,7 @@ void seperate_string(Entry *entry, char *sep, char **array, int size_of_array)
   ptr = strtok(cig,sep);
   int i = 0;
   while (ptr != NULL) {
-    log_info("I am at %s in %s.",ptr,entry->cigar_string);
+    //log_info("I am at %s in %s.",ptr,entry->cigar_string);
     strcpy(array[i],ptr);
     ptr = strtok(NULL,sep);
     i++;
@@ -268,15 +268,15 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
     //}
   }
 
-  for (int i = 0; i < size_of_array; i++) {
-    printf("Nummer %d: %s\n", i, numbers[i] );
-  }
-  for (int i = 0; i < size_of_array; i++) {
-    printf("Letter %d: %s\n", i, letters[i] );
-  }
-  for (int i = 0; i < size_of_array; i++) {
-    printf("Nummer in a[] %d: %d\n", i, a[i] );
-  }
+  //for (int i = 0; i < size_of_array; i++) {
+  //  printf("Nummer %d: %s\n", i, numbers[i] );
+  //}
+  //for (int i = 0; i < size_of_array; i++) {
+  //  printf("Letter %d: %s\n", i, letters[i] );
+  //}
+  //for (int i = 0; i < size_of_array; i++) {
+  //  printf("Nummer in a[] %d: %d\n", i, a[i] );
+  //}
   for (int i=0; i<size_of_array; i++) free(numbers[i]);
   for (int i=0; i<size_of_array; i++) free(letters[i]);
 
@@ -288,7 +288,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
   for (int l = 0; l < size_of_array; l++) {
     a[l] = 0;
   }
-  log_info("size_of_array / 2 = %d", size_of_array/2);
+  //log_info("size_of_array / 2 = %d", size_of_array/2);
   int *starts_r1 = malloc(size_of_array/2*sizeof(int));
   for (int l = 0; l < size_of_array/2; l++) {
     starts_r1[l] = ranges_r1[l*2];
@@ -354,12 +354,12 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
       }
     }
   }
-  log_info("Now I am going to free the memory!");
+  //log_info("Now I am going to free the memory!");
   free(starts_r1);free(stops_r1);
   free(starts_r2);free(stops_r2);
-  for (int i = 0; i < size_of_array; i++) {
-    printf("Combined in a[] %d: %d\n", i, a[i] );
-  }
+  //for (int i = 0; i < size_of_array; i++) {
+  //  printf("Combined in a[] %d: %d\n", i, a[i] );
+  //}
   return a;
 }
 
@@ -375,8 +375,8 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
 
   int i = 0;
   while (starts[i] != 0) {
-    printf("Starts %d \n", starts[i] );
-    printf("Stops %d \n", stops[i] );
+    //printf("Starts %d \n", starts[i] );
+    //printf("Stops %d \n", stops[i] );
     for (int k = starts[i]; k < stops[i]; k++) {
       Chromosome_update(genome->chromosomes[entry->chr_num], k);
     }
