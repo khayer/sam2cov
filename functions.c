@@ -314,7 +314,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
   int c_r2 = 0;
   while(stops_r1[c_r1]!=0 || stops_r2[c_r2]!=0)
   {
-    if ((starts_r1[c_r1] < starts_r2[c_r2] || stops_r2[c_r2] == 0) && starts_r1[c_r1]!=0) {
+    if ((starts_r1[c_r1] < starts_r2[c_r2] || stops_r2[c_r2] == 0) && stops_r1[c_r1]!=0) {
       a[c_a] = starts_r1[c_r1];
       if (stops_r1[c_r1] <= starts_r2[c_r2] || stops_r2[c_r2] == 0) {
         a[c_a + 1] = stops_r1[c_r1];
