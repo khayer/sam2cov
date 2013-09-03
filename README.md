@@ -10,10 +10,12 @@ This C program creates coverage files for sam files. The sam format is specified
 ### Example
 
 * For a sam file produced by [STAR](https://code.google.com/p/rna-star/):
-    sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 0
+
+    `sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 0`
 
 * For a sam file produced by [RUM](http://cbil.upenn.edu/RUM/):
-    sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 1
+
+    `sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 1`
 
 Note: To create the *fa.fai* use `samtools faidx danRer7.fa`. Samtools can be downloaded [here](http://samtools.sourceforge.net/).
 
