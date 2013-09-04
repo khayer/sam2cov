@@ -1,0 +1,12 @@
+DEBUG tests/first_tests.c:64:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:56:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:57:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:65:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:57:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:58:all_tests: 
+----- test_functions
+[ERROR] (tests/first_tests.c:11:check_function errno: None) Did not find number_of_chromosomes(filename) function in the library build/libsam2cov.so: dlsym(0x100200ac0, number_of_chromosomes(filename)): symbol not found
+[ERROR] (tests/first_tests.c:32:test_functions errno: None) print_a_message failed.
