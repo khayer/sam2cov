@@ -149,7 +149,7 @@ int get_strand(int bit_flag) {
     k = k/2;
     i++;
   }
-  log_info("Reverse complemented? %d for %d", bin[4], bit_flag);
+  //log_info("Reverse complemented? %d for %d", bin[4], bit_flag);
   return bin[4];
 }
 
@@ -408,7 +408,7 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
 }
 
 void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
-  int *chromo_lengths,char **names, int num_of_chr){
+  int *chromo_lengths,char **names, int num_of_chr, int strand){
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
@@ -433,7 +433,6 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
 
   if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
-
     int *combinded_ranges;
     combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
     update_coverage(combinded_ranges,entry_r1,genome,size_of_array);
