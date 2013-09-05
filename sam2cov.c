@@ -82,8 +82,9 @@ int main(int argc, char *argv[])
   char *non_unique_file=NULL;
   int unique_mode = 1;
   int rum;
-  if (argc != 6) {
-    printf("Usage: sam2cov fai_file sam_file unique_file non_unique_file rum? \n" );
+  int strand;
+  if (argc != 7) {
+    printf("Usage: sam2cov fai_file sam_file unique_file non_unique_file rum? strand?\n" );
     exit(1);
   }
 
@@ -92,6 +93,7 @@ int main(int argc, char *argv[])
   unique_file = argv[3];
   non_unique_file = argv[4];
   rum = atoi(argv[5]);
+  strand = atoi(argv[6]);
 
   int num_of_chr = number_of_chromosomes(fai_file);
   int chromo_lengths[num_of_chr];

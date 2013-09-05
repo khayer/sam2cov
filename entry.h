@@ -19,13 +19,14 @@ struct EntryStruct;
 typedef struct EntryStruct
 {
   char *read_name;
+  int strand;
   char *chr_name;
   int pos;
   int chr_num;
   char *cigar_string;
 } Entry;
 
-Entry *Entry_create(char *read_name, char *chr_name, int pos, int chr_num, char *cigar);
+Entry *Entry_create(char *read_name, int strand, char *chr_name, int pos, int chr_num, char *cigar);
 void Entry_destroy(Entry *entry);
 
 #endif

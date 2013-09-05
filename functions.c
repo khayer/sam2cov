@@ -140,11 +140,25 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
   fclose(file_handler);
 }
 
+int get_strand(int bit_flag) {
+  int bin[12];
+  int k = bit_flag;
+  int i = 0;
+  while(k>0) {
+    bin[i] = k%2;
+    k = k/2;
+    i++;
+  }
+  log_info("Reverse complemented? %d for %d", bin[4], bit_flag);
+  return bin[4];
+}
+
 Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
   char read_name[500];
+  int strand = 5;
   char chr_name[500];
   int pos;
   char cigar[500];
@@ -153,12 +167,20 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     switch(i) {
       case 0:
         strcpy(read_name,ptr);
+        break;
+      case 1:
+        log_info("pointer is at %s",ptr);
+        if (strcmp(ptr,"*") != 0) strand = get_strand(atoi(ptr));
+        break;
       case 2:
         strcpy(chr_name,ptr);
+        break;
       case 3:
         pos = atoi(ptr);
+        break;
       case 5:
         strcpy(cigar,ptr);
+        break;
     }
     ptr = strtok(NULL,sep);
     i++;
@@ -179,7 +201,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    Entry *entry = Entry_create(read_name, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(read_name, strand, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }
