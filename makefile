@@ -1,11 +1,8 @@
 SHELL   = /bin/sh
 CFLAGS  = -Wall -g -DNDEBUG -std=c99
 CC 	    = cc
-DEPS = entry.h chromosome.h genome.h functions.h seatest.h
-OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
-
-TEST_SRC=$(wildcard tests/*.c)
-TESTS=$(patsubst %.c,%,$(TEST_SRC))
+#DEPS = entry.h chromosome.h genome.h functions.h seatest.h
+#OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
@@ -13,6 +10,9 @@ OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 TARGET=build/libsam2cov.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 PROG= sam2cov
+
+TEST_SRC=$(wildcard tests/*.c)
+TESTS=$(patsubst %.c,%,o,$(TEST_SRC))
 
 
 # The Target Build

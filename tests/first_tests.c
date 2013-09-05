@@ -1,5 +1,6 @@
 #include "minunit.h"
 #include <dlfcn.h>
+#include "../src/functions.h"
 
 typedef int (*lib_function)(const char *data);
 char *lib_file = "build/libsam2cov.so";
@@ -28,10 +29,11 @@ char *test_dlopen()
 
 char *test_functions()
 {
-        char *filename = "test.sam";
-    mu_assert(check_function("number_of_chromosomes(filename)", "15", 0), "print_a_message failed.");
-    mu_assert(check_function("uppercase", "Hello", 0), "uppercase failed.");
-    mu_assert(check_function("lowercase", "Hello", 0), "lowercase failed.");
+    char *filename = "danRer7_s.fa.fai";
+    int k = number_of_chromosomes(filename);
+    mu_assert(k == 7, "error, k != 7" );
+    //mu_assert(check_function("uppercase", "Hello", 0), "uppercase failed.");
+    //mu_assert(check_function("lowercase", "Hello", 0), "lowercase failed.");
 
     return NULL;
 }
