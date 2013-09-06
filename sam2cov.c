@@ -15,7 +15,7 @@
 
 void run_sam2cov(Genome *genome, char *unique_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
-  char **chromo_names, int unique_mode, int rum) {
+  char **chromo_names, int unique_mode, int rum, int strand) {
 
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
@@ -48,7 +48,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-            chromo_names,num_of_chr);
+            chromo_names,num_of_chr,strand);
         }
       } else if (entry != NULL) {
         sep = "IH:i:";
@@ -59,7 +59,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-            chromo_names,num_of_chr);
+            chromo_names,num_of_chr,strand);
         }
       }
     }
@@ -82,8 +82,9 @@ int main(int argc, char *argv[])
   char *non_unique_file=NULL;
   int unique_mode = 1;
   int rum;
-  if (argc != 6) {
-    printf("Usage: sam2cov fai_file sam_file unique_file non_unique_file rum? \n" );
+  int strand;
+  if (argc != 7) {
+    printf("Usage: sam2cov fai_file sam_file unique_file non_unique_file rum? strand?\n" );
     exit(1);
   }
 
@@ -92,6 +93,7 @@ int main(int argc, char *argv[])
   unique_file = argv[3];
   non_unique_file = argv[4];
   rum = atoi(argv[5]);
+  strand = atoi(argv[6]);
 
   int num_of_chr = number_of_chromosomes(fai_file);
   int chromo_lengths[num_of_chr];
@@ -115,13 +117,14 @@ int main(int argc, char *argv[])
   //strcat(result, file_name);
   //log_info("Name of sam file is %s.", result);
 
+
   run_sam2cov(genome, unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum);
-
+    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand);
   Genome_reset(genome);
-
   run_sam2cov(genome, non_unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, 0, rum);
+    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand);
+
+
 
 
 
