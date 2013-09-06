@@ -12,7 +12,7 @@ SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 PROG= sam2cov
 
 TEST_SRC=$(wildcard tests/*.c)
-TESTS=$(patsubst %.c,%,o,$(TEST_SRC))
+TESTS=$(patsubst %.c,%.o,$(TEST_SRC))
 
 
 # The Target Build
