@@ -29,10 +29,10 @@ char *test_dlopen()
 
 char *test_functions()
 {
-    char *filename = "danRer7_s.fa.fai";
-    int k = number_of_chromosomes(filename);
-    mu_assert(k == 7, "error, k != 7" );
-    //mu_assert(check_function("uppercase", "Hello", 0), "uppercase failed.");
+    int k = get_strand(83);
+    //char *filename = "danRer7_s.fa.fai";
+    mu_assert(k == 1, "error, k != 1" );
+    //mu_assert(check_function("usage", "Hello", 0), "uppercase failed.");
     //mu_assert(check_function("lowercase", "Hello", 0), "lowercase failed.");
 
     return NULL;

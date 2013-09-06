@@ -8,6 +8,8 @@
 
 #define MAX_STRING_LENGTH 200
 
+int get_strand(int bit_flag);
+
 int number_of_chromosomes(char *file_name);
 
 void get_names(char *file_name,
