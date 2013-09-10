@@ -153,12 +153,26 @@ int get_strand(int bit_flag) {
   return bin[4];
 }
 
+int get_first(int bit_flag){
+  int bin[12];
+  int k = bit_flag;
+  int i = 0;
+  while(k>0) {
+    bin[i] = k%2;
+    k = k/2;
+    i++;
+  }
+  //log_info("Reverse complemented? %d for %d", bin[4], bit_flag);
+  return bin[6];
+}
+
 Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
   char read_name[500];
   int strand = 5;
+  int first = 5;
   char chr_name[500];
   int pos;
   char cigar[500];
@@ -170,7 +184,10 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
         break;
       case 1:
         //log_info("pointer is at %s",ptr);
-        if (strcmp(ptr,"*") != 0) strand = get_strand(atoi(ptr));
+        if (strcmp(ptr,"*") != 0) {
+          strand = get_strand(atoi(ptr));
+          first = get_first(atoi(ptr));
+        }
         break;
       case 2:
         strcpy(chr_name,ptr);
@@ -201,7 +218,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    Entry *entry = Entry_create(read_name, strand, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(read_name, strand, first, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }
@@ -448,7 +465,8 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     case 1:
       //log_info("strand is 1");
       // Only forward reads:
-      if (entry_r1->strand == 1) {
+      if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
+        (entry_r2->strand == 1 && entry_r2->first == 1)) {
         if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
           int *combinded_ranges;
           combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
@@ -463,7 +481,8 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     case 2:
       //log_info("strand is 2");
       // Only reverse reads
-      if (entry_r1->strand == 0) {
+      if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
+        (entry_r2->strand == 0 && entry_r2->first == 1)) {
         if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
           int *combinded_ranges;
           combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
