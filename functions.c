@@ -432,9 +432,23 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   ranges_r2 = interpret_cigar_string(entry_r2,size_of_array);
 
   switch(strand) {
-      case 0:
-        //log_info("strand is 0");
-        // No strand specified
+    case 0:
+      //log_info("strand is 0");
+      // No strand specified
+      if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
+        int *combinded_ranges;
+        combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
+        update_coverage(combinded_ranges,entry_r1,genome,size_of_array);
+        free(combinded_ranges);
+      } else {
+        update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+        update_coverage(ranges_r2,entry_r2,genome,size_of_array);
+      }
+      break;
+    case 1:
+      //log_info("strand is 1");
+      // Only forward reads:
+      if (entry_r1->strand == 1) {
         if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
           int *combinded_ranges;
           combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
@@ -444,21 +458,24 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
           update_coverage(ranges_r1,entry_r1,genome,size_of_array);
           update_coverage(ranges_r2,entry_r2,genome,size_of_array);
         }
-        break;
-      case 1:
-        //log_info("strand is 1");
-        // Only forward reads:
-        if (entry_r1->strand == 0) update_coverage(ranges_r1,entry_r1,genome,size_of_array);
-        if (entry_r2->strand == 0) update_coverage(ranges_r2,entry_r2,genome,size_of_array);
-        break;
-      case 2:
-        //log_info("strand is 2");
-        if (entry_r1->strand == 1) update_coverage(ranges_r1,entry_r1,genome,size_of_array);
-        if (entry_r2->strand == 1) update_coverage(ranges_r2,entry_r2,genome,size_of_array);
-        break;
-    }
-
-  
+      }
+      break;
+    case 2:
+      //log_info("strand is 2");
+      // Only reverse reads
+      if (entry_r1->strand == 0) {
+        if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
+          int *combinded_ranges;
+          combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
+          update_coverage(combinded_ranges,entry_r1,genome,size_of_array);
+          free(combinded_ranges);
+        } else {
+          update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+          update_coverage(ranges_r2,entry_r2,genome,size_of_array);
+        }
+      }
+      break;
+  }
 
   free(ranges_r2);
   free(ranges_r1);
