@@ -83,9 +83,9 @@ void run_sam2cov(Genome *genome, char *unique_file,
   fclose(file_handler);
   FILE *fp = fopen(unique_file,"w");
   if (ucsc_header == 1 && unique_mode == 1) {
-    fprintf(fp, "track type=bed name=\"Coverage Unique for %s\" description=\"Coverage Unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
+    fprintf(fp, "track type=bedGraph name=\"Coverage Unique for %s\" description=\"Coverage Unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
   } else if (ucsc_header == 1) {
-    fprintf(fp, "track type=bed name=\"Coverage Non-unique for %s\" description=\"Coverage Non-unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
+    fprintf(fp, "track type=bedGraph name=\"Coverage Non-unique for %s\" description=\"Coverage Non-unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
   }
   for (int i = 0; i < num_of_chr; ++i)
   {
