@@ -20,6 +20,7 @@ void usage() {
   printf("\t-r\tAligned with RUM? [0/1] Default: 0\n" );
   printf("\t-s\tStrand: 1 for fwd, 2 for rev [0/1/2] Default: 0\n" );
   printf("\t-p\tPrefix for coverage files. Default: Unique.cov, NU.cov\n" );
+  printf("\t-u\tPrint header for UCSC Genome browser? [0/1] Default: 0\n");
   printf("\t-h\tThis helpful message.\n" );
   printf("\t-v\tPrint Version.\n" );
   exit(1);
@@ -27,7 +28,7 @@ void usage() {
 
 void run_sam2cov(Genome *genome, char *unique_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
-  char **chromo_names, int unique_mode, int rum, int strand) {
+  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
 
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
@@ -80,11 +81,17 @@ void run_sam2cov(Genome *genome, char *unique_file,
   }
   assert(file_handler);
   fclose(file_handler);
-  FILE *fp = fopen(unique_file,"a");
+  FILE *fp = fopen(unique_file,"w");
+  if (ucsc_header == 1 && unique_mode == 1) {
+    fprintf(fp, "track type=bed name=\"Coverage Unique for %s\" description=\"Coverage Unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
+  } else if (ucsc_header == 1) {
+    fprintf(fp, "track type=bed name=\"Coverage Non-unique for %s\" description=\"Coverage Non-unique for %s\" visibility=full color=0,0,0 priority=20\n", sam_file, sam_file);
+  }
   for (int i = 0; i < num_of_chr; ++i)
   {
     Chromosome_print_to_file(genome->chromosomes[i], fp);
   }
+  fclose(fp);
 }
 
 int main(int argc, char *argv[])
@@ -96,11 +103,12 @@ int main(int argc, char *argv[])
   int unique_mode = 1;
   int rum = 0;
   int strand = 0;
+  int ucsc_header = 0;
 
   int c;
   int errflg = 0;
   char *prefix;
-  while ((c = getopt(argc, argv, ":vhrs:p:")) != -1) {
+  while ((c = getopt(argc, argv, "uv:hrs:p:")) != -1) {
     switch(c) {
     case 'h':
       errflg++;
@@ -113,8 +121,12 @@ int main(int argc, char *argv[])
       prefix = optarg;
       break;
     case 'r':
-      fprintf(stderr, "%d\n", c);
+      //fprintf(stderr, "%d\n", c);
       rum = 1;
+      break;
+    case 'u':
+      //fprintf(stderr, "%d\n", c);
+      ucsc_header = 1;
       break;
     case 's':
       strand = atoi(optarg);
@@ -138,14 +150,14 @@ int main(int argc, char *argv[])
     //printf("%d\n",optind );
     //printf("%s\n", argv[optind] );
     if (access(argv[optind], R_OK)==0) {
-      printf("%s\n", argv[optind] );
+      //printf("HALLO %s\n", argv[optind] );
       if (i == 0) strcpy(fai_file,argv[optind]);
       if (i == 1) strcpy(sam_file,argv[optind]);
       i++;
     }
   }
   if (i != 2) usage();
-  printf("%d\n", argc);
+  //printf("Used that many ar%d\n", argc);
   if (prefix) {
     strcpy(unique_file, prefix);
     strcat(unique_file,"Unique.cov");
@@ -162,6 +174,7 @@ int main(int argc, char *argv[])
   log_info("non_unique_file:\t%s",non_unique_file);
   log_info("strand:\t%d",strand);
   log_info("aligned with RUM?:\t%d", rum);
+  log_info("Print header?:\t%d", ucsc_header);
   //unique_file = argv[3];
   //non_unique_file = argv[4];
   //rum = atoi(argv[5]);
@@ -191,10 +204,10 @@ int main(int argc, char *argv[])
 
 
   run_sam2cov(genome, unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand);
+    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
   Genome_reset(genome);
   run_sam2cov(genome, non_unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand);
+    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
 
 
 

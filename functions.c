@@ -203,8 +203,13 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     i++;
   }
   i = 0;
+  //free(ptr);
+  //free(sep);
   int current_chr_number = 123456;
   int found = 0;
+  if (strcmp(chr_name,"*") == 0){
+    return NULL;
+  }
   while (i < genome->size) {
     if (strcmp(genome->chromosomes[i]->name,chr_name) == 0) {
       current_chr_number = i;
