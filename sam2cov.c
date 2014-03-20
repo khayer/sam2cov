@@ -46,14 +46,14 @@ void run_sam2cov(Genome *genome, char *unique_file,
     //s.replace(s.find("$name"), sizeof("Somename")-1, "Somename");
     //dummy.replace(dummy.find("\ufffd", sizeof(""),"");
     //[dummy stringByReplacingOccurrencesOfString:@"\ufffd" withString:@" "];
-    log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[1], strcmp(&dummy[1],"@"),line);
+    log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[0], strcmp(&dummy[0],"@"),line);
     //fputs (strcmp(dummy,"@"), stdout);
     //fputs (dummy,stdout);
     //fputs (line,stdout);
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
-    if (!(strcmp(&dummy[1],"@")==0)) {
+    if (!(strcmp(&dummy[0],"@")==0)) {
       exit(1);
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
@@ -81,7 +81,8 @@ void run_sam2cov(Genome *genome, char *unique_file,
         }
       }
     }
-    free(dummy); free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    //free(dummy);
+    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
   }
   assert(file_handler);
   fclose(file_handler);
