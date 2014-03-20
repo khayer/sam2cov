@@ -26,6 +26,12 @@ void usage() {
   exit(1);
 }
 
+int StartsWith(const char *a, const char *b)
+{
+   if(strncmp(a, b, strlen(b)) == 0) return 1;
+   return 0;
+}
+
 void run_sam2cov(Genome *genome, char *unique_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
   char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
@@ -39,22 +45,23 @@ void run_sam2cov(Genome *genome, char *unique_file,
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
     //char *dummy = malloc(strlen("@"));
-    char dummy[1];
-    assert(dummy != NULL);
+    //char dummy[1];
+    //assert(dummy != NULL);
     //dummy = "@";
-    strncpy(dummy,line,1);
+    //strncpy(dummy,line,1);
     //s.replace(s.find("$name"), sizeof("Somename")-1, "Somename");
-    //dummy.replace(dummy.find("\ufffd", sizeof(""),"");
+    //*dummy.replace(*dummy.find("\ufffd", sizeof(""),"");
     //[dummy stringByReplacingOccurrencesOfString:@"\ufffd" withString:@" "];
-    log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[0], strcmp(&dummy[0],"@"),line);
+    //log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[0], strcmp(&dummy[0],"@"),line);
     //fputs (strcmp(dummy,"@"), stdout);
     //fputs (dummy,stdout);
     //fputs (line,stdout);
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
-    if (!(strcmp(&dummy[0],"@")==0)) {
-      exit(1);
+    //if (!(strcmp(&dummy[0],"@")==0)) {
+    if (!StartsWith(line,"@")) {
+      //exit(1);
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
       if (rum != 1 && entry!=NULL) {
