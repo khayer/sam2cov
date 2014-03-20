@@ -38,11 +38,13 @@ void run_sam2cov(Genome *genome, char *unique_file,
   char *splitted_line;
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
-    char *dummy = malloc(strlen("@"));
-
+    //char *dummy = malloc(strlen("@"));
+    char dummy[1];
     assert(dummy != NULL);
     //dummy = "@";
     strncpy(dummy,line,1);
+    //s.replace(s.find("$name"), sizeof("Somename")-1, "Somename");
+    //dummy.replace(dummy.find("\ufffd", sizeof(""),"");
     //[dummy stringByReplacingOccurrencesOfString:@"\ufffd" withString:@" "];
     log_info("Compare of dummy %s and @ is %d. Line is %s", dummy, strcmp(dummy,"@"),line);
     //fputs (strcmp(dummy,"@"), stdout);
