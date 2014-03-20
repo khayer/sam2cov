@@ -38,7 +38,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
   char *splitted_line;
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
-    char *dummy = malloc(strlen("@")+1);
+    char *dummy = malloc(strlen("\@")+1);
 
     assert(dummy != NULL);
     //dummy = "@";
@@ -50,7 +50,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
-    if (!(strcmp(dummy,"@")==0)) {
+    if (!(strcmp(dummy,"\@")==0)) {
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
       if (rum != 1 && entry!=NULL) {
