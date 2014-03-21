@@ -438,6 +438,9 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
   int size_of_array;
+  log_info("LINE R1 %s",r1_line);
+  log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
+  log_info("LINE R2 %s",r2_line);
   if (strlen(entry_r1->cigar_string) > strlen(entry_r2->cigar_string)) {
     size_of_array = strlen(entry_r1->cigar_string) * 2;
   } else {
