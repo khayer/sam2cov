@@ -437,16 +437,6 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
-  int size_of_array;
-  log_info("LINE R1 %s",r1_line);
-  log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
-  log_info("LINE R2 %s",r2_line);
-  if (strlen(entry_r1->cigar_string) > strlen(entry_r2->cigar_string)) {
-    size_of_array = strlen(entry_r1->cigar_string) * 2;
-  } else {
-    size_of_array = strlen(entry_r2->cigar_string) * 2;
-  }
-
   if (entry_r1 == NULL || entry_r2 == NULL) {
     log_err("Ending all processes");
     Genome_destroy(genome);
@@ -454,6 +444,19 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     exit(1);
   }
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
+
+  int size_of_array;
+  //log_info("LINE R1 %s",r1_line);
+  //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
+  //log_info("LINE R2 %s",r2_line);
+  if (strlen(entry_r1->cigar_string) > strlen(entry_r2->cigar_string)) {
+    size_of_array = strlen(entry_r1->cigar_string) * 2;
+  } else {
+    size_of_array = strlen(entry_r2->cigar_string) * 2;
+  }
+
+
+
   int *ranges_r1;
   ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
   int *ranges_r2;
