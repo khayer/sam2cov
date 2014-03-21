@@ -12,7 +12,8 @@
 
 // run_sam2cov(genome, unique_file, sam_file,
 //  num_of_chr, chromo_lengths, chromo_names, unique_mode, rum);
-#define VERSION "v0.0.1-beta - 9/3/13"
+//#define VERSION "v0.0.1-beta - 9/3/13"
+#define VERSION "v0.0.2-beta - 3/20/14"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
