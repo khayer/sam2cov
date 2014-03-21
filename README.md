@@ -4,18 +4,24 @@ This C program creates coverage files for sam files. The sam format is specified
 
 ## Usage
 
-    Usage: sam2cov fai_file sam_file unique_file non_unique_file rum?
-
+      Usage: sam2cov [OPTIONS] fai_file sam_file
+      Options:
+        -r  Aligned with RUM? [0/1] Default: 0
+        -s  Strand: 1 for fwd, 2 for rev [0/1/2] Default: 0
+        -p  Prefix for coverage files. Default: Unique.cov, NU.cov
+        -u  Print header for UCSC Genome browser? [0/1] Default: 0
+        -h  This helpful message.
+        -v  Print Version.
 
 ### Example
 
 * For a sam file produced by [STAR](https://code.google.com/p/rna-star/):
 
-    `sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 0`
+    `sam2cov -p coverage_ danRer7.fa.fai test.sam`
 
 * For a sam file produced by [RUM](http://cbil.upenn.edu/RUM/):
 
-    `sam2cov danRer7.fa.fai test.sam unique.cov non_unique.cov 1`
+    `sam2cov -p coverage_ -r 1 danRer7.fa.fai test.sam`
 
 Note: To create the *fa.fai* use `samtools faidx danRer7.fa`. Samtools can be downloaded [here](http://samtools.sourceforge.net/).
 
