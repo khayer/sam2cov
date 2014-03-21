@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
   int c;
   int errflg = 0;
   char *prefix;
+  prefix = "";
   while ((c = getopt(argc, argv, "uv:hrs:p:")) != -1) {
     switch(c) {
     case 'h':

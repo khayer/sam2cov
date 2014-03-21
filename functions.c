@@ -171,11 +171,14 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   char *sep = "\t";
   char *ptr;
   char read_name[500];
+  strcpy(read_name,"");
   int strand = 5;
   int first = 5;
   char chr_name[500];
+  strcpy(chr_name,"");
   int pos;
   char cigar[500];
+  strcpy(cigar,"");
   ptr = strtok(line,sep);
   while (ptr != NULL) {
     switch(i) {
