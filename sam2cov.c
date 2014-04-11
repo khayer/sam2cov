@@ -33,7 +33,81 @@ int StartsWith(const char *a, const char *b)
    return 0;
 }
 
-void run_sam2cov(Genome *genome, char *unique_file,
+
+void run_sam2cov_single_end(Genome *genome, char *out_file,
+  char *sam_file, int num_of_chr, int *chromo_lengths,
+  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
+
+  FILE *file_handler = fopen(sam_file,"r");
+  assert(file_handler);
+  char line[5000];
+  //char line_mate[5000];
+  char *sep = "\t";
+  char *splitted_line;
+  while (fgets( line, sizeof(line), file_handler) != NULL)
+  {
+    //char *dummy = malloc(strlen("@"));
+    //char dummy[1];
+    //assert(dummy != NULL);
+    //dummy = "@";
+    //strncpy(dummy,line,1);
+    //s.replace(s.find("$name"), sizeof("Somename")-1, "Somename");
+    //*dummy.replace(*dummy.find("\ufffd", sizeof(""),"");
+    //[dummy stringByReplacingOccurrencesOfString:@"\ufffd" withString:@" "];
+    //log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[0], strcmp(&dummy[0],"@"),line);
+    //fputs (strcmp(dummy,"@"), stdout);
+    //fputs (dummy,stdout);
+    //fputs (line,stdout);
+    Entry *entry = NULL;
+    char *line_cpy = malloc(strlen(line)+1);
+    strcpy(line_cpy, line);
+    //if (!(strcmp(&dummy[0],"@")==0)) {
+    if (!StartsWith(line,"@")) {
+      //exit(1);
+      //log_info("Got here without prob");
+      entry = make_entry_for_read(line_cpy,genome);
+      if (rum != 1 && entry!=NULL) {
+        sep = "NH:i:";
+        char *ptr;
+        ptr = strstr(line,sep);
+        splitted_line = strtok(ptr,"\t");
+        if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
+          (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
+          add_reads_to_cov(line,NULL,genome,chromo_lengths,
+            chromo_names,num_of_chr,strand);
+        }
+      } else if (entry != NULL) {
+        sep = "IH:i:";
+        char *ptr;
+        ptr = strstr(line,sep);
+        splitted_line = strtok(ptr,"\t");
+        if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
+          (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
+          //fgets( line_mate, sizeof(line_mate), file_handler);
+          add_reads_to_cov(line,NULL,genome,chromo_lengths,
+            chromo_names,num_of_chr,strand);
+        }
+      }
+    }
+    //free(dummy);
+    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+  }
+  assert(file_handler);
+  fclose(file_handler);
+  FILE *fp = fopen(out_file,"w");
+  if (ucsc_header == 1 && unique_mode == 1) {
+    fprintf(fp, "track type=bedGraph name=\"Coverage Unique for %s\" description=\"Coverage Unique for %s\" visibility=full color=255,0,0 priority=20\n", sam_file, sam_file);
+  } else if (ucsc_header == 1) {
+    fprintf(fp, "track type=bedGraph name=\"Coverage Non-unique for %s\" description=\"Coverage Non-unique for %s\" visibility=full color=255,0,0 priority=20\n", sam_file, sam_file);
+  }
+  for (int i = 0; i < num_of_chr; ++i)
+  {
+    Chromosome_print_to_file(genome->chromosomes[i], fp);
+  }
+  fclose(fp);
+}
+
+void run_sam2cov(Genome *genome, char *out_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
   char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
 
@@ -94,7 +168,7 @@ void run_sam2cov(Genome *genome, char *unique_file,
   }
   assert(file_handler);
   fclose(file_handler);
-  FILE *fp = fopen(unique_file,"w");
+  FILE *fp = fopen(out_file,"w");
   if (ucsc_header == 1 && unique_mode == 1) {
     fprintf(fp, "track type=bedGraph name=\"Coverage Unique for %s\" description=\"Coverage Unique for %s\" visibility=full color=255,0,0 priority=20\n", sam_file, sam_file);
   } else if (ucsc_header == 1) {
@@ -113,6 +187,7 @@ int main(int argc, char *argv[])
   char *sam_file=malloc(5000);
   char *unique_file= malloc(5000);
   char *non_unique_file=malloc(5000);
+  int paired_end_mode = 1;
   int unique_mode = 1;
   int rum = 0;
   int strand = 0;
@@ -122,7 +197,7 @@ int main(int argc, char *argv[])
   int errflg = 0;
   char *prefix;
   prefix = "";
-  while ((c = getopt(argc, argv, "uv:hrs:p:")) != -1) {
+  while ((c = getopt(argc, argv, "euv:hrs:p:")) != -1) {
     switch(c) {
     case 'h':
       errflg++;
@@ -141,6 +216,10 @@ int main(int argc, char *argv[])
     case 'u':
       //fprintf(stderr, "%d\n", c);
       ucsc_header = 1;
+      break;
+    case 'e':
+      //fprintf(stderr, "%d\n", c);
+      paired_end_mode = 1;
       break;
     case 's':
       strand = atoi(optarg);
@@ -189,6 +268,7 @@ int main(int argc, char *argv[])
   log_info("strand:\t%d",strand);
   log_info("aligned with RUM?:\t%d", rum);
   log_info("Print header?:\t%d", ucsc_header);
+  log_info("Run in paired end mode?:\t%d", paired_end_mode);
   //unique_file = argv[3];
   //non_unique_file = argv[4];
   //rum = atoi(argv[5]);
@@ -216,12 +296,19 @@ int main(int argc, char *argv[])
   //strcat(result, file_name);
   //log_info("Name of sam file is %s.", result);
 
-
-  run_sam2cov(genome, unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
-  Genome_reset(genome);
-  run_sam2cov(genome, non_unique_file, sam_file,
-    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+  if (paired_end_mode == 1) {
+    run_sam2cov(genome, unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
+    Genome_reset(genome);
+    run_sam2cov(genome, non_unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+  } else {
+    run_sam2cov_single_end(genome, unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
+    Genome_reset(genome);
+    run_sam2cov_single_end(genome, non_unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+  }
 
 
 
