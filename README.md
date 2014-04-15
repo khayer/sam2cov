@@ -8,6 +8,7 @@ This C program creates coverage files for sam files. The sam format is specified
       Options:
         -r  Aligned with RUM? [0/1] Default: 0
         -s  Strand: 1 for fwd, 2 for rev [0/1/2] Default: 0
+        -e  Paired end mode [0/1] Default: 1
         -p  Prefix for coverage files. Default: Unique.cov, NU.cov
         -u  Print header for UCSC Genome browser? [0/1] Default: 0
         -h  This helpful message.

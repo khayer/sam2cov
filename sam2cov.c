@@ -13,13 +13,15 @@
 // run_sam2cov(genome, unique_file, sam_file,
 //  num_of_chr, chromo_lengths, chromo_names, unique_mode, rum);
 //#define VERSION "v0.0.1-beta - 9/3/13"
-#define VERSION "v0.0.2-beta - 3/20/14"
+//#define VERSION "v0.0.2-beta - 3/20/14"
+#define VERSION "v0.0.3-beta - 4/15/14"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
   printf("Options:\n" );
   printf("\t-r\tAligned with RUM? [0/1] Default: 0\n" );
   printf("\t-s\tStrand: 1 for fwd, 2 for rev [0/1/2] Default: 0\n" );
+  printf("\t-e\tPaired end mode [0/1] Default: 1\n" );
   printf("\t-p\tPrefix for coverage files. Default: Unique.cov, NU.cov\n" );
   printf("\t-u\tPrint header for UCSC Genome browser? [0/1] Default: 0\n");
   printf("\t-h\tThis helpful message.\n" );
