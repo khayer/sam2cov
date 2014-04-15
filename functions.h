@@ -26,5 +26,8 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
 void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand);
 
+void add_reads_to_cov_single(char *r1_line, Genome *genome,
+  int *chromo_lengths,char **names, int num_of_chr, int strand);
+
 
 #endif

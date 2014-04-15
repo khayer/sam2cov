@@ -73,7 +73,7 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
         splitted_line = strtok(ptr,"\t");
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-          add_reads_to_cov(line,NULL,genome,chromo_lengths,
+          add_reads_to_cov_single(line,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       } else if (entry != NULL) {
@@ -84,7 +84,7 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           //fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,NULL,genome,chromo_lengths,
+          add_reads_to_cov_single(line,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
   int errflg = 0;
   char *prefix;
   prefix = "";
-  while ((c = getopt(argc, argv, "euv:hrs:p:")) != -1) {
+  while ((c = getopt(argc, argv, "e:uv:hrs:p:")) != -1) {
     switch(c) {
     case 'h':
       errflg++;
@@ -218,8 +218,8 @@ int main(int argc, char *argv[])
       ucsc_header = 1;
       break;
     case 'e':
-      //fprintf(stderr, "%d\n", c);
-      paired_end_mode = 1;
+      fprintf(stderr, "%d\n", c);
+      paired_end_mode = atoi(optarg);
       break;
     case 's':
       strand = atoi(optarg);
