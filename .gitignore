@@ -1,3 +1,6 @@
+# My files
+*.cov
+
 # Object files
 *.o
 

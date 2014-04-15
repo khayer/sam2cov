@@ -36,3 +36,9 @@ Note: To create the *fa.fai* use `samtools faidx danRer7.fa`. Samtools can be do
 * Sam files produced by other aligners than [STAR](https://code.google.com/p/rna-star/) and [RUM](http://cbil.upenn.edu/RUM/) are currently not supported.
 * Sam files have to be sorted by sequence name.
 * Read pairs can't be separated. This is especially important for multi-mappers.
+
+## troubleshoot
+
+* Add -std=gnu99 to the makefile if you see this bug:
+
+> sam2cov.c:103: warning: implicit declaration of function ‘getopt’

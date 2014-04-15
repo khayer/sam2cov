@@ -24,7 +24,10 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array);
 void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_array);
 
 void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
-  int *chromo_lengths,char **names, int num_of_chr);
+  int *chromo_lengths,char **names, int num_of_chr, int strand);
+
+void add_reads_to_cov_single(char *r1_line, Genome *genome,
+  int *chromo_lengths,char **names, int num_of_chr, int strand);
 
 
 #endif
