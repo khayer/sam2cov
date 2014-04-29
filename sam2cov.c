@@ -14,7 +14,8 @@
 //  num_of_chr, chromo_lengths, chromo_names, unique_mode, rum);
 //#define VERSION "v0.0.1-beta - 9/3/13"
 //#define VERSION "v0.0.2-beta - 3/20/14"
-#define VERSION "v0.0.3-beta - 4/15/14"
+//#define VERSION "v0.0.3-beta - 4/15/14"
+#define VERSION "v0.0.4-beta - 4/29/14"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
@@ -24,7 +25,7 @@ void usage() {
   printf("\t-e\tPaired end mode [0/1] Default: 1\n" );
   printf("\t-p\tPrefix for coverage files. Default: Unique.cov, NU.cov\n" );
   printf("\t-u\tPrint header for UCSC Genome browser? [0/1] Default: 0\n");
-  printf("\t-c\tAdd \"chr\" in front of location (ensembl genes)? [0/1] Default: 0\n");
+  //printf("\t-c\tAdd \"chr\" in front of location (ensembl genes)? [0/1] Default: 0\n");
   printf("\t-h\tThis helpful message.\n" );
   printf("\t-v\tPrint Version.\n" );
   exit(1);
@@ -39,8 +40,7 @@ int StartsWith(const char *a, const char *b)
 
 void run_sam2cov_single_end(Genome *genome, char *out_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
-  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header,
-  int add_chr) {
+  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
 
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
@@ -106,28 +106,14 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
   }
   for (int i = 0; i < num_of_chr; ++i)
   {
-    if (add_chr == 1) {
-      char *old_name = malloc(MAX_STRING_LENGTH);
-      strcpy(old_name,genome->chromosomes[i]->name);
-      char *new_name = malloc(MAX_STRING_LENGTH);
-      new_name = "BLA";
-      Chromosome_update_name(genome->chromosomes[i],new_name);
-      free(new_name);
-      Chromosome_print_to_file(genome->chromosomes[i], fp);
-      Chromosome_update_name(genome->chromosomes[i],old_name);
-      free(old_name);
-    } else {
-      Chromosome_print_to_file(genome->chromosomes[i], fp);
-    }
-
+    Chromosome_print_to_file(genome->chromosomes[i], fp);
   }
   fclose(fp);
 }
 
 void run_sam2cov(Genome *genome, char *out_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
-  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header,
-  int add_chr) {
+  char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
 
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
@@ -210,13 +196,13 @@ int main(int argc, char *argv[])
   int rum = 0;
   int strand = 0;
   int ucsc_header = 0;
-  int add_chr = 0;
+  //int add_chr = 0;
 
   int c;
   int errflg = 0;
   char *prefix;
   prefix = "";
-  while ((c = getopt(argc, argv, "c:e:uv:hrs:p:")) != -1) {
+  while ((c = getopt(argc, argv, "e:uv:hrs:p:")) != -1) {
     switch(c) {
     case 'h':
       errflg++;
@@ -240,10 +226,10 @@ int main(int argc, char *argv[])
       fprintf(stderr, "%d\n", c);
       paired_end_mode = atoi(optarg);
       break;
-    case 'c':
-      fprintf(stderr, "%d\n", c);
-      add_chr = atoi(optarg);
-      break;
+    //case 'c':
+    //  fprintf(stderr, "%d\n", c);
+    //  add_chr = atoi(optarg);
+    //  break;
     case 's':
       strand = atoi(optarg);
       break;
@@ -292,7 +278,7 @@ int main(int argc, char *argv[])
   log_info("aligned with RUM?:\t%d", rum);
   log_info("Print header?:\t%d", ucsc_header);
   log_info("Run in paired end mode?:\t%d", paired_end_mode);
-  log_info("Add chromosome for ensemble?:\t%d", add_chr);
+  //log_info("Add chromosome for ensemble?:\t%d", add_chr);
   //unique_file = argv[3];
   //non_unique_file = argv[4];
   //rum = atoi(argv[5]);
@@ -323,24 +309,17 @@ int main(int argc, char *argv[])
 
   if (paired_end_mode == 1) {
     run_sam2cov(genome, unique_file, sam_file,
-      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header,
-      add_chr);
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
     Genome_reset(genome);
     run_sam2cov(genome, non_unique_file, sam_file,
-      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header,
-      add_chr);
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
   } else {
     run_sam2cov_single_end(genome, unique_file, sam_file,
-      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header,
-      add_chr);
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
     Genome_reset(genome);
     run_sam2cov_single_end(genome, non_unique_file, sam_file,
-      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header, add_chr);
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
   }
-
-
-
-
 
   Genome_destroy(genome);
   for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
