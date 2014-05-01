@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
       ucsc_header = 1;
       break;
     case 'e':
-      fprintf(stderr, "%d\n", c);
+      //fprintf(stderr, "%d\n", c);
       paired_end_mode = atoi(optarg);
       break;
     //case 'c':
