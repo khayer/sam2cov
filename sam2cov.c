@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
   int errflg = 0;
   char *prefix;
   prefix = "";
-  while ((c = getopt(argc, argv, "e:uv:hrs:p:")) != -1) {
+  while ((c = getopt(argc, argv, "e:uvhrs:p:")) != -1) {
     switch(c) {
     case 'h':
       errflg++;
