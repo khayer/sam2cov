@@ -480,8 +480,8 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     case 1:
       //log_info("strand is 1");
       // Only forward reads:
-      if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
-        (entry_r2->strand == 1 && entry_r2->first == 1)) {
+      if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
+        (entry_r2->strand == 0 && entry_r2->first == 1)) {
         if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
           int *combinded_ranges;
           combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
@@ -496,8 +496,8 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     case 2:
       //log_info("strand is 2");
       // Only reverse reads
-      if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
-        (entry_r2->strand == 0 && entry_r2->first == 1)) {
+      if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
+        (entry_r2->strand == 1 && entry_r2->first == 1)) {
         if (strcmp(entry_r1->chr_name,entry_r2->chr_name) == 0){
           int *combinded_ranges;
           combinded_ranges = combine_ranges(ranges_r1,ranges_r2,size_of_array);
@@ -546,12 +546,22 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
     case 1:
       //log_info("strand is 1");
       // Only forward reads:
-      update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+      if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
+          (entry_r1->strand == 1 && entry_r1->first == 0)) {
+        //log_info("ONLY");
+        update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+
+      }
       break;
     case 2:
       //log_info("strand is 2");
       // Only reverse reads
-      update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+      if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
+          (entry_r1->strand == 0 && entry_r1->first == 0)) {
+        //log_info("YEAH");
+        update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+
+      }
       break;
   }
 
