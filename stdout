@@ -3,10 +3,10 @@
 [INFO] (sam2cov.c:274:main) sam_file:	test.sam
 [INFO] (sam2cov.c:275:main) unique_file:	bothUnique.cov
 [INFO] (sam2cov.c:276:main) non_unique_file:	bothNU.cov
-[INFO] (sam2cov.c:277:main) strand:	2
+[INFO] (sam2cov.c:277:main) strand:	0
 [INFO] (sam2cov.c:278:main) aligned with RUM?:	0
 [INFO] (sam2cov.c:279:main) Print header?:	0
-[INFO] (sam2cov.c:280:main) Run in paired end mode?:	1
+[INFO] (sam2cov.c:280:main) Run in paired end mode?:	0
 [INFO] (functions.c:120:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
 [INFO] (functions.c:135:get_names) Name of chromosome is Zv9_scaffold3453.
 [INFO] (functions.c:137:get_names) Length of chromosome is 203829.

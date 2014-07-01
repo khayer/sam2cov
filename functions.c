@@ -477,7 +477,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
         update_coverage(ranges_r2,entry_r2,genome,size_of_array);
       }
       break;
-    case 1:
+    case 2:
       //log_info("strand is 1");
       // Only forward reads:
       if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
@@ -493,7 +493,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
         }
       }
       break;
-    case 2:
+    case 1:
       //log_info("strand is 2");
       // Only reverse reads
       if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
@@ -543,7 +543,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
       // No strand specified
       update_coverage(ranges_r1,entry_r1,genome,size_of_array);
       break;
-    case 1:
+    case 2:
       //log_info("strand is 1");
       // Only forward reads:
       if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
@@ -553,7 +553,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
 
       }
       break;
-    case 2:
+    case 1:
       //log_info("strand is 2");
       // Only reverse reads
       if ((entry_r1->strand == 1 && entry_r1->first == 1) ||

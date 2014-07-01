@@ -21,7 +21,8 @@ void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
   printf("Options:\n" );
   printf("\t-r\tAligned with RUM? [0/1] Default: 0\n" );
-  printf("\t-s\tStrand: 1 for fwd, 2 for rev [0/1/2] Default: 0\n" );
+  printf("\t-s\tStrand: 1 for fwd, 2 for rev [0/1/2]. Default: 0\n" );
+  printf("\t\tPlease note: Reads are assumed to be in Illumina R2-R1 orientation!\n" );
   printf("\t-e\tPaired end mode [0/1] Default: 1\n" );
   printf("\t-p\tPrefix for coverage files. Default: Unique.cov, NU.cov\n" );
   printf("\t-u\tPrint header for UCSC Genome browser? [0/1] Default: 0\n");
