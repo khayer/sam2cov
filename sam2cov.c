@@ -139,6 +139,7 @@ void run_sam2cov(Genome *genome, char *out_file,
     Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
+    //fprintf(stderr, "LINE -%s requires an operand\n", line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
     if (!StartsWith(line,"@")) {
       //exit(1);
