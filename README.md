@@ -16,7 +16,7 @@ This C program creates coverage files for sam files. The sam format is specified
 
 ### Example
 
-* For a sam file produced by [STAR](https://code.google.com/p/rna-star/):
+* For a sam file produced by [STAR](https://code.google.com/p/rna-star/) or [GSNAP](http://research-pub.gene.com/gmap/):
 
     `sam2cov -p coverage_ danRer7.fa.fai test.sam`
 
@@ -40,7 +40,7 @@ Note: To create the *fa.fai* use `samtools faidx danRer7.fa`. Samtools can be do
 ## Limitations
 
 * Reads in sam file can't be longer than 5,000 characters.
-* Sam files produced by other aligners than [STAR](https://code.google.com/p/rna-star/) and [RUM](http://cbil.upenn.edu/RUM/) are currently not supported.
+* Sam files produced by other aligners than [STAR](https://code.google.com/p/rna-star/), [GSNAP](http://research-pub.gene.com/gmap/) and [RUM](http://cbil.upenn.edu/RUM/) are currently not supported.
 * Sam files have to be sorted by sequence name.
 * Read pairs can't be separated. This is especially important for multi-mappers.
 
