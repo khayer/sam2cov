@@ -1,3 +1,25 @@
+Beta Release 0.0.5 (v0.0.5-beta - 3/30/15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Supports GSNAP now
+
+Beta Release 0.0.4 (v0.0.4-beta - 4/29/14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Fixed issues with logging
+
+Beta Release 0.0.3 (v0.0.3-beta - 4/15/14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Added single end mode
+
+Beta Release 0.0.2 (v0.0.2-beta - 3/20/14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Fixed compiling bugs
+- Fixed ERROR messages
+- Added -u flag to include header UCSC Genome Browser
+
 Beta Release 0.0.1 (v0.0.1-beta - 9/3/13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
