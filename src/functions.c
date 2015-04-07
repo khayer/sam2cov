@@ -329,6 +329,8 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
   for (int i=0; i<size_of_array; i++) free(numbers[i]);
   for (int i=0; i<size_of_array; i++) free(letters[i]);
 
+  //int *l = a;
+  //free(a);
   return a;
 }
 

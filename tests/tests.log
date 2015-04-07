@@ -1,9 +1,0 @@
-DEBUG tests/first_tests.c:99:main: ----- RUNNING: ./tests/first_tests
-DEBUG tests/first_tests.c:91:all_tests: 
------ test_dlopen
-DEBUG tests/first_tests.c:92:all_tests: 
------ test_functions
-DEBUG tests/first_tests.c:93:all_tests: 
------ test_failures
-DEBUG tests/first_tests.c:94:all_tests: 
------ test_dlclose

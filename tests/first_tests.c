@@ -2,6 +2,8 @@
 #include <dlfcn.h>
 //#include "../src/functions.h"
 
+#define MAX_STRING_LENGTH 200
+
 typedef int (*lib_function)(const char *data);
 
 char *lib_file = "build/libsam2cov.so";
@@ -85,14 +87,36 @@ char *test_dlclose()
     return NULL;
 }
 
+char *test_chromosome()
+{
+    char *fai_file = "tests/danRer7_s.fa.fai";
+    mu_assert(check_function("number_of_chromosomes", fai_file, 19), "number_of_chromosomes failed");
+    int num_of_chr = 19;
+    int chromo_lengths[num_of_chr];
+    char* chromo_names[num_of_chr];
+    for (int i=0; i<num_of_chr; ++i)
+        chromo_names[i] = malloc(MAX_STRING_LENGTH);
+    typedef void (*lib_function)(char *file_name, int number_of_chromosomes, int *chromo_lengths,char **names);
+    lib_function func = dlsym(lib, "get_names");
+    check(func != NULL, "Did not find %s function in the library %s: %s", "get_names", lib_file, dlerror());
+
+    func(fai_file, num_of_chr,chromo_lengths,chromo_names);
+    check(chromo_names != NULL, "Function %s return %s for data: %s", "get_names", chromo_names[1], fai_file);
+    mu_assert(strcmp(chromo_names[1],"Zv9_scaffold3454")==0, "get_names failed!");
+    return NULL;
+error:
+    return 0;
+
+}
+
 char *all_tests() {
     mu_suite_start();
 
     mu_run_test(test_dlopen);
     mu_run_test(test_functions);
     mu_run_test(test_failures);
+    mu_run_test(test_chromosome)
     mu_run_test(test_dlclose);
-
     return NULL;
 }
 

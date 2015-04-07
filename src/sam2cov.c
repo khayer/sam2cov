@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 {
   char *fai_file=malloc(5000);
   char *sam_file=malloc(5000);
-  char *unique_file= malloc(5000);
+  char *unique_file=malloc(5000);
   char *non_unique_file=malloc(5000);
   int paired_end_mode = 1;
   int unique_mode = 1;
