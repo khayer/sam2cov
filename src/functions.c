@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define MAX_STRING_LENGTH 200
 
@@ -567,5 +568,44 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
 
   free(ranges_r1);
   Entry_destroy(entry_r1);
+}
+
+int fail_on_purpose(const char *msg)
+{
+    return 1;
+}
+
+char* uppercase(char *msg)
+{
+    int i = 0;
+    char *a = malloc(strlen(msg)+1);
+    strcpy(a, msg);
+    // BUG: \0 termination problems
+    for(i = 0; msg[i] != '\0'; i++) {
+        //printf("%c", toupper(msg[i]));
+        a[i] = toupper(msg[i]);
+    }
+
+    printf("\n");
+    char *l = a;
+    free(a);
+    return l;
+}
+
+char* lowercase(char *msg)
+{
+    int i = 0;
+    char *a = malloc(strlen(msg)+1);
+    strcpy(a, msg);
+    // BUG: \0 termination problems
+    for(i = 0; msg[i] != '\0'; i++) {
+        //printf("%c", tolower(msg[i]));
+        a[i] = tolower(msg[i]);
+    }
+
+    printf("\n");
+    char *l = a;
+    free(a);
+    return l;
 }
 

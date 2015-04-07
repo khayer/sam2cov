@@ -1,5 +1,6 @@
 SHELL   = /bin/sh
-CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99
+CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99 $(OPTFLAGS)
+LIBS=-ldl $(OPTLIBS)
 CC 	    = cc
 #DEPS = entry.h chromosome.h genome.h functions.h seatest.h
 #OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
@@ -16,7 +17,7 @@ TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) tests binarie
+all: $(TARGET) $(SO_TARGET)  binarie tests
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all

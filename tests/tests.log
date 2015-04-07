@@ -1,36 +1,9 @@
-DEBUG tests/first_tests.c:67:main: ----- RUNNING: ./tests/first_tests
-DEBUG tests/first_tests.c:59:all_tests: 
+DEBUG tests/first_tests.c:99:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:91:all_tests: 
 ----- test_dlopen
-DEBUG tests/first_tests.c:60:all_tests: 
+DEBUG tests/first_tests.c:92:all_tests: 
 ----- test_functions
-DEBUG tests/first_tests.c:61:all_tests: 
+DEBUG tests/first_tests.c:93:all_tests: 
 ----- test_failures
-[ERROR] (tests/first_tests.c:12:check_function errno: None) Did not find fail_on_purpose function in the library build/libsam2cov.so: dlsym(0x103400ac0, fail_on_purpose): symbol not found
-[ERROR] (tests/first_tests.c:43:test_failures errno: None) fail_on_purpose should fail.
-DEBUG tests/first_tests.c:67:main: ----- RUNNING: ./tests/first_tests
-DEBUG tests/first_tests.c:59:all_tests: 
------ test_dlopen
-DEBUG tests/first_tests.c:60:all_tests: 
------ test_functions
-DEBUG tests/first_tests.c:61:all_tests: 
------ test_failures
-[ERROR] (tests/first_tests.c:12:check_function errno: None) Did not find fail_on_purpose function in the library build/libsam2cov.so: dlsym(0x107400ac0, fail_on_purpose): symbol not found
-[ERROR] (tests/first_tests.c:43:test_failures errno: None) fail_on_purpose should fail.
-DEBUG tests/first_tests.c:67:main: ----- RUNNING: ./tests/first_tests
-DEBUG tests/first_tests.c:59:all_tests: 
------ test_dlopen
-DEBUG tests/first_tests.c:60:all_tests: 
------ test_functions
-DEBUG tests/first_tests.c:61:all_tests: 
------ test_failures
-DEBUG tests/first_tests.c:62:all_tests: 
+DEBUG tests/first_tests.c:94:all_tests: 
 ----- test_dlclose
-DEBUG tests/first_tests.c:67:main: ----- RUNNING: ./tests/first_tests
-DEBUG tests/first_tests.c:59:all_tests: 
------ test_dlopen
-DEBUG tests/first_tests.c:60:all_tests: 
------ test_functions
-DEBUG tests/first_tests.c:61:all_tests: 
------ test_failures
-[ERROR] (tests/first_tests.c:12:check_function errno: None) Did not find fail_on_purpose function in the library build/libsam2cov.so: dlsym(0x10dc00ac0, fail_on_purpose): symbol not found
-[ERROR] (tests/first_tests.c:43:test_failures errno: None) fail_on_purpose should fail.

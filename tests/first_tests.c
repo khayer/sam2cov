@@ -1,8 +1,9 @@
 #include "minunit.h"
 #include <dlfcn.h>
-#include "../src/functions.h"
+//#include "../src/functions.h"
 
 typedef int (*lib_function)(const char *data);
+
 char *lib_file = "build/libsam2cov.so";
 void *lib = NULL;
 
@@ -19,6 +20,36 @@ error:
     return 0;
 }
 
+typedef int (*lib_function3)(int input);
+
+int check_function3(const char *func_to_run, int input, int expected)
+{
+    lib_function3 func = dlsym(lib, func_to_run);
+    check(func != NULL, "Did not find %s function in the library %s: %s", func_to_run, lib_file, dlerror());
+
+    int rc = func(input);
+    check(rc == expected, "Function %s return %d for data: %d instead of %d", func_to_run, rc, input, expected);
+
+    return 1;
+error:
+    return 0;
+}
+
+typedef char* (*lib_function2)(char *data);
+int check_function2(const char *func_to_run, char *data, char *expected)
+{
+    lib_function2 func = dlsym(lib, func_to_run);
+
+    check(func != NULL, "Did not find %s function in the library %s: %s", func_to_run, lib_file, dlerror());
+    //printf("%s\n", expected);
+    char* rc = func(data);
+    check(strcmp(rc,expected) == 0, "Function %s return %s for data: %s, instead of %s", func_to_run, rc, data, expected);
+
+    return 1;
+error:
+    return 0;
+}
+
 char *test_dlopen()
 {
     lib = dlopen(lib_file, RTLD_NOW);
@@ -29,11 +60,12 @@ char *test_dlopen()
 
 char *test_functions()
 {
-    int k = get_strand(83);
+    //int k = get_strand(83);
     //char *filename = "danRer7_s.fa.fai";
-    mu_assert(k == 1, "error, k != 1" );
-    //mu_assert(check_function("usage", "Hello", 0), "uppercase failed.");
-    //mu_assert(check_function("lowercase", "Hello", 0), "lowercase failed.");
+    //mu_assert(k == 1, "error, k != 1" );
+    mu_assert(check_function3("get_strand", 83, 1), "get_strand failed.");
+    mu_assert(check_function2("uppercase", "Hello", "HELLO"), "uppercase failed.");
+    mu_assert(check_function2("lowercase", "Hello", "hello"), "lowercase failed.");
 
     return NULL;
 }
