@@ -1,6 +1,6 @@
 SHELL   = /bin/sh
 #CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99 $(OPTFLAGS)
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
+CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS) -std=gnu99
 LIBS=-ldl $(OPTLIBS)
 #CC 	    = cc
 #DEPS = entry.h chromosome.h genome.h functions.h seatest.h

@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
     chromo_names[i] = malloc(5000);
   get_names(fai_file, num_of_chr,chromo_lengths,chromo_names);
 
-  //Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
+  Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
 
   //Chromosome_update(genome->chromosomes[2],2);
   //Chromosome_update(genome->chromosomes[0],2);
@@ -324,42 +324,42 @@ int main(int argc, char *argv[])
 
 
 
-  //int res = 0;
-  //if (paired_end_mode == 1) {
-  //  res = run_sam2cov(genome, unique_file, sam_file,
-  //    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
-  //  if (res == -1)
-  //  {
-  //    log_err("There was an error");
-  //    Genome_destroy(genome);
-  //    for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
-//
-  //    free(unique_file); free(non_unique_file);
-  //    free(fai_file); free(sam_file);
-  //    exit(1);
-  //  }
-  //  Genome_reset(genome);
-  //  res = run_sam2cov(genome, non_unique_file, sam_file,
-  //    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
-  //  if (res == -1)
-  //  {
-  //    log_err("There was an error");
-  //    Genome_destroy(genome);
-  //    for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
-//
-  //    free(unique_file); free(non_unique_file);
-  //    free(fai_file); free(sam_file);
-  //    exit(1);
-  //  }
-  //} else {
-  //  run_sam2cov_single_end(genome, unique_file, sam_file,
-  //    num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
-  //  Genome_reset(genome);
-  //  run_sam2cov_single_end(genome, non_unique_file, sam_file,
-  //    num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
-  //}
+  int res = 0;
+  if (paired_end_mode == 1) {
+    res = run_sam2cov(genome, unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
+    if (res == -1)
+    {
+      log_err("There was an error");
+      Genome_destroy(genome);
+      for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
 
-  //Genome_destroy(genome);
+      free(unique_file); free(non_unique_file);
+      free(fai_file); free(sam_file);
+      exit(1);
+    }
+    Genome_reset(genome);
+    res = run_sam2cov(genome, non_unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+    if (res == -1)
+    {
+      log_err("There was an error");
+      Genome_destroy(genome);
+      for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
+
+      free(unique_file); free(non_unique_file);
+      free(fai_file); free(sam_file);
+      exit(1);
+    }
+  } else {
+    run_sam2cov_single_end(genome, unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
+    Genome_reset(genome);
+    run_sam2cov_single_end(genome, non_unique_file, sam_file,
+      num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+  }
+
+  Genome_destroy(genome);
   log_info("Number of chromosomes %d", num_of_chr);
   for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
 
