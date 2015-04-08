@@ -112,7 +112,7 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
   fclose(fp);
 }
 
-void run_sam2cov(Genome *genome, char *out_file,
+int run_sam2cov(Genome *genome, char *out_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
   char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header) {
 
@@ -122,6 +122,7 @@ void run_sam2cov(Genome *genome, char *out_file,
   char line_mate[5000];
   char *sep = "\t";
   char *splitted_line;
+  int res = 0;
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
     //char *dummy = malloc(strlen("@"));
@@ -140,10 +141,12 @@ void run_sam2cov(Genome *genome, char *out_file,
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
+
     if (!StartsWith(line,"@")) {
       //exit(1);
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
+
       if (rum != 1 && entry!=NULL) {
         sep = "NH:i:";
         char *ptr;
@@ -152,7 +155,8 @@ void run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          Entry_destroy(entry);
+          res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       } else if (entry != NULL) {
@@ -163,13 +167,19 @@ void run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          Entry_destroy(entry);
+          res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }
     }
     //free(dummy);
     free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    if (res == -1)
+    {
+      log_err("Something went wrong with entry %s", line);
+      return -1;
+    }
   }
   assert(file_handler);
   fclose(file_handler);
@@ -184,6 +194,7 @@ void run_sam2cov(Genome *genome, char *out_file,
     Chromosome_print_to_file(genome->chromosomes[i], fp);
   }
   fclose(fp);
+  return 0;
 }
 
 int main(int argc, char *argv[])
@@ -288,11 +299,13 @@ int main(int argc, char *argv[])
   int num_of_chr = number_of_chromosomes(fai_file);
   int chromo_lengths[num_of_chr];
   char* chromo_names[num_of_chr];
+  log_info("Number of chromosomes %d", num_of_chr);
   for (int i=0; i<num_of_chr; ++i)
-    chromo_names[i] = malloc(MAX_STRING_LENGTH);
+    //chromo_names[i] = malloc(MAX_STRING_LENGTH);
+    chromo_names[i] = malloc(5000);
   get_names(fai_file, num_of_chr,chromo_lengths,chromo_names);
 
-  Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
+  //Genome *genome = Genome_create(num_of_chr,chromo_names,chromo_lengths);
 
   //Chromosome_update(genome->chromosomes[2],2);
   //Chromosome_update(genome->chromosomes[0],2);
@@ -307,13 +320,34 @@ int main(int argc, char *argv[])
   //strcpy(result, cwd);
   //strcat(result, file_name);
   //log_info("Name of sam file is %s.", result);
-
+  /*
+  int res = 0;
   if (paired_end_mode == 1) {
-    run_sam2cov(genome, unique_file, sam_file,
+    res = run_sam2cov(genome, unique_file, sam_file,
       num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
+    if (res == -1)
+    {
+      log_err("There was an error");
+      Genome_destroy(genome);
+      for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
+
+      free(unique_file); free(non_unique_file);
+      free(fai_file); free(sam_file);
+      exit(1);
+    }
     Genome_reset(genome);
-    run_sam2cov(genome, non_unique_file, sam_file,
+    res = run_sam2cov(genome, non_unique_file, sam_file,
       num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
+    if (res == -1)
+    {
+      log_err("There was an error");
+      Genome_destroy(genome);
+      for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
+
+      free(unique_file); free(non_unique_file);
+      free(fai_file); free(sam_file);
+      exit(1);
+    }
   } else {
     run_sam2cov_single_end(genome, unique_file, sam_file,
       num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, ucsc_header);
@@ -321,8 +355,9 @@ int main(int argc, char *argv[])
     run_sam2cov_single_end(genome, non_unique_file, sam_file,
       num_of_chr, chromo_lengths, chromo_names, 0, rum, strand, ucsc_header);
   }
-
-  Genome_destroy(genome);
+*/
+  //Genome_destroy(genome);
+  log_info("Number of chromosomes %d", num_of_chr);
   for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
 
   free(unique_file); free(non_unique_file);

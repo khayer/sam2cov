@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
 
@@ -125,7 +126,7 @@ int number_of_chromosomes(char *file_name) {
 void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,char **names) {
   FILE *file_handler = fopen(file_name,"r");
   assert(file_handler);
-  char line[90];
+  char line[5000];
   int i = 0;
   char *sep = "\t";
   char *splitted_line;
@@ -335,6 +336,10 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
 }
 
 int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
+  log_info("COMBINE RANGES");
+  log_info("ranges_r1 %d", ranges_r1[0]);
+  log_info("ranges_r2 %d", ranges_r2[0]);
+  log_info("size_of_array %d", size_of_array);
   int *a = malloc(size_of_array*sizeof(int));
   for (int l = 0; l < size_of_array; l++) {
     a[l] = 0;
@@ -436,7 +441,7 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
   free(starts); free(stops);
 }
 
-void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand){
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
@@ -460,11 +465,34 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   }
 
 
-
+  log_info("r1_line %s", r1_line);
   int *ranges_r1;
   ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
   int *ranges_r2;
   ranges_r2 = interpret_cigar_string(entry_r2,size_of_array);
+  //log_info("AFTER interpret_cigar_string");
+  //log_info("ranges_r1 %d", ranges_r1[0]);
+  //log_info("ranges_r2 %d", ranges_r2[0]);
+  if (ranges_r1[0] == -1)
+  {
+    log_err("There are issues with the CIGAR string for \"%s\"",r1_line );
+    log_err("Ending all processes");
+    free(ranges_r2);
+    free(ranges_r1);
+    Entry_destroy(entry_r1);
+    Entry_destroy(entry_r2);
+    return -1;
+  }
+  if (ranges_r2[0] == -1)
+  {
+    log_err("There are issues with the CIGAR string for \"%s\"",r2_line );
+    log_err("Ending all processes");
+    free(ranges_r2);
+    free(ranges_r1);
+    Entry_destroy(entry_r1);
+    Entry_destroy(entry_r2);
+    return -1;
+  }
 
   switch(strand) {
     case 0:
@@ -518,6 +546,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   free(ranges_r1);
   Entry_destroy(entry_r1);
   Entry_destroy(entry_r2);
+  return 0;
 }
 
 void add_reads_to_cov_single(char *r1_line, Genome *genome,

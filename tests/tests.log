@@ -1,0 +1,300 @@
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
+DEBUG tests/first_tests.c:123:main: ----- RUNNING: ./tests/first_tests
+DEBUG tests/first_tests.c:115:all_tests: 
+----- test_dlopen
+DEBUG tests/first_tests.c:116:all_tests: 
+----- test_functions
+DEBUG tests/first_tests.c:117:all_tests: 
+----- test_failures
+DEBUG tests/first_tests.c:118:all_tests: 
+----- test_chromosome
+[INFO] (src/functions.c:122:number_of_chromosomes) There are 19 scaffolds/chromosomes in your file.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3453.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 203829.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3454.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 91011.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3455.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 543129.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3456.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 253302.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3457.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 101278.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3458.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 645357.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3459.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 417943.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3460.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 146079.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chrM.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 302948.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3462.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 224830.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3463.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 664565.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3464.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 182716.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is Zv9_scaffold3465.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 500345.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr7.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1152860.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr2.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 998856.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr5.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1542677.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr6.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1629828.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr16.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1776004.
+[INFO] (src/functions.c:137:get_names) Name of chromosome is chr11.
+[INFO] (src/functions.c:139:get_names) Length of chromosome is 1162930.
+DEBUG tests/first_tests.c:119:all_tests: 
+----- test_dlclose
