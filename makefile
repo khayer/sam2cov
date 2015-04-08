@@ -1,6 +1,6 @@
 SHELL   = /bin/sh
 CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99 $(OPTFLAGS)
-LIBS=-ldl $(OPTLIBS)
+LDLIBS=-ldl $(OPTLIBS)
 CC 	    = cc
 #DEPS = entry.h chromosome.h genome.h functions.h seatest.h
 #OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
