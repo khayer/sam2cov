@@ -12,13 +12,12 @@ TARGET=build/libsam2cov.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 PROG= sam2cov
 
-TEST_SRC=$(wildcard tests/*.c )
-TESTS=$(patsubst %.c,%,$(TEST_SRC))
+
 
 
 # The Target Build
 all: $(TARGET) $(SO_TARGET) binarie
-test: $(TARGET) tests
+test: tests
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
@@ -60,6 +59,8 @@ clean:
 
 # The Unit Tests
 .PHONY: tests
+TEST_SRC=$(wildcard tests/*.c)
+TESTS=$(patsubst %.c,%,$(TEST_SRC))
 tests: CFLAGS += $(TARGET)
 tests: $(TESTS)
 	sh ./tests/runtests.sh
