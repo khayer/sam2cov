@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
 
