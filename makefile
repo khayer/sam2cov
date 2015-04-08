@@ -17,7 +17,7 @@ TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET)  binarie tests
+all: $(TARGET) $(SO_TARGET)  tests binarie
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
