@@ -233,7 +233,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    Entry *entry = Entry_create(ptr2,read_name, strand, first, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(line,read_name, strand, first, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }
