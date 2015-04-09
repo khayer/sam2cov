@@ -1,13 +1,16 @@
 SHELL   = /bin/sh
 #CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99 $(OPTFLAGS)
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS) -std=gnu99
+CFLAGS=-g -O2 -Wall -Wextra -Isrc -DNDEBUG $(OPTFLAGS) -std=gnu99
 LIBS=-ldl $(OPTLIBS)
-#CC 	    = cc
+CC 	    = gcc-4.9
 #DEPS = entry.h chromosome.h genome.h functions.h seatest.h
 #OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
+
+SOURCES2=$(wildcard src/**/*.c)
+OBJECTS2=$(patsubst %.c,%.o,$(SOURCES))
 
 TARGET=build/libsam2cov.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))

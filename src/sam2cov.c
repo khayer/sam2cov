@@ -1,8 +1,8 @@
-#include "dbg.h"
-#include "entry.h"
-#include "chromosome.h"
-#include "genome.h"
-#include "functions.h"
+#include "lib/dbg.h"
+#include "lib/entry.h"
+#include "lib/chromosome.h"
+#include "lib/genome.h"
+#include "lib/functions.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
