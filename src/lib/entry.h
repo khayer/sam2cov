@@ -18,6 +18,7 @@ struct EntryStruct;
 
 typedef struct EntryStruct
 {
+  char *auxilary;
   char *read_name;
   int strand;
   int first;
@@ -27,7 +28,7 @@ typedef struct EntryStruct
   char *cigar_string;
 } Entry;
 
-Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar);
+Entry *Entry_create(char *auxilary,char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar);
 void Entry_destroy(Entry *entry);
 
 #endif

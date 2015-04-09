@@ -172,6 +172,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
+  char *ptr2;
   char read_name[500];
   //char *read_name = malloc(1000);
   strcpy(read_name,"");
@@ -183,6 +184,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   char cigar[500];
   strcpy(cigar,"");
   ptr = strtok(line,sep);
+  ptr2 = strtok(line,sep);
   while (ptr != NULL) {
     switch(i) {
       case 0:
@@ -209,6 +211,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     i++;
   }
   i = 0;
+  //free(ptr2);
   //free(ptr);
   //free(sep);
   int current_chr_number = 123456;
@@ -230,7 +233,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    Entry *entry = Entry_create(read_name, strand, first, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(ptr2,read_name, strand, first, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }

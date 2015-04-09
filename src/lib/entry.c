@@ -5,10 +5,11 @@
 #include <assert.h>
 #include <string.h>
 
-Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar){
+Entry *Entry_create(char *auxilary,char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar){
   Entry *entry = malloc(sizeof(Entry));
   assert(entry != NULL);
 
+  entry->auxilary = auxilary;
   entry->read_name = read_name;
   entry->strand = strand;
   entry->first = first;
@@ -23,6 +24,7 @@ Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int 
 void Entry_destroy(Entry *entry) {
   assert(entry != NULL);
 
+  free(entry->auxilary);
   free(entry->read_name);
   free(entry->chr_name);
   free(entry->cigar_string);
