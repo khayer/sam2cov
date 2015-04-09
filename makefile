@@ -20,7 +20,8 @@ PROG= sam2cov
 
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) binarie
+
+all: $(TARGET) $(SO_TARGET) binarie tests
 test: tests
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
@@ -65,7 +66,7 @@ clean:
 .PHONY: tests
 TEST_SRC=$(wildcard tests/*.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
-tests: CFLAGS += $(TARGET)
+#tests: CFLAGS += $(TARGET)
 tests: $(TESTS)
 	sh ./tests/runtests.sh
 
