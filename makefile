@@ -9,8 +9,8 @@ LDLIBS=-ldl $(OPTLIBS)
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 
-SOURCES2=$(wildcard src/**/*.c)
-OBJECTS2=$(patsubst %.c,%.o,$(SOURCES))
+#SOURCES2=$(wildcard src/**/*.c)
+#OBJECTS2=$(patsubst %.c,%.o,$(SOURCES))
 
 TARGET=build/libsam2cov.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
