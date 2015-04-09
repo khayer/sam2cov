@@ -8,9 +8,6 @@ OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o seatest.o test.o
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-sam2cov: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
-
 test:
 	$(CC) -o $@ test.o seatest.o $(CFLAGS)
 
@@ -18,3 +15,12 @@ clean:
 	rm -f *.o
 	rm -f sam2cov
 	rm -f test
+
+
+
+# The Unit Tests
+.PHONY: tests
+TEST_SRC=$(wildcard *.c)
+TESTS=$(patsubst %.c,%,$(TEST_SRC))
+tests: $(TESTS)
+  sh ./runtests.sh

@@ -46,7 +46,7 @@ int check_function2(const char *func_to_run, char *data, char *expected)
     //printf("%s\n", expected);
     char* rc = func(data);
     check(strcmp(rc,expected) == 0, "Function %s return %s for data: %s, instead of %s", func_to_run, rc, data, expected);
-
+    free(rc);
     return 1;
 error:
     return 0;

@@ -618,9 +618,9 @@ char* uppercase(char *msg)
     }
 
     printf("\n");
-    char *l = a;
-    free(a);
-    return l;
+    //char *l = a;
+    //free(a);
+    return a;
 }
 
 char* lowercase(char *msg)
@@ -635,8 +635,6 @@ char* lowercase(char *msg)
     }
 
     printf("\n");
-    char *l = a;
-    free(a);
-    return l;
+    return a;
 }
 
