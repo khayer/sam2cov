@@ -103,6 +103,7 @@ char *test_chromosome()
     func(fai_file, num_of_chr,chromo_lengths,chromo_names);
     check(chromo_names != NULL, "Function %s return %s for data: %s", "get_names", chromo_names[1], fai_file);
     mu_assert(strcmp(chromo_names[1],"Zv9_scaffold3454")==0, "get_names failed!");
+    for (int i=0; i<num_of_chr; i++) free(chromo_names[i]);
     return NULL;
 error:
     return 0;
