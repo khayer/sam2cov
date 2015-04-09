@@ -2,7 +2,7 @@ SHELL   = /bin/sh
 #CFLAGS  = -Wall -g -DNDEBUG -std=c99 -std=gnu99 $(OPTFLAGS)
 CFLAGS=-g -O2 -Wall -Wextra -Isrc -DNDEBUG $(OPTFLAGS) -std=gnu99
 LDLIBS=-ldl $(OPTLIBS)
-#CC 	    = gcc-4.9
+CC 	    = gcc-4.9
 #DEPS = entry.h chromosome.h genome.h functions.h seatest.h
 #OBJ = sam2cov.o entry.o chromosome.o genome.o functions.o
 
@@ -16,6 +16,7 @@ TARGET=build/libsam2cov.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 PROG= sam2cov
 
+VALGRIND="valgrind --log-file=/tmp/valgrind-%p.log"
 
 
 
