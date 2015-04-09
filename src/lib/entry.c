@@ -23,7 +23,7 @@ Entry *Entry_create(char *auxilary,char *read_name, int strand, int first, char 
 
 void Entry_destroy(Entry *entry) {
   assert(entry != NULL);
-  log_info("Entry: %s", entry->auxilary);
+  //log_info("Entry: %s", entry->auxilary);
   free(entry->auxilary);
   free(entry->read_name);
   free(entry->chr_name);
