@@ -155,7 +155,7 @@ int run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          if (entry != NULL) Entry_destroy(entry);
+          if (entry != NULL){ Entry_destroy(entry);}
           res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
@@ -167,14 +167,14 @@ int run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          if (entry != NULL) Entry_destroy(entry);
+           if (entry != NULL){ Entry_destroy(entry);}
           res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }
     }
     //free(dummy);
-    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    free(line_cpy); if (entry != NULL){ Entry_destroy(entry);}
     if (res == -1)
     {
       log_err("Something went wrong with entry %s", line);
