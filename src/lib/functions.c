@@ -184,7 +184,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   char cigar[500];
   strcpy(cigar,"");
   ptr = strtok(line,sep);
-  ptr2 = strtok(line,sep);
+  ptr2 = &line;
   while (ptr != NULL) {
     switch(i) {
       case 0:
