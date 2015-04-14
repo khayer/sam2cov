@@ -212,7 +212,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     i++;
   }
   i = 0;
-  free(ptr2);
+  //free(ptr2);
   *ptr2 = "1";
   //free(ptr);
   //free(sep);
