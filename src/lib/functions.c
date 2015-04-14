@@ -172,10 +172,12 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
-  char *ptr2 = strdup(line);
+  //char *ptr2 = strdup(line);
+  char ptr2[10000];
   char read_name[500];
   //char *read_name = malloc(1000);
   strcpy(read_name,"");
+  strcpy(ptr2,line);
   int strand = 5;
   int first = 5;
   char chr_name[500];
@@ -213,7 +215,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   }
   i = 0;
   //free(ptr2);
-  *ptr2 = "1";
+  //*ptr2 = "1";
   //free(ptr);
   //free(sep);
   int current_chr_number = 123456;
