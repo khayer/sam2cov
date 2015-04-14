@@ -9,7 +9,7 @@ Entry *Entry_create(char *auxilary,char *read_name, int strand, int first, char 
   Entry *entry = malloc(sizeof(Entry));
   assert(entry != NULL);
 
-  entry->auxilary = strdup(auxilary);
+  entry->auxilary = auxilary;
   entry->read_name = strdup(read_name);
   entry->strand = strand;
   entry->first = first;
