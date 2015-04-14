@@ -1,5 +1,6 @@
 #include "minunit.h"
 #include <dlfcn.h>
+#include "dbg.h"
 //#include "../src/functions.h"
 
 #define MAX_STRING_LENGTH 200

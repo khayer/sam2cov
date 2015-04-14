@@ -173,7 +173,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   char *sep = "\t";
   char *ptr;
   //char *ptr2 = strdup(line);
-  char ptr2[10000];
+  char ptr2[100000];
   char read_name[500];
   //char *read_name = malloc(1000);
   strcpy(read_name,"");

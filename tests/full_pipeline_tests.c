@@ -1,5 +1,6 @@
 #include "minunit.h"
 #include <dlfcn.h>
+#include "dbg.h"
 //#include "../src/functions.h"
 
 #define MAX_STRING_LENGTH 200
@@ -66,7 +67,7 @@ char *test_functions()
     //char *filename = "danRer7_s.fa.fai";
     //mu_assert(k == 1, "error, k != 1" );
     mu_assert(check_function3("get_strand", 83, 1), "get_strand failed.");
-    mu_assert(check_function2("uppercase", "Hello", "HELLO"), "uppercase failed.");
+    mu_assert(check_function2("uppercase", "Hello", "HELLO!"), "uppercase failed.");
     mu_assert(check_function2("lowercase", "Hello", "hello"), "lowercase failed.");
 
     return NULL;
@@ -112,22 +113,24 @@ error:
 
 char *test_everything()
 {
-    char *fai_file = "tests/danRer7_s.fa.fai";
-    int num_of_chr = 19;
-    char *sam_file="tests/test.sam";
-    char *unique_file="tests/tmp_unique";
-    char *non_unique_file="tests/tmp_NU";
-    int paired_end_mode = 1;
-    int unique_mode = 1;
-    int rum = 0;
-    int strand = 2;
-    int ucsc_header = 0;
-    run_sam2cov(Genome *genome, char *out_file,
-        char *sam_file, int num_of_chr, int *chromo_lengths,
-        char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header);
+    //char *fai_file = "tests/danRer7_s.fa.fai";
+    //int num_of_chr = 19;
+    //char *sam_file="tests/test.sam";
+    //char *unique_file="tests/tmp_unique";
+    //char *non_unique_file="tests/tmp_NU";
+    //int paired_end_mode = 1;
+    //int unique_mode = 1;
+    //int rum = 0;
+    //int strand = 2;
+    //int ucsc_header = 0;
+    int status = system("valgrind -v  --leak-check=full --show-leak-kinds=all  ./bin/sam2cov  -p both2 -s 2  -e 1 tests/danRer7_s.fa.fai test.sam");
+    printf("Satus %d\n", status);
+    //check(status == 0, "Function sam2cov return %d", status);
+    mu_assert(status == 0,"test_everything failed!");
+    //run_sam2cov(Genome *genome, char *out_file,
+    //    char *sam_file, int num_of_chr, int *chromo_lengths,
+    //    char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header);
     return NULL;
-error
-    return 0;
 
 }
 
@@ -135,9 +138,9 @@ char *all_tests() {
     mu_suite_start();
 
     mu_run_test(test_dlopen);
-    mu_run_test(test_functions);
-    mu_run_test(test_failures);
-    mu_run_test(test_chromosome)
+    mu_run_test(test_everything);
+    //mu_run_test(test_functions);
+    //mu_run_test(test_chromosome)
     mu_run_test(test_dlclose);
     return NULL;
 }
