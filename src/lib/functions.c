@@ -652,6 +652,7 @@ char* lowercase(char *msg)
 }
 
 int compare_two_files(char *file1, char *file2) {
+  log_info("File 1: %s, File 2: %s",file1, file2);
   FILE *file_handler1 = fopen(file1,"r");
   FILE *file_handler2 = fopen(file2,"r");
   assert(file_handler1);
@@ -660,7 +661,9 @@ int compare_two_files(char *file1, char *file2) {
   char line2[5000];
   while (fgets( line1, sizeof(line1), file_handler1) != NULL)
   {
+    log_info("Line1 %s", line1);
     fgets(line2, sizeof(line2), file_handler2);
+    log_info("Line2 %s", line2);
     if (strcmp(line1,line2) != 0) {
       log_err("Line1: '%s' is not equal to line2: '%s'",line1,line2);
       return -1;
