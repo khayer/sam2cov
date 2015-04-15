@@ -9,7 +9,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
-#undef NDEBUG
+//#undef NDEBUG
+//#include <assert.h>
 //#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
@@ -573,7 +574,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
     for (int i=0; i<num_of_chr; i++) free(names[i]);
     exit(1);
   }
-  assert(strcmp(entry_r1->read_name) == 0);
+
 
   int size_of_array;
   //log_info("LINE R1 %s",r1_line);
@@ -655,10 +656,16 @@ char* lowercase(char *msg)
 int compare_two_files(char *file1, char *file2) {
   log_info("File 1: %s, File 2: %s",file1, file2);
   FILE *file_handler1 = fopen(file1,"r");
+  if (file_handler1 == NULL) {
+    log_err("Couldn't open file1 %s.", file1);
+    return -1;
+  }
   FILE *file_handler2 = fopen(file2,"r");
-  assert(file_handler1 != NULL);
-  assert(file_handler2 != NULL);
-  //assert(file_handler2);
+  if (file_handler2 == NULL) {
+    fclose(file_handler1);
+    log_err("Couldn't open file2 %s.", file2);
+    return -1;
+  }
   log_info("file_handler1 %d", file_handler1 != NULL);
   log_info("file_handler2 %d", file_handler2 != NULL);
   char line1[5000];
