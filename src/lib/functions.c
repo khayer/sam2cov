@@ -653,6 +653,6 @@ char* lowercase(char *msg)
 
 int compare_two_files(char *file1, char *file2) {
 
-  return 0;
+  return 1;
 }
 

@@ -101,16 +101,16 @@ char *test_everything()
 }
 
 char *test_output(){
-    char *file1 = "tests/both2_tmp_NU.cov";
-    char *file2 = "tests/both2NU.cov";
+    //char *file1 = ;
+    //char *file2 = ;
     //status = compare_two_files(file1,file2);
     //char msg[500];
     //snprintf(msg, "compare_two_files failed of %s and %s!", file1, file2);
-    mu_assert(check_function("compare_two_files", file1, file2, 1), "test_output failed!");
-    file1 = "tests/both2_tmp_Unique.cov";
-    file2 = "tests/both2Unique.cov";
-    mu_assert(check_function("compare_two_files", file1, file2, 1), "test_output failed!");
-    free(file1); free(file2);
+    mu_assert(check_function("compare_two_files", "tests/both2_tmp_NU.cov", "tests/both2NU.cov", 1), "test_output failed!");
+    //file1 = "tests/both2_tmp_Unique.cov";
+    //file2 = "tests/both2Unique.cov";
+    mu_assert(check_function("compare_two_files", "tests/both2_tmp_Unique.cov", "tests/both2Unique.cov", 1), "test_output failed!");
+    //free(file1); free(file2);
     return NULL;
 }
 
