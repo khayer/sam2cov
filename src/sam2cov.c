@@ -95,7 +95,7 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
       }
     }
     //free(dummy);
-    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    if (line_cpy != NULL) free(line_cpy); if (entry != NULL) Entry_destroy(entry);
   }
   assert(file_handler);
   fclose(file_handler);
@@ -174,7 +174,7 @@ int run_sam2cov(Genome *genome, char *out_file,
       }
     }
     //free(dummy);
-    free(line_cpy); if (entry != NULL){ Entry_destroy(entry);}
+    if (line_cpy != NULL) free(line_cpy); if (entry != NULL){ Entry_destroy(entry);}
     if (res == -1)
     {
       log_err("Something went wrong with entry %s", line);
