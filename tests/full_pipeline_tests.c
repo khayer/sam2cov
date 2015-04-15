@@ -66,7 +66,8 @@ char *test_dlclose()
 {
     int rc = dlclose(lib);
     mu_assert(rc == 0, "Failed to close lib.");
-
+    int status = system("rm tests/both2_tmp_NU.cov tests/both2_tmp_Unique.cov");
+    mu_assert(status == 0, "Remove tmp files was unsuccesful.");
     return NULL;
 }
 
@@ -109,7 +110,7 @@ char *test_output(){
     file1 = "tests/both2_tmp_Unique.cov";
     file2 = "tests/both2Unique.cov";
     mu_assert(check_function("compare_two_files", file1, file2, 1), "test_output failed!");
-
+    free(file1); free(file2);
     return NULL;
 }
 
