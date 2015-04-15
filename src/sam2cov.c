@@ -137,7 +137,7 @@ int run_sam2cov(Genome *genome, char *out_file,
     //fputs (strcmp(dummy,"@"), stdout);
     //fputs (dummy,stdout);
     //fputs (line,stdout);
-    Entry *entry = NULL;
+    //Entry *entry = NULL;
     char *line_cpy = malloc(strlen(line)+1);
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
@@ -145,9 +145,9 @@ int run_sam2cov(Genome *genome, char *out_file,
     if (!StartsWith(line,"@")) {
       //exit(1);
       //log_info("Got here without prob");
-      entry = make_entry_for_read(line_cpy,genome);
+      //entry = make_entry_for_read(line_cpy,genome);
 
-      if (rum != 1 && entry!=NULL) {
+      if (rum != 1) {
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
@@ -155,11 +155,11 @@ int run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          if (entry != NULL){ Entry_destroy(entry);}
+          //if (entry != NULL){ Entry_destroy(entry);}
           res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
-      } else if (entry != NULL) {
+      } else {
         sep = "IH:i:";
         char *ptr;
         ptr = strstr(line,sep);
@@ -167,14 +167,14 @@ int run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-           if (entry != NULL){ Entry_destroy(entry);}
+          //if (entry != NULL){ Entry_destroy(entry);}
           res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }
     }
     //free(dummy);
-    if (line_cpy != NULL) free(line_cpy); if (entry != NULL){ Entry_destroy(entry);}
+    if (line_cpy != NULL) free(line_cpy); //if (entry != NULL){ Entry_destroy(entry);}
     if (res == -1)
     {
       log_err("Something went wrong with entry %s", line);
