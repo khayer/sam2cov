@@ -221,6 +221,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int current_chr_number = 123456;
   int found = 0;
   if (strcmp(chr_name,"*") == 0){
+    //log_warn("Got here!!!");
     return NULL;
   }
   while (i < genome->size) {
