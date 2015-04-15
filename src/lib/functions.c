@@ -8,6 +8,10 @@
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
+//#undef NDEBUG
+//#include <assert.h>
+//#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
 
@@ -124,7 +128,7 @@ int number_of_chromosomes(char *file_name) {
 void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,char **names) {
   FILE *file_handler = fopen(file_name,"r");
   assert(file_handler);
-  char line[90];
+  char line[5000];
   int i = 0;
   char *sep = "\t";
   char *splitted_line;
@@ -170,8 +174,12 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
+  //char *ptr2 = strdup(line);
+  char ptr2[100000];
   char read_name[500];
+  //char *read_name = malloc(1000);
   strcpy(read_name,"");
+  strcpy(ptr2,line);
   int strand = 5;
   int first = 5;
   char chr_name[500];
@@ -179,7 +187,9 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int pos;
   char cigar[500];
   strcpy(cigar,"");
+  //ptr2 = line;
   ptr = strtok(line,sep);
+
   while (ptr != NULL) {
     switch(i) {
       case 0:
@@ -206,11 +216,14 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     i++;
   }
   i = 0;
+  //free(ptr2);
+  //*ptr2 = "1";
   //free(ptr);
   //free(sep);
   int current_chr_number = 123456;
   int found = 0;
   if (strcmp(chr_name,"*") == 0){
+    //log_warn("Got here!!!");
     return NULL;
   }
   while (i < genome->size) {
@@ -227,7 +240,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
-    Entry *entry = Entry_create(read_name, strand, first, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(ptr2,read_name, strand, first, chr_name, pos, current_chr_number, cigar);
     return entry;
   }
 }
@@ -275,6 +288,7 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
   for (int i=0; i<size_of_array; i++) {
     letters[i] = malloc(500);
   }
+  log_info("%s", entry->auxilary);
   seperate_string(entry, sep_numbers,letters, size_of_array);
   if (strcmp(&letters[0][0],"*") == 0) a[0] = 0;
   int j = 1;
@@ -328,10 +342,16 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
   for (int i=0; i<size_of_array; i++) free(numbers[i]);
   for (int i=0; i<size_of_array; i++) free(letters[i]);
 
+  //int *l = a;
+  //free(a);
   return a;
 }
 
 int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
+  log_info("COMBINE RANGES");
+  log_info("ranges_r1 %d", ranges_r1[0]);
+  log_info("ranges_r2 %d", ranges_r2[0]);
+  log_info("size_of_array %d", size_of_array);
   int *a = malloc(size_of_array*sizeof(int));
   for (int l = 0; l < size_of_array; l++) {
     a[l] = 0;
@@ -433,16 +453,19 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
   free(starts); free(stops);
 }
 
-void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand){
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
   if (entry_r1 == NULL || entry_r2 == NULL) {
-    log_err("Ending all processes");
-    Genome_destroy(genome);
-    for (int i=0; i<num_of_chr; i++) free(names[i]);
-    exit(1);
+    log_err("One of them was NULL all processes");
+    if (entry_r1 != NULL){ Entry_destroy(entry_r1);}
+    if (entry_r2 != NULL){ Entry_destroy(entry_r2);}
+    return 0;
+    //Genome_destroy(genome);
+    //for (int i=0; i<num_of_chr; i++) free(names[i]);
+    //exit(1);
   }
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
@@ -457,11 +480,34 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   }
 
 
-
+  //log_info("r1_line %s", r1_line);
   int *ranges_r1;
   ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
   int *ranges_r2;
   ranges_r2 = interpret_cigar_string(entry_r2,size_of_array);
+  //log_info("AFTER interpret_cigar_string");
+  //log_info("ranges_r1 %d", ranges_r1[0]);
+  //log_info("ranges_r2 %d", ranges_r2[0]);
+  if (ranges_r1[0] == -1)
+  {
+    log_err("There are issues with the CIGAR string for \"%s\"",r1_line );
+    log_err("Ending all processes");
+    free(ranges_r2);
+    free(ranges_r1);
+    Entry_destroy(entry_r1);
+    Entry_destroy(entry_r2);
+    return -1;
+  }
+  if (ranges_r2[0] == -1)
+  {
+    log_err("There are issues with the CIGAR string for \"%s\"",r2_line );
+    log_err("Ending all processes");
+    free(ranges_r2);
+    free(ranges_r1);
+    Entry_destroy(entry_r1);
+    Entry_destroy(entry_r2);
+    return -1;
+  }
 
   switch(strand) {
     case 0:
@@ -515,6 +561,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   free(ranges_r1);
   Entry_destroy(entry_r1);
   Entry_destroy(entry_r2);
+  return 0;
 }
 
 void add_reads_to_cov_single(char *r1_line, Genome *genome,
@@ -527,7 +574,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
     for (int i=0; i<num_of_chr; i++) free(names[i]);
     exit(1);
   }
-  assert(strcmp(entry_r1->read_name) == 0);
+
 
   int size_of_array;
   //log_info("LINE R1 %s",r1_line);
@@ -567,5 +614,80 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
 
   free(ranges_r1);
   Entry_destroy(entry_r1);
+}
+
+int fail_on_purpose(const char *msg)
+{
+    return 1;
+}
+
+char* uppercase(char *msg)
+{
+    int i = 0;
+    char *a = malloc(strlen(msg)+1);
+    strcpy(a, msg);
+    // BUG: \0 termination problems
+    for(i = 0; msg[i] != '\0'; i++) {
+        //printf("%c", toupper(msg[i]));
+        a[i] = toupper(msg[i]);
+    }
+
+    printf("\n");
+    //char *l = a;
+    //free(a);
+    return a;
+}
+
+char* lowercase(char *msg)
+{
+    int i = 0;
+    char *a = malloc(strlen(msg)+1);
+    strcpy(a, msg);
+    // BUG: \0 termination problems
+    for(i = 0; msg[i] != '\0'; i++) {
+        //printf("%c", tolower(msg[i]));
+        a[i] = tolower(msg[i]);
+    }
+
+    printf("\n");
+    return a;
+}
+
+int compare_two_files(char *file1, char *file2) {
+  log_info("File 1: %s, File 2: %s",file1, file2);
+  FILE *file_handler1 = fopen(file1,"r");
+  if (file_handler1 == NULL) {
+    log_err("Couldn't open file1 %s.", file1);
+    return -1;
+  }
+  FILE *file_handler2 = fopen(file2,"r");
+  if (file_handler2 == NULL) {
+    fclose(file_handler1);
+    log_err("Couldn't open file2 %s.", file2);
+    return -1;
+  }
+  log_info("file_handler1 %d", file_handler1 != NULL);
+  log_info("file_handler2 %d", file_handler2 != NULL);
+  char line1[5000];
+  char line2[5000];
+  log_info("sizeof line1 %d", sizeof(line1));
+  log_info("sizeof line2 %d", sizeof(line2));
+  while (fgets( line1, sizeof(line1), file_handler1) != NULL && fgets( line2, sizeof(line2), file_handler2) != NULL)
+  {
+    log_info("Line1 %s", line1);
+    //fgets(line2, sizeof(line2) , file_handler2);
+    log_info("Line2 %s", line2);
+    if (strcmp(line1,line2) != 0) {
+      log_err("Line1: '%s' is not equal to line2: '%s'",line1,line2);
+      //free(line2);
+      fclose(file_handler1);
+      fclose(file_handler2);
+      return -1;
+    }
+  }
+  //free(line2);
+  fclose(file_handler1);
+  fclose(file_handler2);
+  return 1;
 }
 

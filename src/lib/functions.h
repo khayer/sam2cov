@@ -8,6 +8,8 @@
 
 #define MAX_STRING_LENGTH 200
 
+int get_strand(int bit_flag);
+
 int number_of_chromosomes(char *file_name);
 
 void get_names(char *file_name,
@@ -23,11 +25,18 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array);
 
 void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_array);
 
-void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand);
 
 void add_reads_to_cov_single(char *r1_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand);
 
+int fail_on_purpose(const char *msg);
+
+char* uppercase(char *msg);
+
+char* lowercase(char *msg);
+
+int compare_two_files(char *file1, char *file2);
 
 #endif
