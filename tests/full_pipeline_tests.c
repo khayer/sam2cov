@@ -123,7 +123,9 @@ char *test_everything()
     //int rum = 0;
     //int strand = 2;
     //int ucsc_header = 0;
-    int status = system("valgrind -v  --leak-check=full --show-leak-kinds=all  ./bin/sam2cov  -p both2 -s 2  -e 1 tests/danRer7_s.fa.fai test.sam");
+    int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
+    printf("Satus %d\n", status);
+    status = system("$VALGRIND ./bin/sam2cov  -p both2 -s 2  -e 1 tests/danRer7_s.fa.fai test.sam");
     printf("Satus %d\n", status);
     //check(status == 0, "Function sam2cov return %d", status);
     mu_assert(status == 0,"test_everything failed!");
