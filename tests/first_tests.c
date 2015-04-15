@@ -23,6 +23,22 @@ error:
     return 0;
 }
 
+
+typedef int (*lib_function4)(const char *data, int cut_off);
+
+int check_function4(const char *func_to_run, const char *data, int cut_off, int expected)
+{
+    lib_function4 func = dlsym(lib, func_to_run);
+    check(func != NULL, "Did not find %s function in the library %s: %s", func_to_run, lib_file, dlerror());
+
+    int rc = func(data,cut_off);
+    check(rc == expected, "Function %s return %d for data: %s and cut_off: %d cut_off", func_to_run, rc, data, cut_off);
+
+    return 1;
+error:
+    return 0;
+}
+
 typedef int (*lib_function3)(int input);
 
 int check_function3(const char *func_to_run, int input, int expected)
@@ -69,6 +85,7 @@ char *test_functions()
     mu_assert(check_function3("get_strand", 83, 1), "get_strand failed.");
     mu_assert(check_function2("uppercase", "Hello", "HELLO"), "uppercase failed.");
     mu_assert(check_function2("lowercase", "Hello", "hello"), "lowercase failed.");
+    mu_assert(check_function4("string_to_number", "seq.12435", 100, 30), "string_to_number failed.");
 
     return NULL;
 }

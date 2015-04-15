@@ -666,12 +666,12 @@ int compare_two_files(char *file1, char *file2) {
     log_err("Couldn't open file2 %s.", file2);
     return -1;
   }
-  log_info("file_handler1 %d", file_handler1 != NULL);
-  log_info("file_handler2 %d", file_handler2 != NULL);
+  //log_info("file_handler1 %d", file_handler1 != NULL);
+  //log_info("file_handler2 %d", file_handler2 != NULL);
   char line1[5000];
   char line2[5000];
-  log_info("sizeof line1 %d", sizeof(line1));
-  log_info("sizeof line2 %d", sizeof(line2));
+  //log_info("sizeof line1 %d", sizeof(line1));
+  //log_info("sizeof line2 %d", sizeof(line2));
   while (fgets( line1, sizeof(line1), file_handler1) != NULL && fgets( line2, sizeof(line2), file_handler2) != NULL)
   {
     log_info("Line1 %s", line1);
@@ -689,5 +689,22 @@ int compare_two_files(char *file1, char *file2) {
   fclose(file_handler1);
   fclose(file_handler2);
   return 1;
+}
+
+int string_to_number(char *string, int max_cutoff) {
+  int i = 0;
+  int res = 0;
+  //char *a = malloc(strlen(msg)+1);
+  //strcpy(a, msg);
+  int l;
+  // BUG: \0 termination problems
+  for(i = 0; string[i] != '\0'; i++) {
+
+      //printf("%c", tolower(msg[i]));
+      l = string[i] - '\0';
+      log_info("%c = %d", string[i], l);
+      res = res + l ;
+  }
+  return res % max_cutoff;
 }
 
