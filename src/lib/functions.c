@@ -657,6 +657,8 @@ int compare_two_files(char *file1, char *file2) {
   FILE *file_handler2 = fopen(file2,"r");
   assert(file_handler1);
   assert(file_handler2);
+  log_info("file_handler1 %d", file_handler1 != NULL);
+  log_info("file_handler2 %d", file_handler2 != NULL);
   char line1[5000];
   char line2[5000];
   log_info("sizeof line1 %d", sizeof(line1));
