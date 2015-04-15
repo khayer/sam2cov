@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#undef NDEBUG
 //#include <stdbool.h>
 
 #define MAX_STRING_LENGTH 200
@@ -655,8 +656,9 @@ int compare_two_files(char *file1, char *file2) {
   log_info("File 1: %s, File 2: %s",file1, file2);
   FILE *file_handler1 = fopen(file1,"r");
   FILE *file_handler2 = fopen(file2,"r");
-  assert(file_handler1);
-  assert(file_handler2);
+  assert(file_handler1 != NULL);
+  assert(file_handler2 != NULL);
+  //assert(file_handler2);
   log_info("file_handler1 %d", file_handler1 != NULL);
   log_info("file_handler2 %d", file_handler2 != NULL);
   char line1[5000];
