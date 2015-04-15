@@ -67,7 +67,7 @@ char *test_functions()
     //char *filename = "danRer7_s.fa.fai";
     //mu_assert(k == 1, "error, k != 1" );
     mu_assert(check_function3("get_strand", 83, 1), "get_strand failed.");
-    mu_assert(check_function2("uppercase", "Hello", "HELLO"), "uppercase failed.");
+    mu_assert(check_function2("uppercase", "Hello", "hELLO"), "uppercase failed.");
     mu_assert(check_function2("lowercase", "Hello", "hello"), "lowercase failed.");
 
     return NULL;
