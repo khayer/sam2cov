@@ -651,3 +651,8 @@ char* lowercase(char *msg)
     return a;
 }
 
+int compare_two_files(char *file1, char *file2) {
+
+  return 0;
+}
+

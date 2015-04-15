@@ -37,4 +37,6 @@ char* uppercase(char *msg);
 
 char* lowercase(char *msg);
 
+int compare_two_files(char *file1, char *file2);
+
 #endif
