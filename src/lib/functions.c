@@ -473,7 +473,7 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   }
 
 
-  log_info("r1_line %s", r1_line);
+  //log_info("r1_line %s", r1_line);
   int *ranges_r1;
   ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
   int *ranges_r2;
