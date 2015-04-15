@@ -659,6 +659,8 @@ int compare_two_files(char *file1, char *file2) {
   assert(file_handler2);
   char line1[5000];
   char line2[5000];
+  log_info("sizeof line1 %d", sizeof(line1));
+  log_info("sizeof line2 %d", sizeof(line2));
   while (fgets( line1, sizeof(line1), file_handler1) != NULL && fgets( line2, sizeof(line2), file_handler2) != NULL)
   {
     log_info("Line1 %s", line1);
