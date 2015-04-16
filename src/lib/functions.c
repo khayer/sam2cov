@@ -708,3 +708,21 @@ int string_to_number(char *string, int max_cutoff) {
   return res % max_cutoff;
 }
 
+int compare_names(char *line,char *line_mate,Genome *genome) {
+  int res = 0;
+  //Entry *entry_r1 = make_entry_for_read(line,genome);
+  //Entry *entry_r2 = make_entry_for_read(line_mate,genome);
+  log_info("line1 %s", line);
+  log_info("line2 %s", line_mate);
+  if (strcmp(line,line_mate)==0)
+  {
+    res = 1;
+  }
+  //Entry_destroy(entry_r1); Entry_destroy(entry_r2);
+  return res;
+}
+
+int write_to_file(char *line) {
+  return 1;
+}
+

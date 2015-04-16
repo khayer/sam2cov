@@ -157,10 +157,20 @@ int run_sam2cov(Genome *genome, char *out_file,
           splitted_line = strtok(ptr,"\t");
           if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
             (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-            fgets( line_mate, sizeof(line_mate), file_handler);
-            //if (entry != NULL){ Entry_destroy(entry);}
-            res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-              chromo_names,num_of_chr,strand);
+
+            int i = 0;
+            while (i == 0) {
+              fgets( line_mate, sizeof(line_mate), file_handler);
+              res = compare_names(line,line_mate,genome);
+              if (res == 1) {
+                //if (entry != NULL){ Entry_destroy(entry);}
+                res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+                  chromo_names,num_of_chr,strand);
+                i = 1;
+              } else {
+                res = write_to_file(line_mate);
+              }
+            }
           }
         }
       } else {

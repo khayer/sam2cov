@@ -41,4 +41,8 @@ int compare_two_files(char *file1, char *file2);
 
 int string_to_number(char *string, int max_cutoff);
 
+int compare_names(char *line,char *line_mate,Genome *genome);
+
+int write_to_file(char *line);
+
 #endif
