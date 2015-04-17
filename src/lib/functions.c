@@ -666,17 +666,23 @@ int compare_two_files(char *file1, char *file2) {
     log_err("Couldn't open file2 %s.", file2);
     return -1;
   }
-  //log_info("file_handler1 %d", file_handler1 != NULL);
-  //log_info("file_handler2 %d", file_handler2 != NULL);
+  int num_lines_1 = countlines(file1);
+  int num_lines_2 = countlines(file2);
+  if (num_lines_1 != num_lines_2)
+  {
+    log_err("num_lines_1: '%d' is not equal to num_lines_2: '%d'",num_lines_1,num_lines_2);
+    fclose(file_handler1);
+    fclose(file_handler2);
+    return -1;
+  }
   char line1[5000];
   char line2[5000];
-  //log_info("sizeof line1 %d", sizeof(line1));
-  //log_info("sizeof line2 %d", sizeof(line2));
+
   while (fgets( line1, sizeof(line1), file_handler1) != NULL && fgets( line2, sizeof(line2), file_handler2) != NULL)
   {
-    log_info("Line1 %s", line1);
+    //log_info("Line1 %s", line1);
     //fgets(line2, sizeof(line2) , file_handler2);
-    log_info("Line2 %s", line2);
+    //log_info("Line2 %s", line2);
     if (strcmp(line1,line2) != 0) {
       log_err("Line1: '%s' is not equal to line2: '%s'",line1,line2);
       //free(line2);
@@ -702,7 +708,7 @@ int string_to_number(char *string, int max_cutoff) {
 
       //printf("%c", tolower(msg[i]));
       l = string[i] - '\0';
-      log_info("%c = %d", string[i], l);
+      //log_info("%c = %d", string[i], l);
       res = res + l ;
   }
   return res % max_cutoff;
@@ -710,11 +716,19 @@ int string_to_number(char *string, int max_cutoff) {
 
 int compare_names(char *line,char *line_mate,Genome *genome) {
   int res = 0;
+  char *sep = "\t";
   //Entry *entry_r1 = make_entry_for_read(line,genome);
   //Entry *entry_r2 = make_entry_for_read(line_mate,genome);
-  log_info("line1 %s", line);
-  log_info("line2 %s", line_mate);
-  if (strcmp(line,line_mate)==0)
+  //log_info("line1 %s", line);
+  //log_info("line2 %s", line_mate);
+  char read_name1[10000];
+  strcpy(read_name1,line);
+  char read_name2[10000];
+  strcpy(read_name2,line_mate);
+  char *ptr1, *ptr2;
+  ptr1 = strtok(read_name1,sep);
+  ptr2 = strtok(read_name2,sep);
+  if (strcmp(ptr1,ptr2)==0)
   {
     res = 1;
   }
@@ -722,7 +736,38 @@ int compare_names(char *line,char *line_mate,Genome *genome) {
   return res;
 }
 
-int write_to_file(char *line) {
+int write_to_file(char *line, int max_file_num) {
+  //int res = 0;
+  char *sep = "\t";
+  char read_name[10000];
+  strcpy(read_name,line);
+  char *ptr1;
+  ptr1 = strtok(read_name,sep);
+  int name = string_to_number(ptr1,max_file_num);
+  char *out_file = malloc(5000);
+  //strcpy(out_file,".sam2cov_tmp/tmp_");
+  sprintf(out_file, ".sam2cov_tmp/tmp_%d.sam", name);//(out_file, itos(name));
+  FILE *fp = fopen(out_file,"a");
+  fprintf(fp, "%s", line);
+  fclose(fp);
+  free(out_file);
+
   return 1;
+}
+
+int countlines(char *file) {
+  //log_info("File 1: %s, File 2: %s",file1, file2);
+  FILE *file_handler = fopen(file,"r");
+  if (file_handler == NULL) {
+    log_err("Couldn't open file %s.", file);
+    return -1;
+  }
+  char line[5000];
+  int number_of_lines = 0;
+  while (fgets( line, sizeof(line), file_handler) != NULL) {
+    number_of_lines++;
+  }
+  fclose(file_handler);
+  return number_of_lines;
 }
 
