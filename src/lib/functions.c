@@ -459,7 +459,9 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
   if (entry_r1 == NULL || entry_r2 == NULL) {
-    log_err("One of them was NULL all processes");
+    log_err("One of them was NULL");
+    log_err("Line1 %s",r1_line);
+    log_err("Line2 %s", r2_line);
     if (entry_r1 != NULL){ Entry_destroy(entry_r1);}
     if (entry_r2 != NULL){ Entry_destroy(entry_r2);}
     return 0;
