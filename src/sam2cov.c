@@ -138,6 +138,7 @@ int run_sam2cov(Genome *genome, char *out_file,
   char *splitted_line2;
   int res = 0;
   int res2 = 0;
+  int same_hi_tag = 0;
 
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
@@ -174,20 +175,21 @@ int run_sam2cov(Genome *genome, char *out_file,
           splitted_line = strtok(ptr,"\t");
           if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
             (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-
             int i = 0;
             int hit = 0;
             while (i == 0 && fgets( line_mate, sizeof(line), file_handler) != NULL) {
+
               //fgets( line_mate, sizeof(line_mate), file_handler);
-              res = compare_names(line,line_mate,genome);
+              res = compare_names(line,line_mate);
+              same_hi_tag = compare_HI_tag(line,line_mate);
               char *ptr2;
               strcpy(line_mate_cpy, line);
               ptr2 = strstr(line_mate_cpy,sep);
               if (ptr2 != NULL)
-              { 
+              {
                 splitted_line2 = strtok(ptr2,"\t");
                 log_info("RESULT I is: %d",res);
-                if (res == 1 && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
+                if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
                   //if (entry != NULL){ Entry_destroy(entry);}
                   res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
@@ -235,7 +237,7 @@ int run_sam2cov(Genome *genome, char *out_file,
   }
   assert(file_handler);
   fclose(file_handler);
-  while (rmdir(".sam2cov_tmp") != 0) 
+  while (rmdir(".sam2cov_tmp") != 0)
   {
 
     DIR *dir;
@@ -295,7 +297,9 @@ int run_sam2cov(Genome *genome, char *out_file,
               if (rum != 1) {
                 sep = "NH:i:";
                 char *ptr;
-                ptr = strstr(line,sep);
+                strcpy(line_cpy, line);
+                //ptr = strstr(line_cpy,sep);
+                ptr = strstr(line_cpy,sep);
                 if (ptr != NULL)
                 {
                   splitted_line = strtok(ptr,"\t");
@@ -303,11 +307,12 @@ int run_sam2cov(Genome *genome, char *out_file,
                     (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
 
                     int i = 0;
-                    while (i == 0 && fgets(line_mate, sizeof(line), file_handler) != NULL) {
+                    while (i == 0  && fgets(line_mate, sizeof(line), file_handler) != NULL) {
                       //fgets( line_mate, sizeof(line_mate), file_handler);
-                      res = compare_names(line,line_mate,genome);
+                      res = compare_names(line,line_mate);
+                      same_hi_tag = compare_HI_tag(line,line_mate);
                       log_info("RESULT is: %d",res);
-                      if (res == 1) {
+                      if (res == 1 && same_hi_tag) {
                         //if (entry != NULL){ Entry_destroy(entry);}
                         res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
                           chromo_names,num_of_chr,strand);

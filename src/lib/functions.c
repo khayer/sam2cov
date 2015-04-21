@@ -716,7 +716,7 @@ int string_to_number(char *string, int max_cutoff) {
   return res % max_cutoff;
 }
 
-int compare_names(char *line,char *line_mate,Genome *genome) {
+int compare_names(char *line,char *line_mate) {
   int res = 0;
   char *sep = "\t";
   //Entry *entry_r1 = make_entry_for_read(line,genome);
@@ -736,6 +736,31 @@ int compare_names(char *line,char *line_mate,Genome *genome) {
   }
   //Entry_destroy(entry_r1); Entry_destroy(entry_r2);
   return res;
+}
+
+int compare_HI_tag(char *line,char *line_mate){
+
+
+  char line_cpy[50000];
+  strcpy(line_cpy, line);
+  char line_mate_cpy[50000];
+  strcpy(line_mate_cpy, line_mate);
+
+  char *ptr,*ptr2;
+  char *sep = "HI:i:";
+  ptr = strstr(line_cpy,sep);
+  ptr2 = strstr(line_mate_cpy,sep);
+  if (ptr == NULL || ptr2 == NULL) {
+    return 0;
+  }
+  char *splitted_line, *splitted_line_mate;
+  splitted_line = strtok(ptr,"\t");
+  splitted_line_mate = strtok(ptr2,"\t");
+  if (strcmp(splitted_line,splitted_line_mate)==0) {
+    return 1;
+  }
+
+  return 0;
 }
 
 int write_to_file(char *line, int max_file_num) {
