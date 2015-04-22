@@ -19,6 +19,22 @@
 Code framework by Zed A. Shaw
 */
 
+int countlines(char *file) {
+  //log_info("File 1: %s, File 2: %s",file1, file2);
+  FILE *file_handler = fopen(file,"r");
+  if (file_handler == NULL) {
+    log_err("Couldn't open file %s.", file);
+    return -1;
+  }
+  char line[5000];
+  int number_of_lines = 0;
+  while (fgets( line, sizeof(line), file_handler) != NULL) {
+    number_of_lines++;
+  }
+  fclose(file_handler);
+  return number_of_lines;
+}
+
 void test_debug()
 {
     // notice you don't need the \n
@@ -184,7 +200,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int first = 5;
   char chr_name[500];
   strcpy(chr_name,"");
-  int pos;
+  int pos=0;
   char cigar[500];
   strcpy(cigar,"");
   //ptr2 = line;
@@ -763,7 +779,7 @@ int compare_HI_tag(char *line,char *line_mate){
   return 0;
 }
 
-int write_to_file(char *line, int max_file_num) {
+int write_to_file(char *line, int max_file_num, int counter) {
   //int res = 0;
   char *sep = "\t";
   char read_name[10000];
@@ -773,7 +789,7 @@ int write_to_file(char *line, int max_file_num) {
   int name = string_to_number(ptr1,max_file_num);
   char *out_file = malloc(5000);
   //strcpy(out_file,".sam2cov_tmp/tmp_");
-  sprintf(out_file, ".sam2cov_tmp/tmp_%d.sam", name);//(out_file, itos(name));
+  sprintf(out_file, ".sam2cov_tmp/tmp_%d_%d.sam", name, counter);//(out_file, itos(name));
   FILE *fp = fopen(out_file,"a");
   fprintf(fp, "%s", line);
   fclose(fp);
@@ -782,19 +798,5 @@ int write_to_file(char *line, int max_file_num) {
   return 1;
 }
 
-int countlines(char *file) {
-  //log_info("File 1: %s, File 2: %s",file1, file2);
-  FILE *file_handler = fopen(file,"r");
-  if (file_handler == NULL) {
-    log_err("Couldn't open file %s.", file);
-    return -1;
-  }
-  char line[5000];
-  int number_of_lines = 0;
-  while (fgets( line, sizeof(line), file_handler) != NULL) {
-    number_of_lines++;
-  }
-  fclose(file_handler);
-  return number_of_lines;
-}
+
 

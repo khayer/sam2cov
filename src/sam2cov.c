@@ -183,7 +183,7 @@ int run_sam2cov(Genome *genome, char *out_file,
               res = compare_names(line,line_mate);
               same_hi_tag = compare_HI_tag(line,line_mate);
               char *ptr2;
-              strcpy(line_mate_cpy, line);
+              strcpy(line_mate_cpy, line_mate);
               ptr2 = strstr(line_mate_cpy,sep);
               if (ptr2 != NULL)
               {
@@ -199,14 +199,18 @@ int run_sam2cov(Genome *genome, char *out_file,
                   hit = 1;
                 } else if ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1)) {
-                  res2 = write_to_file(line_mate,max_file_num);
+                  log_info("unique_mode %d", unique_mode);
+                  log_info("splitted_line2 %s", splitted_line2);
+                  log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
+                  log_info("Line '%s' not matched",line_mate);
+                  res2 = write_to_file(line_mate,max_file_num,0);
                 }
               }
             }
-            if (hit ==0)
+            if (hit == 0)
             {
               log_info("Line '%s' not found",line);
-              res2 = write_to_file(line,max_file_num);
+              res2 = write_to_file(line,max_file_num,0);
             }
           }
         }
@@ -250,18 +254,16 @@ int run_sam2cov(Genome *genome, char *out_file,
         //strcpy(file_and_dir,".sam2cov_tmp/");
         //strcpy(file_and_dir,ent->d_name);
         sprintf(file_and_dir, ".sam2cov_tmp/%s", ent->d_name);
-        printf ("%s\n", ent->d_name);
-
-
-
+        log_info("ent->d_name %s", ent->d_name);
+        int counter = 0;
         if (StartsWith(ent->d_name, "t"))
         {
           sprintf(system_call, "sort %s > %s.tmp", file_and_dir,file_and_dir);
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          system(system_call);
+          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          //system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
@@ -269,6 +271,13 @@ int run_sam2cov(Genome *genome, char *out_file,
           //char *sep = "\t";
           //char *splitted_line;
           //int res = 0;
+          counter += 1;
+          if (counter > 100) {
+            log_err("Counter: %d is very large! Stopping.");
+            free(file_and_dir);
+            free(system_call);
+            return -1;
+          }
           while (fgets( line, sizeof(line), file_handler) != NULL)
           {
             //char *dummy = malloc(strlen("@"));
@@ -303,24 +312,32 @@ int run_sam2cov(Genome *genome, char *out_file,
                 if (ptr != NULL)
                 {
                   splitted_line = strtok(ptr,"\t");
+
                   if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
                     (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
 
                     int i = 0;
+                    int hit = 0;
                     while (i == 0  && fgets(line_mate, sizeof(line), file_handler) != NULL) {
                       //fgets( line_mate, sizeof(line_mate), file_handler);
                       res = compare_names(line,line_mate);
                       same_hi_tag = compare_HI_tag(line,line_mate);
-                      log_info("RESULT is: %d",res);
+                      log_info("RESULT is: %d and same_hi_tag: %d",res,same_hi_tag);
                       if (res == 1 && same_hi_tag) {
                         //if (entry != NULL){ Entry_destroy(entry);}
                         res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
                           chromo_names,num_of_chr,strand);
                         i = 1;
+                        hit = 1;
                       } else {
                         log_err("line_mate %s and line don't match %s",line_mate,line);
-                        //res = write_to_file(line_mate,max_file_num);
+                        res = write_to_file(line_mate,max_file_num,counter);
                       }
+                    }
+                    if (hit == 0)
+                    {
+                      log_info("Line '%s' not found",line);
+                      res2 = write_to_file(line,max_file_num,counter);
                     }
                   }
                 }
@@ -331,6 +348,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                 if (ptr != NULL)
                 {
                   splitted_line = strtok(ptr,"\t");
+
                   if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
                     (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
                     fgets( line_mate, sizeof(line_mate), file_handler);

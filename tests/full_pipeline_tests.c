@@ -85,10 +85,39 @@ char *test_everything()
     //int ucsc_header = 0;
     int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
     //printf("Satus %d\n", status);
-    status = system("$VALGRIND ./bin/sam2cov  -p tests/both2_tmp_ -s 0  -e 1 tests/danRer7_s.fa.fai test.sam");
+    status = system("$VALGRIND ./bin/sam2cov  -p tests/both2_tmp_ -s 0  -e 1 tests/danRer7_s.fa.fai tests/test.sam");
     //printf("Satus %d\n", status);
     //check(status == 0, "Function sam2cov return %d", status);
     mu_assert(status == 0,"test_everything failed!");
+
+    //strcpy(msg,"");
+    //snprintf(msg, "compare_two_files failed of %s and %s!", file1, file2);
+    //mu_assert(status == 1,"compare_two_files failed!");
+    //run_sam2cov(Genome *genome, char *out_file,
+    //    char *sam_file, int num_of_chr, int *chromo_lengths,
+    //    char **chromo_names, int unique_mode, int rum, int strand, int ucsc_header);
+    return NULL;
+
+}
+
+char *test_everything_shuf()
+{
+    //char *fai_file = "tests/danRer7_s.fa.fai";
+    //int num_of_chr = 19;
+    //char *sam_file="tests/test.sam";
+    //char *unique_file="tests/tmp_unique";
+    //char *non_unique_file="tests/tmp_NU";
+    //int paired_end_mode = 1;
+    //int unique_mode = 1;
+    //int rum = 0;
+    //int strand = 2;
+    //int ucsc_header = 0;
+    int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
+    //printf("Satus %d\n", status);
+    status = system("$VALGRIND ./bin/sam2cov  -p tests/both2_tmp_shuf_ -s 0  -e 1 tests/danRer7_s.fa.fai tests/shuf_test.sam");
+    //printf("Satus %d\n", status);
+    //check(status == 0, "Function sam2cov return %d", status);
+    mu_assert(status == 0,"test_everything_shuf failed!");
 
     //strcpy(msg,"");
     //snprintf(msg, "compare_two_files failed of %s and %s!", file1, file2);
@@ -114,12 +143,20 @@ char *test_output(){
     return NULL;
 }
 
+char *test_output_shuf(){
+    mu_assert(check_function("compare_two_files", "tests/both2_tmp_shuf_NU.cov", "tests/both2NU.cov", 1), "test_output failed!");
+    mu_assert(check_function("compare_two_files", "tests/both2_tmp_shuf_Unique.cov", "tests/both2Unique.cov", 1), "test_output failed!");
+    return NULL;
+}
+
 char *all_tests() {
     mu_suite_start();
 
     mu_run_test(test_dlopen);
     mu_run_test(test_everything);
     mu_run_test(test_output);
+    mu_run_test(test_everything_shuf);
+    mu_run_test(test_output_shuf);
     //mu_run_test(test_functions);
     //mu_run_test(test_chromosome)
     mu_run_test(test_dlclose);

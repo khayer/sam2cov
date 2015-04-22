@@ -45,6 +45,6 @@ int compare_names(char *line,char *line_mate);
 
 int compare_HI_tags(char *line,char *line_mate);
 
-int write_to_file(char *line, int max_file_num);
+int write_to_file(char *line, int max_file_num, int counter);
 
 #endif
