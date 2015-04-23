@@ -144,12 +144,18 @@ int run_sam2cov(Genome *genome, char *out_file,
   char line_cpy[50000];
   char line_mate[50000];
   char line_mate_cpy[50000];
+  char** in_memory_array = malloc(sizeof(line)*(100));
+  for (int i = 0; i < 100; ++i)
+  {
+    in_memory_array[i] = "";
+  }
   char *sep = "\t";
   char *splitted_line;
   char *splitted_line2;
   int res = 0;
   int res2 = 0;
   int same_hi_tag = 0;
+  int in_memory_index = 0;
 
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
@@ -180,6 +186,7 @@ int run_sam2cov(Genome *genome, char *out_file,
         sep = "NH:i:";
         char *ptr;
         strcpy(line_cpy, line);
+        in_memory_array[in_memory_index] = line;
         ptr = strstr(line_cpy,sep);
         if (ptr != NULL)
         {
@@ -191,8 +198,23 @@ int run_sam2cov(Genome *genome, char *out_file,
             while (i == 0 && fgets( line_mate, sizeof(line), file_handler) != NULL) {
 
               //fgets( line_mate, sizeof(line_mate), file_handler);
-              res = compare_names(line,line_mate);
-              same_hi_tag = compare_HI_tag(line,line_mate);
+              int l;
+              res = 0;
+              same_hi_tag = 0;
+              for (l = 0; l < 100; ++l)
+              {
+                if (in_memory_array[l] == "")
+                {
+                  break;
+                }
+                res = compare_names(in_memory_array[l],line_mate);
+                same_hi_tag = compare_HI_tag(in_memory_array[l],line_mate);
+                if ((res == 1 && same_hi_tag == 1) )
+                {
+                  break;
+                }
+              }
+
               char *ptr2;
               strcpy(line_mate_cpy, line_mate);
               ptr2 = strstr(line_mate_cpy,sep);
@@ -203,18 +225,30 @@ int run_sam2cov(Genome *genome, char *out_file,
                 if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
                   //if (entry != NULL){ Entry_destroy(entry);}
-                  res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+                  res2 = add_reads_to_cov(in_memory_array[l],line_mate,genome,chromo_lengths,
                     chromo_names,num_of_chr,strand);
                   //log_info("res2 was %d",res2);
                   i = 1;
                   hit = 1;
+                  in_memory_array[l] = "";
                 } else if ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1)) {
                   //log_info("unique_mode %d", unique_mode);
                   //log_info("splitted_line2 %s", splitted_line2);
                   //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
                   //log_info("Line '%s' not matched",line_mate);
-                  res2 = write_to_file(line_mate,max_file_num,0,file_handler_array);
+                  in_memory_index = 1 + in_memory_index;
+                  int success = 0;
+                  for (int i = 0; i < 100; ++i)
+                  {
+                    if (in_memory_index == "") {
+                      in_memory_array[i] = line_mate;
+                      success = 1;
+                    }
+                  }
+                  if (success != 1) {
+                    res2 = write_to_file(line_mate,max_file_num,0,file_handler_array);
+                  }
                 }
               }
             }
@@ -250,6 +284,7 @@ int run_sam2cov(Genome *genome, char *out_file,
       return -1;
     }
   }
+
   assert(file_handler);
   fclose(file_handler);
   for (int i = 0; i < max_file_num; ++i)
@@ -258,6 +293,7 @@ int run_sam2cov(Genome *genome, char *out_file,
     //free(file_handler_array[i]);
   }
   free(file_handler_array);
+  free(in_memory_array);
   while (rmdir(".sam2cov_tmp") != 0)
   {
 
@@ -275,7 +311,7 @@ int run_sam2cov(Genome *genome, char *out_file,
         int counter = 0;
         int k;
         sscanf(ent->d_name, "tmp_%d_", &k);
-        log_info("k = %d",k);
+        //log_info("k = %d",k);
         //exit(0);
         if (StartsWith(ent->d_name, "t"))
         {
