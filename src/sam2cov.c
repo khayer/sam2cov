@@ -122,7 +122,7 @@ int run_sam2cov(Genome *genome, char *out_file,
   char *sam_file, int num_of_chr, int *chromo_lengths,
   char **chromo_names, int unique_mode, int rum, int strand,
   int max_file_num, int ucsc_header) {
-  int res1 = mkdir(".sam2cov_tmp",'S_IRWXU');
+  int res1 = mkdir(".sam2cov_tmp",0777);
   if (res1 != 0)
   {
     log_err("Mkdir failed!");
