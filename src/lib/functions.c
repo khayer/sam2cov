@@ -304,7 +304,7 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
   for (int i=0; i<size_of_array; i++) {
     letters[i] = malloc(500);
   }
-  log_info("%s", entry->auxilary);
+  //log_info("%s", entry->auxilary);
   seperate_string(entry, sep_numbers,letters, size_of_array);
   if (strcmp(&letters[0][0],"*") == 0) a[0] = 0;
   int j = 1;
@@ -364,10 +364,10 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
 }
 
 int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
-  log_info("COMBINE RANGES");
-  log_info("ranges_r1 %d", ranges_r1[0]);
-  log_info("ranges_r2 %d", ranges_r2[0]);
-  log_info("size_of_array %d", size_of_array);
+  //log_info("COMBINE RANGES");
+  //log_info("ranges_r1 %d", ranges_r1[0]);
+  //log_info("ranges_r2 %d", ranges_r2[0]);
+  //log_info("size_of_array %d", size_of_array);
   int *a = malloc(size_of_array*sizeof(int));
   for (int l = 0; l < size_of_array; l++) {
     a[l] = 0;
