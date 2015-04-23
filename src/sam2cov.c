@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <sys/stat.h>
 //#include <iostream.h>
 //#include <filesystem.h>
 //#include <stat.h>
@@ -278,8 +279,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          system(system_call);
+          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          //system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
@@ -289,7 +290,7 @@ int run_sam2cov(Genome *genome, char *out_file,
           //int res = 0;
           counter += 1;
           if (counter > 100) {
-            log_err("Counter: %d is very large! Stopping.");
+            log_err("Counter: %d is very large! Stopping.", counter);
             free(file_and_dir);
             free(system_call);
             return -1;
@@ -346,7 +347,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                         i = 1;
                         hit = 1;
                       } else {
-                        log_err("line_mate %s and line don't match %s",line_mate,line);
+                        //log_err("line_mate %s and line don't match %s",line_mate,line);
                         res = write_to_file2(line_mate,max_file_num,counter);
                       }
                     }

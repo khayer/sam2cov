@@ -35,6 +35,29 @@ int countlines(char *file) {
   return number_of_lines;
 }
 
+int compare_HI_tag(char *line,char *line_mate) {
+  char line_cpy[50000];
+  strcpy(line_cpy, line);
+  char line_mate_cpy[50000];
+  strcpy(line_mate_cpy, line_mate);
+
+  char *ptr,*ptr2;
+  char *sep = "HI:i:";
+  ptr = strstr(line_cpy,sep);
+  ptr2 = strstr(line_mate_cpy,sep);
+  if (ptr == NULL || ptr2 == NULL) {
+    return 0;
+  }
+  char *splitted_line, *splitted_line_mate;
+  splitted_line = strtok(ptr,"\t");
+  splitted_line_mate = strtok(ptr2,"\t");
+  if (strcmp(splitted_line,splitted_line_mate)==0) {
+    return 1;
+  }
+
+  return 0;
+}
+
 void test_debug()
 {
     // notice you don't need the \n
@@ -754,31 +777,6 @@ int compare_names(char *line,char *line_mate) {
   return res;
 }
 
-int compare_HI_tag(char *line,char *line_mate){
-
-
-  char line_cpy[50000];
-  strcpy(line_cpy, line);
-  char line_mate_cpy[50000];
-  strcpy(line_mate_cpy, line_mate);
-
-  char *ptr,*ptr2;
-  char *sep = "HI:i:";
-  ptr = strstr(line_cpy,sep);
-  ptr2 = strstr(line_mate_cpy,sep);
-  if (ptr == NULL || ptr2 == NULL) {
-    return 0;
-  }
-  char *splitted_line, *splitted_line_mate;
-  splitted_line = strtok(ptr,"\t");
-  splitted_line_mate = strtok(ptr2,"\t");
-  if (strcmp(splitted_line,splitted_line_mate)==0) {
-    return 1;
-  }
-
-  return 0;
-}
-
 int write_to_file2(char *line, int max_file_num, int counter) {
   //int res = 0;
   char *sep = "\t";
@@ -811,6 +809,8 @@ int write_to_file(char *line, int max_file_num, int counter, FILE** file_handler
   //sprintf(out_file, ".sam2cov_tmp/tmp_%d_%d.sam", name, counter);//(out_file, itos(name));
   //FILE *fp = fopen(out_file,"a");
   fprintf(file_handler_array[name], "%s", line);
+
+  return 1;
 }
 
 
