@@ -273,14 +273,18 @@ int run_sam2cov(Genome *genome, char *out_file,
         sprintf(file_and_dir, ".sam2cov_tmp/%s", ent->d_name);
         log_info("ent->d_name %s", ent->d_name);
         int counter = 0;
+        int k;
+        sscanf(ent->d_name, "tmp_%d_", &k);
+        log_info("k = %d",k);
+        //exit(0);
         if (StartsWith(ent->d_name, "t"))
         {
           sprintf(system_call, "sort %s > %s.tmp", file_and_dir,file_and_dir);
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          //system(system_call);
+          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
@@ -295,6 +299,10 @@ int run_sam2cov(Genome *genome, char *out_file,
             free(system_call);
             return -1;
           }
+          char *out_file_tmp = malloc(5000);
+          sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_%d.sam", k, counter);
+          FILE *current_file = fopen(out_file_tmp,"a");
+          free(out_file_tmp);
           while (fgets( line, sizeof(line), file_handler) != NULL)
           {
             //char *dummy = malloc(strlen("@"));
@@ -348,13 +356,15 @@ int run_sam2cov(Genome *genome, char *out_file,
                         hit = 1;
                       } else {
                         //log_err("line_mate %s and line don't match %s",line_mate,line);
-                        res = write_to_file2(line_mate,max_file_num,counter);
+                        //res = write_to_file2(line_mate,max_file_num,counter);
+                        fprintf(current_file, "%s", line_mate);
                       }
                     }
                     if (hit == 0)
                     {
                       //log_info("Line '%s' not found",line);
-                      res2 = write_to_file2(line,max_file_num,counter);
+                      fprintf(current_file, "%s", line);
+                      //res2 = write_to_file2(line,max_file_num,counter);
                     }
                   }
                 }
@@ -384,6 +394,7 @@ int run_sam2cov(Genome *genome, char *out_file,
               return -1;
             }
           }
+          fclose(current_file);
           assert(file_handler);
           fclose(file_handler);
           log_info("Deleting %s",file_and_dir);

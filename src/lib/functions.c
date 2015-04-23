@@ -809,7 +809,6 @@ int write_to_file(char *line, int max_file_num, int counter, FILE** file_handler
   //sprintf(out_file, ".sam2cov_tmp/tmp_%d_%d.sam", name, counter);//(out_file, itos(name));
   //FILE *fp = fopen(out_file,"a");
   fprintf(file_handler_array[name], "%s", line);
-
   return 1;
 }
 
