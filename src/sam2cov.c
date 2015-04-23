@@ -127,6 +127,16 @@ int run_sam2cov(Genome *genome, char *out_file,
   {
     log_err("Mkdir failed!");
   }
+
+  FILE** file_handler_array = malloc(sizeof(FILE*)*(max_file_num));
+  char *out_file_tmp = malloc(5000);
+  for (int i = 0; i < max_file_num; ++i)
+  {
+    sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_0.sam", i);//(out_file, itos(name));
+    file_handler_array[i] = fopen(out_file_tmp,"a");
+  }
+
+  free(out_file_tmp);
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
   char line[50000];
@@ -203,14 +213,14 @@ int run_sam2cov(Genome *genome, char *out_file,
                   //log_info("splitted_line2 %s", splitted_line2);
                   //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
                   //log_info("Line '%s' not matched",line_mate);
-                  res2 = write_to_file(line_mate,max_file_num,0);
+                  res2 = write_to_file(line_mate,max_file_num,0,file_handler_array);
                 }
               }
             }
             if (hit == 0)
             {
               //log_info("Line '%s' not found",line);
-              res2 = write_to_file(line,max_file_num,0);
+              res2 = write_to_file(line,max_file_num,0,file_handler_array);
             }
           }
         }
@@ -241,6 +251,12 @@ int run_sam2cov(Genome *genome, char *out_file,
   }
   assert(file_handler);
   fclose(file_handler);
+  for (int i = 0; i < max_file_num; ++i)
+  {
+    fclose(file_handler_array[i]);
+    //free(file_handler_array[i]);
+  }
+  free(file_handler_array);
   while (rmdir(".sam2cov_tmp") != 0)
   {
 
@@ -262,8 +278,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          //system(system_call);
+          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
@@ -331,13 +347,13 @@ int run_sam2cov(Genome *genome, char *out_file,
                         hit = 1;
                       } else {
                         log_err("line_mate %s and line don't match %s",line_mate,line);
-                        res = write_to_file(line_mate,max_file_num,counter);
+                        res = write_to_file2(line_mate,max_file_num,counter);
                       }
                     }
                     if (hit == 0)
                     {
                       //log_info("Line '%s' not found",line);
-                      res2 = write_to_file(line,max_file_num,counter);
+                      res2 = write_to_file2(line,max_file_num,counter);
                     }
                   }
                 }

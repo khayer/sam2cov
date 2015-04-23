@@ -779,7 +779,7 @@ int compare_HI_tag(char *line,char *line_mate){
   return 0;
 }
 
-int write_to_file(char *line, int max_file_num, int counter) {
+int write_to_file2(char *line, int max_file_num, int counter) {
   //int res = 0;
   char *sep = "\t";
   char read_name[10000];
@@ -796,6 +796,21 @@ int write_to_file(char *line, int max_file_num, int counter) {
   free(out_file);
 
   return 1;
+}
+
+int write_to_file(char *line, int max_file_num, int counter, FILE** file_handler_array){
+  //int res = 0;
+  char *sep = "\t";
+  char read_name[10000];
+  strcpy(read_name,line);
+  char *ptr1;
+  ptr1 = strtok(read_name,sep);
+  int name = string_to_number(ptr1,max_file_num);
+  //char *out_file = malloc(5000);
+  //strcpy(out_file,".sam2cov_tmp/tmp_");
+  //sprintf(out_file, ".sam2cov_tmp/tmp_%d_%d.sam", name, counter);//(out_file, itos(name));
+  //FILE *fp = fopen(out_file,"a");
+  fprintf(file_handler_array[name], "%s", line);
 }
 
 
