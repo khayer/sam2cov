@@ -188,28 +188,28 @@ int run_sam2cov(Genome *genome, char *out_file,
               if (ptr2 != NULL)
               {
                 splitted_line2 = strtok(ptr2,"\t");
-                log_info("RESULT I is: %d",res);
+                //log_info("RESULT I is: %d",res);
                 if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
                   //if (entry != NULL){ Entry_destroy(entry);}
                   res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
                     chromo_names,num_of_chr,strand);
-                  log_info("res2 was %d",res2);
+                  //log_info("res2 was %d",res2);
                   i = 1;
                   hit = 1;
                 } else if ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1)) {
-                  log_info("unique_mode %d", unique_mode);
-                  log_info("splitted_line2 %s", splitted_line2);
-                  log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
-                  log_info("Line '%s' not matched",line_mate);
+                  //log_info("unique_mode %d", unique_mode);
+                  //log_info("splitted_line2 %s", splitted_line2);
+                  //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
+                  //log_info("Line '%s' not matched",line_mate);
                   res2 = write_to_file(line_mate,max_file_num,0);
                 }
               }
             }
             if (hit == 0)
             {
-              log_info("Line '%s' not found",line);
+              //log_info("Line '%s' not found",line);
               res2 = write_to_file(line,max_file_num,0);
             }
           }
@@ -322,7 +322,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                       //fgets( line_mate, sizeof(line_mate), file_handler);
                       res = compare_names(line,line_mate);
                       same_hi_tag = compare_HI_tag(line,line_mate);
-                      log_info("RESULT is: %d and same_hi_tag: %d",res,same_hi_tag);
+                      //log_info("RESULT is: %d and same_hi_tag: %d",res,same_hi_tag);
                       if (res == 1 && same_hi_tag) {
                         //if (entry != NULL){ Entry_destroy(entry);}
                         res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
@@ -336,7 +336,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                     }
                     if (hit == 0)
                     {
-                      log_info("Line '%s' not found",line);
+                      //log_info("Line '%s' not found",line);
                       res2 = write_to_file(line,max_file_num,counter);
                     }
                   }
