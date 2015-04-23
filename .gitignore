@@ -1,6 +1,6 @@
 # My files
 ./*.cov
-*.sam
+./*.sam
 
 # Object files
 *.o

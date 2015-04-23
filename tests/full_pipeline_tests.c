@@ -68,6 +68,8 @@ char *test_dlclose()
     mu_assert(rc == 0, "Failed to close lib.");
     int status = system("rm tests/both2_tmp_NU.cov tests/both2_tmp_Unique.cov");
     mu_assert(status == 0, "Remove tmp files was unsuccesful.");
+    status = system("rm tests/both2_tmp_shuf_NU.cov tests/both2_tmp_shuf_Unique.cov");
+    mu_assert(status == 0, "Remove tmp files was unsuccesful.");
     return NULL;
 }
 
