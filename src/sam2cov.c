@@ -364,8 +364,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          system(system_call);
+          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          //system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
