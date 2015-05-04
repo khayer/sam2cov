@@ -338,15 +338,18 @@ int run_sam2cov(Genome *genome, char *out_file,
   }
   free(file_handler_array);
 
-
-  while (rmdir(".sam2cov_tmp") != 0)
+  int hit_file = 1;
+  while (rmdir(".sam2cov_tmp") != 0 && hit_file == 1)
   {
 
     DIR *dir;
     struct dirent *ent;
+    hit_file = 0;
     if ((dir = opendir (".sam2cov_tmp")) != NULL) {
+
       /* print all the files and directories within directory */
       while ((ent = readdir (dir)) != NULL) {
+        hit_file = 1;
         char *file_and_dir = malloc(5000);
         char *system_call = malloc(5000);
         char *out_file_tmp = malloc(5000);
