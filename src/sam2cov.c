@@ -187,7 +187,7 @@ int run_sam2cov(Genome *genome, char *out_file,
         sep = "NH:i:";
         char *ptr;
         strcpy(line_cpy, line);
-        
+
         ptr = strstr(line_cpy,sep);
         if (ptr != NULL)
         {
@@ -337,8 +337,8 @@ int run_sam2cov(Genome *genome, char *out_file,
     //free(file_handler_array[i]);
   }
   free(file_handler_array);
-  
-  
+
+
   while (rmdir(".sam2cov_tmp") != 0)
   {
 
@@ -349,6 +349,7 @@ int run_sam2cov(Genome *genome, char *out_file,
       while ((ent = readdir (dir)) != NULL) {
         char *file_and_dir = malloc(5000);
         char *system_call = malloc(5000);
+        char *out_file_tmp = malloc(5000);
         //strcpy(file_and_dir,".sam2cov_tmp/");
         //strcpy(file_and_dir,ent->d_name);
         sprintf(file_and_dir, ".sam2cov_tmp/%s", ent->d_name);
@@ -358,8 +359,24 @@ int run_sam2cov(Genome *genome, char *out_file,
         sscanf(ent->d_name, "tmp_%d_%d", &k, &counter);
         //log_info("k = %d",k);
         //exit(0);
-        if (StartsWith(ent->d_name, "t"))
+
+        int weiter = 1;
+        FILE *last_file = fopen(file_and_dir,"r");
+        //free(out_file_tmp);
+        fseek(last_file, 0, SEEK_END);
+        if (ftell(last_file)==0) {
+          //free(out_file_tmp);
+          unlink(file_and_dir);
+          //free(out_file_tmp);
+          weiter = 0;
+          //break;
+        }
+        fclose(last_file);
+
+
+        if (StartsWith(ent->d_name, "t") && (weiter ==1))
         {
+
           sprintf(system_call, "sort %s > %s.tmp", file_and_dir,file_and_dir);
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
@@ -373,9 +390,11 @@ int run_sam2cov(Genome *genome, char *out_file,
           //char *sep = "\t";
           //char *splitted_line;
           //int res = 0;
-          
+
           while (fgets( line, sizeof(line), file_handler) != NULL)
           {
+
+            //fclose(current_file);
             counter += 1;
             if (counter > 100) {
               log_err("Counter: %d is very large! Stopping.", counter);
@@ -383,10 +402,10 @@ int run_sam2cov(Genome *genome, char *out_file,
               free(system_call);
               return -1;
             }
-            char *out_file_tmp = malloc(5000);
+            //char *out_file_tmp = malloc(5000);
             sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_%d.sam", k, counter);
             FILE *current_file = fopen(out_file_tmp,"a");
-            free(out_file_tmp);
+
             //char *dummy = malloc(strlen("@"));
             //char dummy[1];
             //assert(dummy != NULL);
@@ -477,12 +496,12 @@ int run_sam2cov(Genome *genome, char *out_file,
             }
             fseek(current_file, 0, SEEK_END);
             if (ftell(current_file)==0) {
-              unlink(current_file);
+              unlink(out_file_tmp);
             } else {
               fclose(current_file);
             }
           }
-          
+          free(out_file_tmp);
           assert(file_handler);
           fclose(file_handler);
           log_info("Deleting %s",file_and_dir);
