@@ -144,8 +144,8 @@ int run_sam2cov(Genome *genome, char *out_file,
   char line_cpy[50000];
   char line_mate[50000];
   char line_mate_cpy[50000];
-  char in_memory_array[100][50000];
-  for (int i = 0; i < 100; ++i)
+  char in_memory_array[500][50000];
+  for (int i = 0; i < 500; ++i)
   {
     //in_memory_array[i] = "";
     strcpy(in_memory_array[i], "undefined");
@@ -160,24 +160,6 @@ int run_sam2cov(Genome *genome, char *out_file,
 
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
-    //char *dummy = malloc(strlen("@"));
-    //char dummy[1];
-    //assert(dummy != NULL);
-    //dummy = "@";
-    //strncpy(dummy,line,1);
-    //s.replace(s.find("$name"), sizeof("Somename")-1, "Somename");
-    //*dummy.replace(*dummy.find("\ufffd", sizeof(""),"");
-    //[dummy stringByReplacingOccurrencesOfString:@"\ufffd" withString:@" "];
-    //log_info("Compare of dummy %s and @ is %d. Line is %s", &dummy[0], strcmp(&dummy[0],"@"),line);
-    //fputs (strcmp(dummy,"@"), stdout);
-    //fputs (dummy,stdout);
-    //fputs (line,stdout);
-    //Entry *entry = NULL;
-    //char *line_cpy = malloc(strlen(line)+1);
-    //strcpy(line_cpy, line);
-    //fprintf(stderr, "LINE -%s requires an operand\n", line);
-    //if (!(strcmp(&dummy[0],"@")==0)) {
-
     if (!StartsWith(line,"@")) {
       //exit(1);
       //log_info("Got here without prob");
@@ -197,7 +179,7 @@ int run_sam2cov(Genome *genome, char *out_file,
             int i = 0;
             int hit = 0;
             int success = 0;
-            for (int r = 0; r < 100; ++r)
+            for (int r = 0; r < 500; ++r)
             {
               if (strcmp(in_memory_array[r],"undefined") == 0) {
                 strcpy(in_memory_array[r],line); //in_memory_array[r] = line;
@@ -215,7 +197,7 @@ int run_sam2cov(Genome *genome, char *out_file,
               int l;
               res = 0;
               same_hi_tag = 0;
-              for (l = 0; l < 100; ++l)
+              for (l = 0; l < 500; ++l)
               {
                 if (strcmp(in_memory_array[l],"undefined") == 0)
                 {
@@ -258,7 +240,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                   //log_info("Line '%s' not matched",line_mate);
                   //in_memory_index = 1 + in_memory_index;
                   int success = 0;
-                  for (int r = 0; r < 100; ++r)
+                  for (int r = 0; r < 500; ++r)
                   {
                     if (strcmp(in_memory_array[r],"undefined") == 0) {
                       strcpy(in_memory_array[r],line_mate);
@@ -318,7 +300,7 @@ int run_sam2cov(Genome *genome, char *out_file,
   assert(file_handler);
   fclose(file_handler);
 
-  for (int r = 0; r < 100; ++r)
+  for (int r = 0; r < 500; ++r)
   {
     if (!strcmp(in_memory_array[r],"undefined") == 0) {
       log_info("i was: %d",r);
