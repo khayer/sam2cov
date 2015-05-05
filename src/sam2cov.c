@@ -397,20 +397,22 @@ int run_sam2cov(Genome *genome, char *out_file,
           //char *splitted_line;
           //int res = 0;
 
+          counter += 1;
+          if (counter > 100) {
+            log_err("Counter: %d is very large! Stopping.", counter);
+            free(file_and_dir);
+            free(system_call);
+            return -1;
+          }
+          //char *out_file_tmp = malloc(5000);
+          sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_%d.sam", k, counter);
+          FILE *current_file = fopen(out_file_tmp,"a");
+
           while (fgets( line, sizeof(line), file_handler) != NULL)
           {
 
             //fclose(current_file);
-            counter += 1;
-            if (counter > 100) {
-              log_err("Counter: %d is very large! Stopping.", counter);
-              free(file_and_dir);
-              free(system_call);
-              return -1;
-            }
-            //char *out_file_tmp = malloc(5000);
-            sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_%d.sam", k, counter);
-            FILE *current_file = fopen(out_file_tmp,"a");
+
 
             //char *dummy = malloc(strlen("@"));
             //char dummy[1];
@@ -500,12 +502,13 @@ int run_sam2cov(Genome *genome, char *out_file,
               log_err("Something went wrong with entry %s", line);
               return -1;
             }
-            fseek(current_file, 0, SEEK_END);
-            if (ftell(current_file)==0) {
-              unlink(out_file_tmp);
-            } else {
-              fclose(current_file);
-            }
+
+          }
+          fseek(current_file, 0, SEEK_END);
+          if (ftell(current_file)==0) {
+            unlink(out_file_tmp);
+          } else {
+            fclose(current_file);
           }
           free(out_file_tmp);
           assert(file_handler);
