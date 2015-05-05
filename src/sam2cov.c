@@ -349,7 +349,10 @@ int run_sam2cov(Genome *genome, char *out_file,
 
       /* print all the files and directories within directory */
       while ((ent = readdir (dir)) != NULL) {
-        hit_file = 1;
+        if (StartsWith(ent->d_name, "t")) {
+          hit_file = 1;
+        }
+
         char *file_and_dir = malloc(5000);
         char *system_call = malloc(5000);
         char *out_file_tmp = malloc(5000);
