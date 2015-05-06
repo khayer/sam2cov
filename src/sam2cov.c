@@ -184,11 +184,11 @@ int run_sam2cov(Genome *genome, char *out_file,
             same_hi_tag = 0;
             for (l = 0; l < 500; ++l)
             {
-              if (strcmp(in_memory_array[l],"undefined") == 0)
-              {
-                //log_err("Here we break!!!! 1");
-                break;
-              }
+              //if (strcmp(in_memory_array[l],"undefined") == 0)
+              //{
+              //  //log_err("Here we break!!!! 1");
+              //  break;
+              //}
               //og_info(l);
               res = compare_names(in_memory_array[l],line);
               same_hi_tag = compare_HI_tag(in_memory_array[l],line);
@@ -262,11 +262,11 @@ int run_sam2cov(Genome *genome, char *out_file,
               same_hi_tag = 0;
               for (l = 0; l < 500; ++l)
               {
-                if (strcmp(in_memory_array[l],"undefined") == 0)
-                {
-                  //log_err("Here we break!!!! 1");
-                  break;
-                }
+                //if (strcmp(in_memory_array[l],"undefined") == 0)
+                //{
+                //  //log_err("Here we break!!!! 1");
+                //  break;
+                //}
                 //og_info(l);
                 res = compare_names(in_memory_array[l],line_mate);
                 same_hi_tag = compare_HI_tag(in_memory_array[l],line_mate);
