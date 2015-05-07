@@ -196,7 +196,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                   break;
                 } else {
                   in_memory_counter[l] += 1;
-                  if (in_memory_counter[l] > 1000) {
+                  if (in_memory_counter[l] > 10000) {
                     res2 = write_to_file(in_memory_array[l],max_file_num,0,file_handler_array);
                     strcpy(in_memory_array[l], "undefined");
                     in_memory_counter[l] = 0;
@@ -440,8 +440,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           system(system_call);
           sprintf(system_call, "mv %s.tmp %s", file_and_dir,file_and_dir);
           system(system_call);
-          sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
-          system(system_call);
+          //sprintf(system_call, "cp %s ../%s", file_and_dir,ent->d_name);
+          //system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
           //char line[5000];
