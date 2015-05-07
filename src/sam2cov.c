@@ -153,6 +153,7 @@ int run_sam2cov(Genome *genome, char *out_file,
     in_memory_counter[i] = 0;
   }
   char *sep = "\t";
+  char *sep2 = "NH:i:1";
   char *splitted_line;
   char *splitted_line2;
   int res = 0;
@@ -169,63 +170,139 @@ int run_sam2cov(Genome *genome, char *out_file,
 
       if (rum != 1) {
         sep = "NH:i:";
-        char *ptr;
-        strcpy(line_cpy, line);
-
-        ptr = strstr(line_cpy,sep);
-        if (ptr != NULL)
-        {
-          splitted_line = strtok(ptr,"\t");
-          if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
-            (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-            int hit = 0;
-            int i = 0;
-
+      } else {
+        sep = "IH:i:";
+        sep2 = "IH:i:1";
+      }
+      char *ptr;
+      strcpy(line_cpy, line);
+      ptr = strstr(line_cpy,sep);
+      if (ptr != NULL)
+      {
+        splitted_line = strtok(ptr,"\t");
+        if ((strcmp(splitted_line,sep2)==0 && unique_mode==1) ||
+          (strcmp(splitted_line,sep2)!=0 && unique_mode!=1)) {
+          int hit = 0;
+          int i = 0;
+          int l;
+          res = 0;
+          same_hi_tag = 0;
+          for (l = 0; l < max_array_entries; ++l)
+          {
+            if (strcmp(in_memory_array[l],"undefined") != 0) {
+              res = compare_names(in_memory_array[l],line);
+              same_hi_tag = compare_HI_tag(in_memory_array[l],line);
+              if ((res == 1 && same_hi_tag == 1) )
+              {
+                //log_err("Here we break!!!!");
+                break;
+              } else {
+                in_memory_counter[l] += 1;
+                if (in_memory_counter[l] > 10000) {
+                  res2 = write_to_file(in_memory_array[l],max_file_num,0,file_handler_array);
+                  strcpy(in_memory_array[l], "undefined");
+                  in_memory_counter[l] = 0;
+                }
+              }
+            }
+          }
+          //log_err("l is: %d", l);
+          char *ptr2;
+          strcpy(line_cpy, line);
+          ptr2 = strstr(line_cpy,sep);
+          if (ptr2 != NULL)
+          {
+            splitted_line2 = strtok(ptr2,"\t");
+            //log_info("RESULT I is: %d",res);
+            if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,sep2)==0 && unique_mode==1) ||
+              (strcmp(splitted_line2,sep2)!=0 && unique_mode!=1))) {
+              //if (entry != NULL){ Entry_destroy(entry);}
+              log_info("comparing %s and %s", in_memory_array[l] , line);
+              res2 = add_reads_to_cov(in_memory_array[l],line,genome,chromo_lengths,
+                chromo_names,num_of_chr,strand);
+              //log_info("res2 was %d",res2);
+              //i = 1;
+              hit = 1;
+              //in_memory_array[l] = "";
+              strcpy(in_memory_array[l], "undefined");
+              in_memory_counter[l] = 0;
+            } else if ((strcmp(splitted_line2,sep2)==0 && unique_mode==1) ||
+              (strcmp(splitted_line2,sep2)!=0 && unique_mode!=1)) {
+              //log_info("unique_mode %d", unique_mode);
+              //log_info("splitted_line2 %s", splitted_line2);
+              //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
+              //log_info("Line '%s' not matched",line_mate);
+              //in_memory_index = 1 + in_memory_index;
+              int success = 0;
+              for (int r = 0; r < max_array_entries; ++r)
+              {
+                if (strcmp(in_memory_array[r],"undefined") == 0) {
+                  strcpy(in_memory_array[r],line);
+                  success = 1;
+                  break;
+                }
+              }
+              if (success != 1) {
+                res2 = write_to_file(line,max_file_num,0,file_handler_array);
+              }
+            }
+          }
+          //int i = 0;
+          //int success = 0;
+          //for (int r = 0; r < 500; ++r)
+          //{
+          //  if (strcmp(in_memory_array[r],"undefined") == 0) {
+          //    strcpy(in_memory_array[r],line); //in_memory_array[r] = line;
+          //    success = 1;
+          //    break;
+          //  }
+          //}
+          //if (success != 1) {
+          //  res2 = write_to_file(line,max_file_num,0,file_handler_array);
+          //}
+          while (i == 0 && fgets( line_mate, sizeof(line), file_handler) != NULL) {
+            //fgets( line_mate, sizeof(line_mate), file_handler);
             int l;
             res = 0;
             same_hi_tag = 0;
             for (l = 0; l < max_array_entries; ++l)
             {
-              if (strcmp(in_memory_array[l],"undefined") != 0) {
-
-                res = compare_names(in_memory_array[l],line);
-                same_hi_tag = compare_HI_tag(in_memory_array[l],line);
-                if ((res == 1 && same_hi_tag == 1) )
-                {
-                  //log_err("Here we break!!!!");
-                  break;
-                } else {
-                  in_memory_counter[l] += 1;
-                  if (in_memory_counter[l] > 10000) {
-                    res2 = write_to_file(in_memory_array[l],max_file_num,0,file_handler_array);
-                    strcpy(in_memory_array[l], "undefined");
-                    in_memory_counter[l] = 0;
-                  }
-                }
+              //if (strcmp(in_memory_array[l],"undefined") == 0)
+              //{
+              //  //log_err("Here we break!!!! 1");
+              //  break;
+              //}
+              //og_info(l);
+              res = compare_names(in_memory_array[l],line_mate);
+              same_hi_tag = compare_HI_tag(in_memory_array[l],line_mate);
+              if ((res == 1 && same_hi_tag == 1) )
+              {
+                //log_err("Here we break!!!!");
+                break;
               }
             }
             //log_err("l is: %d", l);
             char *ptr2;
-            strcpy(line_cpy, line);
-            ptr2 = strstr(line_cpy,sep);
+            strcpy(line_mate_cpy, line_mate);
+            ptr2 = strstr(line_mate_cpy,sep);
             if (ptr2 != NULL)
             {
               splitted_line2 = strtok(ptr2,"\t");
               //log_info("RESULT I is: %d",res);
-              if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
-                (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
+              if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,sep2)==0 && unique_mode==1) ||
+                (strcmp(splitted_line2,sep2)!=0 && unique_mode!=1))) {
                 //if (entry != NULL){ Entry_destroy(entry);}
-                log_info("comparing %s and %s", in_memory_array[l] , line);
-                res2 = add_reads_to_cov(in_memory_array[l],line,genome,chromo_lengths,
+                log_info("comparing %s and %s", in_memory_array[l] , line_mate);
+                res2 = add_reads_to_cov(in_memory_array[l],line_mate,genome,chromo_lengths,
                   chromo_names,num_of_chr,strand);
                 //log_info("res2 was %d",res2);
-                //i = 1;
+                i = 1;
                 hit = 1;
                 //in_memory_array[l] = "";
                 strcpy(in_memory_array[l], "undefined");
                 in_memory_counter[l] = 0;
-              } else if ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
-                (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1)) {
+              } else if ((strcmp(splitted_line2,sep2)==0 && unique_mode==1) ||
+                (strcmp(splitted_line2,sep2)!=0 && unique_mode!=1)) {
                 //log_info("unique_mode %d", unique_mode);
                 //log_info("splitted_line2 %s", splitted_line2);
                 //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
@@ -235,127 +312,32 @@ int run_sam2cov(Genome *genome, char *out_file,
                 for (int r = 0; r < max_array_entries; ++r)
                 {
                   if (strcmp(in_memory_array[r],"undefined") == 0) {
-                    strcpy(in_memory_array[r],line);
+                    strcpy(in_memory_array[r],line_mate);
                     success = 1;
                     break;
                   }
                 }
                 if (success != 1) {
-                  res2 = write_to_file(line,max_file_num,0,file_handler_array);
+                  res2 = write_to_file(line_mate,max_file_num,0,file_handler_array);
                 }
               }
             }
-
-            //int i = 0;
-
-            //int success = 0;
-            //for (int r = 0; r < 500; ++r)
-            //{
-            //  if (strcmp(in_memory_array[r],"undefined") == 0) {
-            //    strcpy(in_memory_array[r],line); //in_memory_array[r] = line;
-            //    success = 1;
-            //    break;
-            //  }
-            //}
-            //if (success != 1) {
-            //  res2 = write_to_file(line,max_file_num,0,file_handler_array);
-            //}
-
-            while (i == 0 && fgets( line_mate, sizeof(line), file_handler) != NULL) {
-
-              //fgets( line_mate, sizeof(line_mate), file_handler);
-              int l;
-              res = 0;
-              same_hi_tag = 0;
-              for (l = 0; l < max_array_entries; ++l)
-              {
-                //if (strcmp(in_memory_array[l],"undefined") == 0)
-                //{
-                //  //log_err("Here we break!!!! 1");
-                //  break;
-                //}
-                //og_info(l);
-                res = compare_names(in_memory_array[l],line_mate);
-                same_hi_tag = compare_HI_tag(in_memory_array[l],line_mate);
-                if ((res == 1 && same_hi_tag == 1) )
-                {
-                  //log_err("Here we break!!!!");
-                  break;
-                }
-              }
-              //log_err("l is: %d", l);
-              char *ptr2;
-              strcpy(line_mate_cpy, line_mate);
-              ptr2 = strstr(line_mate_cpy,sep);
-              if (ptr2 != NULL)
-              {
-                splitted_line2 = strtok(ptr2,"\t");
-                //log_info("RESULT I is: %d",res);
-                if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
-                  (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
-                  //if (entry != NULL){ Entry_destroy(entry);}
-                  log_info("comparing %s and %s", in_memory_array[l] , line_mate);
-                  res2 = add_reads_to_cov(in_memory_array[l],line_mate,genome,chromo_lengths,
-                    chromo_names,num_of_chr,strand);
-                  //log_info("res2 was %d",res2);
-                  i = 1;
-                  hit = 1;
-                  //in_memory_array[l] = "";
-                  strcpy(in_memory_array[l], "undefined");
-                  in_memory_counter[l] = 0;
-                } else if ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
-                  (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1)) {
-                  //log_info("unique_mode %d", unique_mode);
-                  //log_info("splitted_line2 %s", splitted_line2);
-                  //log_info("strcmp %d", strcmp(splitted_line2,"NH:i:1"));
-                  //log_info("Line '%s' not matched",line_mate);
-                  //in_memory_index = 1 + in_memory_index;
-                  int success = 0;
-                  for (int r = 0; r < max_array_entries; ++r)
-                  {
-                    if (strcmp(in_memory_array[r],"undefined") == 0) {
-                      strcpy(in_memory_array[r],line_mate);
-                      success = 1;
-                      break;
-                    }
-                  }
-                  if (success != 1) {
-                    res2 = write_to_file(line_mate,max_file_num,0,file_handler_array);
-                  }
-                }
-              }
-            }
-            //if (hit == 0)
-            //{
-            //  //log_info("Line '%s' not found",line);
-            //  int success = 0;
-            //  for (int r = 0; r < 100; ++r)
-            //  {
-            //    if (strcmp(in_memory_array[r],"") == 0) {
-            //      in_memory_array[r] = line;
-            //      success = 1;
-            //    }
-            //  }
-            //  if (success != 1) {
-            //    res2 = write_to_file(line,max_file_num,0,file_handler_array);
-            //  }
-            //}
           }
-        }
-      } else {
-        sep = "IH:i:";
-        char *ptr;
-        ptr = strstr(line,sep);
-        if (ptr != NULL)
-        {
-          splitted_line = strtok(ptr,"\t");
-          if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
-            (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
-            fgets( line_mate, sizeof(line_mate), file_handler);
-            //if (entry != NULL){ Entry_destroy(entry);}
-            res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-              chromo_names,num_of_chr,strand);
-          }
+          //if (hit == 0)
+          //{
+          //  //log_info("Line '%s' not found",line);
+          //  int success = 0;
+          //  for (int r = 0; r < 100; ++r)
+          //  {
+          //    if (strcmp(in_memory_array[r],"") == 0) {
+          //      in_memory_array[r] = line;
+          //      success = 1;
+          //    }
+          //  }
+          //  if (success != 1) {
+          //    res2 = write_to_file(line,max_file_num,0,file_handler_array);
+          //  }
+          //}
         }
       }
     }
@@ -368,9 +350,6 @@ int run_sam2cov(Genome *genome, char *out_file,
     }
   }
 
-  assert(file_handler);
-  fclose(file_handler);
-
   for (int r = 0; r < max_array_entries; ++r)
   {
     if (!strcmp(in_memory_array[r],"undefined") == 0) {
@@ -381,6 +360,11 @@ int run_sam2cov(Genome *genome, char *out_file,
       //break;
     }
   }
+
+  assert(file_handler);
+  fclose(file_handler);
+
+
 
   //free(in_memory_array);
 
@@ -444,6 +428,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           //system(system_call);
           FILE *file_handler = fopen(file_and_dir,"r");
           assert(file_handler);
+
+
           //char line[5000];
           //char line_mate[5000];
           //char *sep = "\t";
@@ -461,6 +447,8 @@ int run_sam2cov(Genome *genome, char *out_file,
           sprintf(out_file_tmp, ".sam2cov_tmp/tmp_%d_%d.sam", k, counter);
           FILE *current_file = fopen(out_file_tmp,"a");
           int the_very_first = 1;
+
+
           while (fgets( line, sizeof(line), file_handler) != NULL)
           {
 
@@ -492,66 +480,51 @@ int run_sam2cov(Genome *genome, char *out_file,
 
               if (rum != 1) {
                 sep = "NH:i:";
-                char *ptr;
-                strcpy(line_cpy, line);
-                //ptr = strstr(line_cpy,sep);
-                ptr = strstr(line_cpy,sep);
-                if (ptr != NULL)
-                {
-                  splitted_line = strtok(ptr,"\t");
-
-                  if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
-                    (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-
-                    int i = 0;
-                    int hit = 0;
-                    int is_there_a_next = 0;
-                    while (i == 0  && fgets(line_mate, sizeof(line), file_handler) != NULL) {
-                      is_there_a_next = 1;
-                      //fgets( line_mate, sizeof(line_mate), file_handler);
-                      res = compare_names(line,line_mate);
-                      if (res != 1) {
-                        log_err("%s has no partner", line);
-                        strcpy(line, line_mate);
-                      } else {
-                        same_hi_tag = compare_HI_tag(line,line_mate);
-                        //log_info("RESULT is: %d and same_hi_tag: %d",res,same_hi_tag);
-                        if (res == 1 && same_hi_tag) {
-                          //if (entry != NULL){ Entry_destroy(entry);}
-                          res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-                            chromo_names,num_of_chr,strand);
-                          i = 1;
-                          hit = 1;
-                        } else {
-                          //log_err("line_mate %s and line don't match %s",line_mate,line);
-                          //res = write_to_file2(line_mate,max_file_num,counter);
-                          fprintf(current_file, "%s", line_mate);
-                        }
-                      }
-                    }
-                    if (is_there_a_next == 0 && the_very_first == 1) {
-                      log_err("%s has no partner", line);
-                    } else if (hit == 0) {
-                      //log_info("Line '%s' not found",line);
-                      fprintf(current_file, "%s", line);
-                      //res2 = write_to_file2(line,max_file_num,counter);
-                    }
-                  }
-                }
               } else {
                 sep = "IH:i:";
-                char *ptr;
-                ptr = strstr(line,sep);
-                if (ptr != NULL)
-                {
-                  splitted_line = strtok(ptr,"\t");
-
-                  if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
-                    (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
-                    fgets( line_mate, sizeof(line_mate), file_handler);
-                    //if (entry != NULL){ Entry_destroy(entry);}
-                    res = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
-                      chromo_names,num_of_chr,strand);
+                sep2 = "IH:i:1";
+              }
+              char *ptr;
+              strcpy(line_cpy, line);
+              //ptr = strstr(line_cpy,sep);
+              ptr = strstr(line_cpy,sep);
+              if (ptr != NULL)
+              {
+                splitted_line = strtok(ptr,"\t");
+                if ((strcmp(splitted_line,sep2)==0 && unique_mode==1) ||
+                  (strcmp(splitted_line,sep2)!=0 && unique_mode!=1)) {
+                  int i = 0;
+                  int hit = 0;
+                  int is_there_a_next = 0;
+                  while (i == 0  && fgets(line_mate, sizeof(line), file_handler) != NULL) {
+                    is_there_a_next = 1;
+                    //fgets( line_mate, sizeof(line_mate), file_handler);
+                    res = compare_names(line,line_mate);
+                    if (res != 1) {
+                      log_err("%s has no partner", line);
+                      strcpy(line, line_mate);
+                    } else {
+                      same_hi_tag = compare_HI_tag(line,line_mate);
+                      //log_info("RESULT is: %d and same_hi_tag: %d",res,same_hi_tag);
+                      if (res == 1 && same_hi_tag) {
+                        //if (entry != NULL){ Entry_destroy(entry);}
+                        res2 = add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+                          chromo_names,num_of_chr,strand);
+                        i = 1;
+                        hit = 1;
+                      } else {
+                        //log_err("line_mate %s and line don't match %s",line_mate,line);
+                        //res = write_to_file2(line_mate,max_file_num,counter);
+                        fprintf(current_file, "%s", line_mate);
+                      }
+                    }
+                  }
+                  if (is_there_a_next == 0 && the_very_first == 1) {
+                    log_err("%s has no partner", line);
+                  } else if (hit == 0) {
+                    //log_info("Line '%s' not found",line);
+                    fprintf(current_file, "%s", line);
+                    //res2 = write_to_file2(line,max_file_num,counter);
                   }
                 }
               }

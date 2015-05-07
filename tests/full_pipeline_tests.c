@@ -87,7 +87,7 @@ char *test_everything()
     //int ucsc_header = 0;
     int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
     //printf("Satus %d\n", status);
-    status = system("$VALGRIND ./bin/sam2cov  -p tests/both2_tmp_ -s 0  -e 1 tests/danRer7_s.fa.fai tests/test.sam");
+    status = system("$VALGRIND ./bin/sam2cov  -p tests/both2_tmp_ -r 1 -s 0  -e 1 tests/danRer7_s.fa.fai tests/test.sam");
     //printf("Satus %d\n", status);
     //check(status == 0, "Function sam2cov return %d", status);
     mu_assert(status == 0,"test_everything failed!");
