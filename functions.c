@@ -142,6 +142,11 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
 
 int get_strand(int bit_flag) {
   int bin[12];
+  //int l = 0;
+  //while (l<12) {
+  //  bin[l] = 0;
+  //  l++;
+  //}
   int k = bit_flag;
   int i = 0;
   while(k>0) {
@@ -439,10 +444,11 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
   if (entry_r1 == NULL || entry_r2 == NULL) {
-    log_err("Ending all processes");
-    Genome_destroy(genome);
-    for (int i=0; i<num_of_chr; i++) free(names[i]);
-    exit(1);
+    //log_err("Ending all processes");
+    //Genome_destroy(genome);
+    //for (int i=0; i<num_of_chr; i++) free(names[i]);
+    //exit(1);
+    return;
   }
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
