@@ -438,12 +438,13 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
 
-  //if (entry_r1 == NULL || entry_r2 == NULL) {
+  if (entry_r1 == NULL || entry_r2 == NULL) {
   //  log_err("Ending all processes");
   //  Genome_destroy(genome);
   //  for (int i=0; i<num_of_chr; i++) free(names[i]);
   //  exit(1);
-  //}
+    return;
+  }
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
   int size_of_array;
