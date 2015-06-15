@@ -450,6 +450,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     //exit(1);
     return;
   }
+
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
   int size_of_array;
