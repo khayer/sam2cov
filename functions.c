@@ -142,6 +142,11 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
 
 int get_strand(int bit_flag) {
   int bin[12];
+  int l = 0;
+  while (l<12) {
+    bin[l] = 0;
+    l++;
+  }
   int k = bit_flag;
   int i = 0;
   while(k>0) {
@@ -445,6 +450,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   //  exit(1);
     return;
   }
+
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
   int size_of_array;
@@ -547,8 +553,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
     case 2:
       //log_info("strand is 1");
       // Only forward reads:
-      if ((entry_r1->strand == 0 && entry_r1->first == 1) ||
-          (entry_r1->strand == 1 && entry_r1->first == 0)) {
+      if (entry_r1->strand == 0 ) {
         //log_info("ONLY");
         update_coverage(ranges_r1,entry_r1,genome,size_of_array);
 
@@ -557,8 +562,7 @@ void add_reads_to_cov_single(char *r1_line, Genome *genome,
     case 1:
       //log_info("strand is 2");
       // Only reverse reads
-      if ((entry_r1->strand == 1 && entry_r1->first == 1) ||
-          (entry_r1->strand == 0 && entry_r1->first == 0)) {
+      if (entry_r1->strand == 1) {
         //log_info("YEAH");
         update_coverage(ranges_r1,entry_r1,genome,size_of_array);
 
