@@ -142,11 +142,11 @@ void get_names(char *file_name, int number_of_chromosomes, int *chromo_lengths,c
 
 int get_strand(int bit_flag) {
   int bin[12];
-  //int l = 0;
-  //while (l<12) {
-  //  bin[l] = 0;
-  //  l++;
-  //}
+  int l = 0;
+  while (l<12) {
+    bin[l] = 0;
+    l++;
+  }
   int k = bit_flag;
   int i = 0;
   while(k>0) {
