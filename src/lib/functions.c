@@ -468,7 +468,7 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   //  Genome_destroy(genome);
   //  for (int i=0; i<num_of_chr; i++) free(names[i]);
   //  exit(1);
-    return;
+    return 0;
   }
 
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);

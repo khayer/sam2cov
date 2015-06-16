@@ -1,6 +1,5 @@
 # My files
 ./*.cov
-*.cov
 *.sam
 
 # Object files
@@ -21,4 +20,3 @@
 *.out
 *.app
 
-Pf3D7_genome_one-line-seqs.fa.fai

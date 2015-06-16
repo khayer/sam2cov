@@ -66,7 +66,7 @@ char *test_dlclose()
 {
     int rc = dlclose(lib);
     mu_assert(rc == 0, "Failed to close lib.");
-    int status = system("rm tests/both2_tmp_NU.cov tests/both2_tmp_Unique.cov");
+    int status = system("rm tests/*tmp*");
     mu_assert(status == 0, "Remove tmp files was unsuccesful.");
     return NULL;
 }
@@ -114,12 +114,33 @@ char *test_output(){
     return NULL;
 }
 
+
+char *test_everything_single()
+{
+    int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
+    status = system("$VALGRIND ./bin/sam2cov -p tests/sing_2_tmp_ -s 2 -e 0 tests/Pf3D7_genome_one-line-seqs.fa.fai tests/single_end.sam");
+    status = system("$VALGRIND ./bin/sam2cov -p tests/sing_1_tmp_ -s 1 -e 0 tests/Pf3D7_genome_one-line-seqs.fa.fai tests/single_end.sam");
+    mu_assert(status == 0,"test_everything failed!");
+    return NULL;
+
+}
+
+char *test_output_single(){
+    mu_assert(check_function("compare_two_files", "tests/sing_2_tmp_NU.cov", "tests/sing_2NU.cov", 1), "test_output failed!");
+    mu_assert(check_function("compare_two_files", "tests/sing_2_tmp_Unique.cov", "tests/sing_2Unique.cov", 1), "test_output failed!");
+    mu_assert(check_function("compare_two_files", "tests/sing_1_tmp_NU.cov", "tests/sing_1NU.cov", 1), "test_output failed!");
+    mu_assert(check_function("compare_two_files", "tests/sing_1_tmp_Unique.cov", "tests/sing_1Unique.cov", 1), "test_output failed!");
+    return NULL;
+}
+
 char *all_tests() {
     mu_suite_start();
 
     mu_run_test(test_dlopen);
     mu_run_test(test_everything);
     mu_run_test(test_output);
+    mu_run_test(test_everything_single);
+    mu_run_test(test_output_single);
     //mu_run_test(test_functions);
     //mu_run_test(test_chromosome)
     mu_run_test(test_dlclose);
