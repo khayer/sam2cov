@@ -278,7 +278,11 @@ int *interpret_cigar_string(Entry *entry, int size_of_array) {
   //int size_of_array = strlen(entry->cigar_string);
   int *a = malloc(size_of_array*sizeof(int));
   for (int l = 0; l < size_of_array; l++) {
-    a[l] = 0;
+    a[l] = -1;
+  }
+  if (entry == 0)
+  {
+    return a;
   }
   a[0] = entry->pos;
 
@@ -357,27 +361,27 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
   log_info("ranges_r1 %d", ranges_r1[0]);
   log_info("ranges_r2 %d", ranges_r2[0]);
   log_info("size_of_array %d", size_of_array);
-  int *a = malloc(size_of_array*sizeof(int));
+  int *a = malloc(size_of_array*sizeof(int)+1);
   for (int l = 0; l < size_of_array; l++) {
     a[l] = 0;
   }
   //log_info("size_of_array / 2 = %d", size_of_array/2);
-  int *starts_r1 = malloc(size_of_array/2*sizeof(int));
+  int *starts_r1 = malloc(size_of_array/2*sizeof(int)+1);
   for (int l = 0; l < size_of_array/2; l++) {
     starts_r1[l] = ranges_r1[l*2];
   }
 
-  int *starts_r2 = malloc(size_of_array/2*sizeof(int));
+  int *starts_r2 = malloc(size_of_array/2*sizeof(int)+1);
   for (int l = 0; l < size_of_array/2; l++) {
     starts_r2[l] = ranges_r2[l*2];
   }
 
-  int *stops_r1 = malloc(size_of_array/2*sizeof(int));
+  int *stops_r1 = malloc(size_of_array/2*sizeof(int)+1);
   for (int l = 0; l < size_of_array/2; l++) {
     stops_r1[l] = ranges_r1[l*2+1];
   }
 
-  int *stops_r2 = malloc(size_of_array/2*sizeof(int));
+  int *stops_r2 = malloc(size_of_array/2*sizeof(int)+1);
   for (int l = 0; l < size_of_array/2; l++) {
     stops_r2[l] = ranges_r2[l*2+1];
   }
@@ -430,6 +434,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
   //log_info("Now I am going to free the memory!");
   free(starts_r1);free(stops_r1);
   free(starts_r2);free(stops_r2);
+  log_info("got here combine_ranges!");
   //for (int i = 0; i < size_of_array; i++) {
   //  printf("Combined in a[] %d: %d\n", i, a[i] );
   //}
@@ -462,8 +467,9 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand){
   Entry *entry_r1 = make_entry_for_read(r1_line,genome);
   Entry *entry_r2 = make_entry_for_read(r2_line,genome);
+  log_info("R1 %s", r1_line);
 
-  if (entry_r1 == NULL || entry_r2 == NULL) {
+  if (entry_r1 == NULL && entry_r2 == NULL) {
   //  log_err("Ending all processes");
   //  Genome_destroy(genome);
   //  for (int i=0; i<num_of_chr; i++) free(names[i]);
@@ -477,40 +483,53 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   //log_info("LINE R1 %s",r1_line);
   //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
   //log_info("LINE R2 %s",r2_line);
-  if (strlen(entry_r1->cigar_string) > strlen(entry_r2->cigar_string)) {
+  log_info("GOT HERE");
+  if (entry_r1 != NULL && entry_r2 != NULL) {
+    log_info("BOTH");
+    if (strlen(entry_r1->cigar_string) > strlen(entry_r2->cigar_string)) {
+      size_of_array = strlen(entry_r1->cigar_string) * 2;
+    } else {
+      size_of_array = strlen(entry_r2->cigar_string) * 2;
+    }
+  } else if (entry_r1 != NULL) {
+    log_info("R1");
     size_of_array = strlen(entry_r1->cigar_string) * 2;
-  } else {
+  } else if (entry_r2 != NULL) {
+    log_info("R2");
     size_of_array = strlen(entry_r2->cigar_string) * 2;
   }
 
-
+  log_info("GOT HERE2");
   //log_info("r1_line %s", r1_line);
   int *ranges_r1;
   ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
+  log_info("LALA ranges_r1 %d", ranges_r1[0]);
+
   int *ranges_r2;
   ranges_r2 = interpret_cigar_string(entry_r2,size_of_array);
+  log_info("LALA ranges_r2 %d", ranges_r2[0]);
   //log_info("AFTER interpret_cigar_string");
   //log_info("ranges_r1 %d", ranges_r1[0]);
   //log_info("ranges_r2 %d", ranges_r2[0]);
   if (ranges_r1[0] == -1)
   {
-    log_err("There are issues with the CIGAR string for \"%s\"",r1_line );
-    log_err("Ending all processes");
-    free(ranges_r2);
-    free(ranges_r1);
-    Entry_destroy(entry_r1);
-    Entry_destroy(entry_r2);
-    return -1;
+    //log_err("There are issues with the CIGAR string for \"%s\"",r1_line );
+    //log_err("Ending all processes");
+    //free(ranges_r2);
+    //free(ranges_r1);
+    //Entry_destroy(entry_r1);
+    //Entry_destroy(entry_r2);
+    //return -1;
+    //ranges_r1 = ranges_r2;
+    for (int l = 0; l < size_of_array; l++) {
+      ranges_r1[l] = ranges_r2[l];
+    }
   }
   if (ranges_r2[0] == -1)
   {
-    log_err("There are issues with the CIGAR string for \"%s\"",r2_line );
-    log_err("Ending all processes");
-    free(ranges_r2);
-    free(ranges_r1);
-    Entry_destroy(entry_r1);
-    Entry_destroy(entry_r2);
-    return -1;
+    for (int l = 0; l < size_of_array; l++) {
+      ranges_r2[l] = ranges_r1[l];
+    }
   }
 
   switch(strand) {
@@ -560,6 +579,7 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
       }
       break;
   }
+  log_info("got here nsekjfnse!");
 
   free(ranges_r2);
   free(ranges_r1);
