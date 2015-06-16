@@ -653,6 +653,22 @@ int run_sam2cov(Genome *genome, char *out_file,
 
                     if (is_there_a_next == 0 && the_very_first == 1) {
                       log_err("%s has no partner", line);
+                      // Remove from array too!
+                      for (l = 0; l < max_array_entries; ++l)
+                      {
+                        if (strcmp(in_memory_array[l],"undefined") != 0) {
+                          res = compare_names(in_memory_array[l],line);
+                          same_hi_tag = compare_HI_tag(in_memory_array[l],line);
+                          if ((res == 1 && same_hi_tag == 1) )
+                          {
+                            //log_err("Here we break!!!!");
+                            break;
+                          }
+                        }
+                      }
+                      strcpy(in_memory_array[l], "undefined");
+                      in_memory_counter[l] = 0;
+
                     } else if (hit == 0) {
                       //log_info("Line '%s' not found",line);
                       fprintf(current_file, "%s", line);
@@ -672,6 +688,18 @@ int run_sam2cov(Genome *genome, char *out_file,
               return -1;
             }
 
+          }
+          for (int r = 0; r < max_array_entries; ++r)
+          {
+            if (!strcmp(in_memory_array[r],"undefined") == 0) {
+              log_info("i was: %d",r);
+              log_info("Still in memory: %s", in_memory_array[r]);
+              fprintf(current_file, "%s", line);
+              strcpy(in_memory_array[r], "undefined");
+              in_memory_counter[r] = 0;
+            } else {
+              //break;
+            }
           }
           fseek(current_file, 0, SEEK_END);
           if (ftell(current_file)==0) {
@@ -730,7 +758,7 @@ int main(int argc, char *argv[])
   int strand = 0;
   int ucsc_header = 0;
   int max_file_num = 10;
-  int max_array_entries = 10;
+  int max_array_entries = 2;
   //int add_chr = 0;
 
   int c;
