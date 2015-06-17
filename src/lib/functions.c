@@ -762,9 +762,9 @@ int compare_names(char *line,char *line_mate) {
   //Entry *entry_r2 = make_entry_for_read(line_mate,genome);
   //log_info("line1 %s", line);
   //log_info("line2 %s", line_mate);
-  char read_name1[10000];
+  char read_name1[50000];
   strcpy(read_name1,line);
-  char read_name2[10000];
+  char read_name2[50000];
   strcpy(read_name2,line_mate);
   char *ptr1, *ptr2;
   ptr1 = strtok(read_name1,sep);
@@ -780,12 +780,12 @@ int compare_names(char *line,char *line_mate) {
 int write_to_file2(char *line, int max_file_num, int counter) {
   //int res = 0;
   char *sep = "\t";
-  char read_name[10000];
+  char read_name[50000];
   strcpy(read_name,line);
   char *ptr1;
   ptr1 = strtok(read_name,sep);
   int name = string_to_number(ptr1,max_file_num);
-  char *out_file = malloc(5000);
+  char *out_file = malloc(50000);
   //strcpy(out_file,".sam2cov_tmp/tmp_");
   sprintf(out_file, ".sam2cov_tmp/tmp_%d_%d.sam", name, counter);//(out_file, itos(name));
   FILE *fp = fopen(out_file,"a");
@@ -799,7 +799,7 @@ int write_to_file2(char *line, int max_file_num, int counter) {
 int write_to_file(char *line, int max_file_num, int counter, FILE** file_handler_array){
   //int res = 0;
   char *sep = "\t";
-  char read_name[10000];
+  char read_name[50000+1];
   strcpy(read_name,line);
   char *ptr1;
   ptr1 = strtok(read_name,sep);

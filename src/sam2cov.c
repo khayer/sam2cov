@@ -119,10 +119,17 @@ void run_sam2cov_single_end(Genome *genome, char *out_file,
   fclose(fp);
 }
 
-int run_sam2cov(Genome *genome, char *out_file,
-  char *sam_file, int num_of_chr, int *chromo_lengths,
-  char **chromo_names, int unique_mode, int rum, int strand,
-  int max_file_num, int ucsc_header) {
+int run_sam2cov(Genome *genome, 
+  char *out_file,
+  char *sam_file, 
+  int num_of_chr, 
+  int *chromo_lengths,
+  char **chromo_names, 
+  int unique_mode, 
+  int rum, 
+  int strand,
+  int max_file_num, 
+  int ucsc_header) {
   int res1 = mkdir(".sam2cov_tmp",0777);
   if (res1 != 0)
   {
@@ -242,7 +249,7 @@ int run_sam2cov(Genome *genome, char *out_file,
                 if (res == 1 && same_hi_tag && ((strcmp(splitted_line2,"NH:i:1")==0 && unique_mode==1) ||
                   (strcmp(splitted_line2,"NH:i:1")!=0 && unique_mode!=1))) {
                   //if (entry != NULL){ Entry_destroy(entry);}
-                  log_info("comparing %s and %s", in_memory_array[l] , line_mate);
+                  //log_info("comparing %s and %s", in_memory_array[l] , line_mate);
                   res2 = add_reads_to_cov(in_memory_array[l],line_mate,genome,chromo_lengths,
                     chromo_names,num_of_chr,strand);
                   //log_info("res2 was %d",res2);
@@ -331,9 +338,9 @@ int run_sam2cov(Genome *genome, char *out_file,
 
   //free(in_memory_array);
 
-  for (int i = 0; i < max_file_num; ++i)
+  for (int r = 0; r < max_file_num; ++r)
   {
-    fclose(file_handler_array[i]);
+    fclose(file_handler_array[r]);
     //free(file_handler_array[i]);
   }
   free(file_handler_array);
@@ -655,8 +662,17 @@ int main(int argc, char *argv[])
 
   int res = 0;
   if (paired_end_mode == 1) {
-    res = run_sam2cov(genome, unique_file, sam_file,
-      num_of_chr, chromo_lengths, chromo_names, unique_mode, rum, strand, max_file_num, ucsc_header);
+    res = run_sam2cov(genome, 
+      unique_file, 
+      sam_file,
+      num_of_chr, 
+      chromo_lengths, 
+      chromo_names, 
+      unique_mode, 
+      rum, 
+      strand, 
+      max_file_num, 
+      ucsc_header);
     if (res == -1)
     {
       log_err("There was an error");
