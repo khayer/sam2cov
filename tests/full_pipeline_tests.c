@@ -143,7 +143,7 @@ char *all_tests() {
     mu_run_test(test_output_single);
     //mu_run_test(test_functions);
     //mu_run_test(test_chromosome)
-    //mu_run_test(test_dlclose);
+    mu_run_test(test_dlclose);
     return NULL;
 }
 
