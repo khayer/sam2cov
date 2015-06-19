@@ -133,6 +133,21 @@ char *test_output_single(){
     return NULL;
 }
 
+char *test_everything_prob()
+{
+    int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
+    status = system("$VALGRIND ./bin/sam2cov -p tests/prob_tmp_ -s 0 -e 1 tests/Pf3D7_genome_one-line-seqs.fa.fai tests/prob.sam");
+    mu_assert(status == 0,"test_everything failed!");
+    return NULL;
+
+}
+
+char *test_output_prob(){
+    mu_assert(check_function("compare_two_files", "tests/prob_tmp_NU.cov", "tests/prob_NU.cov", 1), "test_output failed!");
+    mu_assert(check_function("compare_two_files", "tests/prob_tmp_Unique.cov", "tests/prob_Unique.cov", 1), "test_output failed!");
+    return NULL;
+}
+
 char *all_tests() {
     mu_suite_start();
 
@@ -141,6 +156,8 @@ char *all_tests() {
     mu_run_test(test_output);
     mu_run_test(test_everything_single);
     mu_run_test(test_output_single);
+    mu_run_test(test_everything_prob);
+    mu_run_test(test_output_prob);
     //mu_run_test(test_functions);
     //mu_run_test(test_chromosome)
     mu_run_test(test_dlclose);

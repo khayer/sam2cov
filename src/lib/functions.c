@@ -241,8 +241,8 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   }
   assert(found == 1);
   if (found != 1) {
-    log_err("LINE: %s invalid",line);
-    log_err("Could not find %s.", chr_name);
+    //log_err("LINE: %s invalid",line);
+    //log_err("Could not find %s.", chr_name);
     return NULL;
   } else {
     Entry *entry = Entry_create(ptr2,read_name, strand, first, chr_name, pos, current_chr_number, cigar);
