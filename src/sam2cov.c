@@ -18,7 +18,7 @@
 //#define VERSION "v0.0.4-beta - 4/29/14"
 //#define VERSION "v0.0.5.1-beta - 6/15/15"
 //#define VERSION "v0.0.5.2-beta - 6/15/15"
-#define VERSION "v0.0.5.2-dev - 6/19/15"
+#define VERSION "v0.0.5.3-beta - 6/19/15"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );

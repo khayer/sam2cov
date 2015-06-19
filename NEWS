@@ -1,11 +1,10 @@
-Dev Release 0.0.5.2-dev (v0.0.5.2-dev - 6/19/15)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Unit tests
+Beta Release 0.0.5.3 (v0.0.5.3-beta - 6/19/15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Unnecessary error messages removed
 
 Beta Release 0.0.5.2 (v0.0.5.2-beta - 6/15/15)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 - Strand Specific is now available for single end data
 
 Beta Release 0.0.5.1 (v0.0.5.1-beta - 6/15/15)
