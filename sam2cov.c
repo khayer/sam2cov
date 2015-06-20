@@ -159,16 +159,12 @@ void run_sam2cov(Genome *genome, char *out_file,
         char *ptr;
         ptr = strstr(line,sep);
         splitted_line = strtok(ptr,"\t");
-        log_info("ewokeo %s dmkmfdk",line_cpy);
-        log_info("HALLO %s",splitted_line);
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-          log_info("dsdksndksndk");
-          
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
-      } else if (entry != NULL) {
+      } else if (entry!=NULL || entry_mate != NULL) {
         sep = "IH:i:";
         char *ptr;
         ptr = strstr(line,sep);
