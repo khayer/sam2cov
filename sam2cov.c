@@ -143,7 +143,7 @@ void run_sam2cov(Genome *genome, char *out_file,
     Entry *entry = NULL;
     Entry *entry_mate = NULL;
     char *line_cpy = malloc(strlen(line)+1);
-    
+
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
     if (!StartsWith(line,"@")) {
@@ -159,6 +159,11 @@ void run_sam2cov(Genome *genome, char *out_file,
         char *ptr;
         ptr = strstr(line,sep);
         splitted_line = strtok(ptr,"\t");
+        if (splitted_line == NULL) {
+          ptr = strstr(line_mate,sep);
+          splitted_line = strtok(ptr,"\t");
+        }
+        //log_info("splitted_line %s" , splitted_line);
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
@@ -179,7 +184,7 @@ void run_sam2cov(Genome *genome, char *out_file,
     }
     //free(dummy);
     free(line_cpy); if (entry != NULL) Entry_destroy(entry);
-    //free(mate_cpy); 
+    //free(mate_cpy);
     if (entry_mate != NULL) Entry_destroy(entry_mate);
   }
   assert(file_handler);

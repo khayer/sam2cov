@@ -459,7 +459,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
   assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
-  int size_of_array;
+  int size_of_array = 0;
   //log_info("LINE R1 %s",r1_line);
   //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
   //log_info("LINE R2 %s",r2_line);
@@ -474,7 +474,7 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   } else if (entry_r1 != NULL) {
     //log_info("R1");
     size_of_array = strlen(entry_r1->cigar_string) * 2;
-  } else if (entry_r2 != NULL) {
+  } else {//if (entry_r2 != NULL) {
     //log_info("R2");
     size_of_array = strlen(entry_r2->cigar_string) * 2;
   }
