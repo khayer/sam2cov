@@ -154,7 +154,7 @@ void run_sam2cov(Genome *genome, char *out_file,
       //char *mate_cpy = malloc(strlen(line_mate)+1);
       strcpy(mate_cpy, line_mate);
       entry_mate = make_entry_for_read(mate_cpy,genome);
-      if (rum != 1 && (entry!=NULL || entry_mate != NULL)) {
+      if (rum != 1 && (entry->chr_num == -1 || entry_mate->chr_num == -1)) {
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
@@ -169,7 +169,7 @@ void run_sam2cov(Genome *genome, char *out_file,
           add_reads_to_cov(line,line_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
-      } else if (entry!=NULL || entry_mate != NULL) {
+      } else if (entry->chr_num == -1 || entry_mate->chr_num == -1) {
         sep = "IH:i:";
         char *ptr;
         ptr = strstr(line,sep);
