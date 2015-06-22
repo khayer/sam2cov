@@ -136,7 +136,7 @@ char *test_output_single(){
 char *test_everything_prob()
 {
     int status = system("command -v valgrind >/dev/null 2>&1 && VALGRIND='valgrind -v --leak-check=full'");
-    status = system("$VALGRIND ./bin/sam2cov -p tests/prob_tmp_ -s 0 -e 1 tests/Pf3D7_genome_one-line-seqs.fa.fai tests/prob.sam");
+    status = system("$VALGRIND ./bin/sam2cov -p tests/prob_tmp_ -s 2 -e 1 tests/Pf3D7_genome_one-line-seqs.fa.fai tests/prob.sam");
     mu_assert(status == 0,"test_everything failed!");
     return NULL;
 
