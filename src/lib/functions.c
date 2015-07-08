@@ -228,7 +228,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int current_chr_number = 123456;
   int found = 0;
   if (strcmp(chr_name,"*") == 0){
-    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none");
+    Entry *entry = Entry_create(ptr2, read_name, strand, first, "none", -1, -1, "none");
     return entry;
   }
   while (i < genome->size) {
@@ -243,7 +243,7 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   if (found != 1) {
     //log_err("LINE: %s invalid",line);
     //log_err("Could not find %s.", chr_name);
-    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none");
+    Entry *entry = Entry_create(ptr2, read_name, strand, first, "none", -1, -1, "none");
     return entry;
     //return NULL;
   } else {
@@ -619,7 +619,7 @@ int add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
   if (entry_r1 != NULL) { Entry_destroy(entry_r1);}
   if (entry_r2 != NULL) { Entry_destroy(entry_r2);}
   //Entry_destroy(entry_r2);
-  return;
+  return 0;
 }
 
 void add_reads_to_cov_single(char *r1_line, Genome *genome,
