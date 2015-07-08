@@ -18,7 +18,8 @@
 //#define VERSION "v0.0.4-beta - 4/29/14"
 //#define VERSION "v0.0.5.1-beta - 6/15/15"
 //#define VERSION "v0.0.5.2-beta - 6/15/15"
-#define VERSION "v0.0.5.3-beta - 6/19/15"
+//#define VERSION "v0.0.5.3-beta - 6/19/15"
+#define VERSION "v0.0.5.4-beta - PLACEHOLDER"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
@@ -158,15 +159,19 @@ void run_sam2cov(Genome *genome, char *out_file,
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
-        splitted_line = strtok(ptr,"\t");
-        if (splitted_line == NULL) {
+        log_info("PTRRRR %s",ptr);
+        log_info("LINEEEEE %s",line);
+        //splitted_line = strtok(ptr,"\t");
+        if (ptr == NULL) {
           ptr = strstr(line_mate,sep);
+          splitted_line = strtok(ptr,"\t");
+        } else {
           splitted_line = strtok(ptr,"\t");
         }
         //log_info("splitted_line %s" , splitted_line);
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          add_reads_to_cov(entry,entry_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       } else if (entry->chr_num != -1 || entry_mate->chr_num != -1) {
@@ -177,7 +182,7 @@ void run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          add_reads_to_cov(entry,entry_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }

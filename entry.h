@@ -25,9 +25,10 @@ typedef struct EntryStruct
   int pos;
   int chr_num;
   char *cigar_string;
+  int hi_tag;
 } Entry;
 
-Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar);
+Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar, int hi_tag);
 void Entry_destroy(Entry *entry);
 
 #endif

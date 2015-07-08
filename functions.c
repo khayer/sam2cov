@@ -175,10 +175,15 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   int i = 0;
   char *sep = "\t";
   char *ptr;
+  char *ptr2;
+  //char *splitted_line;
   char read_name[500];
+  char line_cpy[5000];
+  strcpy(line_cpy, line);
   strcpy(read_name,"");
   int strand = 5;
   int first = 5;
+  int hi_tag = -1;
   char chr_name[500];
   strcpy(chr_name,"");
   int pos;
@@ -211,12 +216,34 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     i++;
   }
   i = 0;
+  sep = "HI:i:";
+  log_info("line_cpy %s", line_cpy);
+  ptr2 = strstr(line_cpy,sep);
+  log_info("ptr21: %s",ptr2);
+  if (ptr2 != NULL) {
+    //ptr2 = strstr(line_cpy,sep);
+    ptr2 = strtok(ptr2,":");
+    ptr2 = strtok(NULL,":");
+    ptr2 = strtok(NULL,":");
+    ptr2 = strtok(ptr2,"\t");
+    //ptr2 = strtok(ptr2,":");
+    //ptr2 = strtok(NULL,":");
+    //splitted_line = strtok(ptr2,"\t");
+    log_info("ptr2: %s",ptr2);
+    //log_info("splitted_line: %s",splitted_line);
+    if (ptr2 != NULL) {
+
+      hi_tag = atoi(ptr2);
+      log_info("got here! %d", hi_tag);
+    }
+  }
   //free(ptr);
   //free(sep);
+  //free(line_cpy);
   int current_chr_number = 123456;
   int found = 0;
   if (strcmp(chr_name,"*") == 0){
-    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none");
+    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none",hi_tag);
     return entry;
     //return NULL;
   }
@@ -232,11 +259,11 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   if (found != 1) {
     //log_err("LINE: %s invalid",line);
     //log_err("Could not find %s.", chr_name);
-    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none");
+    Entry *entry = Entry_create(read_name, strand, first, "none", -1, -1, "none",hi_tag);
     return entry;
     //return NULL;
   } else {
-    Entry *entry = Entry_create(read_name, strand, first, chr_name, pos, current_chr_number, cigar);
+    Entry *entry = Entry_create(read_name, strand, first, chr_name, pos, current_chr_number, cigar, hi_tag);
     return entry;
   }
 }
@@ -426,6 +453,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
 }
 
 void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_array){
+  log_info("SIZE OF ARRAY %d", size_of_array);
   int *starts = malloc(size_of_array/2*sizeof(int));
   for (int l = 0; l < size_of_array/2; l++) {
     starts[l] = ranges[l*2];
@@ -436,21 +464,23 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
   }
 
   int i = 0;
-  while (stops[i] != 0) {
+  while (i < size_of_array/2-1) {
+
     //printf("Starts %d \n", starts[i] );
     //printf("Stops %d \n", stops[i] );
     for (int k = starts[i]; k < stops[i]; k++) {
       Chromosome_update(genome->chromosomes[entry->chr_num], k);
     }
     i++;
+    log_info("stops i %d", stops[i]);
   }
   free(starts); free(stops);
 }
 
-void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
+void add_reads_to_cov(Entry *entry_r1, Entry *entry_r2, Genome *genome,
   int *chromo_lengths,char **names, int num_of_chr, int strand){
-  Entry *entry_r1 = make_entry_for_read(r1_line,genome);
-  Entry *entry_r2 = make_entry_for_read(r2_line,genome);
+  //Entry *entry_r1 = make_entry_for_read(r1_line,genome);
+  //Entry *entry_r2 = make_entry_for_read(r2_line,genome);
   //log_info("R1 %s", r1_line);
   //log_info("R2 %s", r2_line);
   //log_info("Entry R1 rn: %s, strand: %d", entry_r1->read_name,entry_r1->strand );
@@ -462,8 +492,88 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
     return;
   }
 
-  assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
 
+  assert(strcmp(entry_r1->read_name,entry_r2->read_name) == 0);
+  if (entry_r1->hi_tag != entry_r2->hi_tag) {
+    int size_of_array;
+    if (entry_r1->hi_tag != -1) {
+
+      //log_info("LINE R1 %s",r1_line);
+      //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
+      //log_info("LINE R2 %s",r2_line);
+      size_of_array = strlen(entry_r1->cigar_string) * 2;
+      int *ranges_r1;
+      ranges_r1 = interpret_cigar_string(entry_r1,size_of_array);
+
+      switch(strand) {
+        case 0:
+          //log_info("strand is 0");
+          // No strand specified
+          update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+          break;
+        case 2:
+          //log_info("strand is 1");
+          // Only forward reads:
+          if (entry_r1->strand == 0 ) {
+            //log_info("ONLY");
+            update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+
+          }
+          break;
+        case 1:
+          //log_info("strand is 2");
+          // Only reverse reads
+          if (entry_r1->strand == 1) {
+            //log_info("YEAH");
+            update_coverage(ranges_r1,entry_r1,genome,size_of_array);
+
+          }
+          break;
+      }
+      free(ranges_r1);
+    }
+    if (entry_r2->hi_tag != -1) {
+      //og_info("HITAG is %d", entry_r2->hi_tag);
+      //log_info("CIGAR is %s", entry_r2->cigar_string);
+      //int size_of_array;
+      //log_info("LINE R1 %s",r1_line);
+      //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
+      //log_info("LINE R2 %s",r2_line);
+      size_of_array = strlen(entry_r2->cigar_string) * 2;
+      int *ranges_r2;
+      ranges_r2 = interpret_cigar_string(entry_r2,size_of_array);
+
+      switch(strand) {
+        case 0:
+          //log_info("strand is 0");
+          // No strand specified
+          update_coverage(ranges_r2,entry_r2,genome,size_of_array);
+          break;
+        case 2:
+          //log_info("strand is 1");
+          // Only forward reads:
+          if (entry_r2->strand == 0 ) {
+            //log_info("ONLY");
+            update_coverage(ranges_r2,entry_r2,genome,size_of_array);
+
+          }
+          break;
+        case 1:
+          //log_info("strand is 2");
+          // Only reverse reads
+          if (entry_r2->strand == 1) {
+            //log_info("YEAH");
+            update_coverage(ranges_r2,entry_r2,genome,size_of_array);
+
+          }
+          break;
+      }
+      free(ranges_r2);
+    }
+
+
+    return;
+  }
   int size_of_array = 0;
   //log_info("LINE R1 %s",r1_line);
   //log_info("CIGAR %s, cigar_len %zd",entry_r1->cigar_string,strlen(entry_r1->cigar_string));
@@ -583,8 +693,8 @@ void add_reads_to_cov(char *r1_line, char *r2_line, Genome *genome,
 
   free(ranges_r2);
   free(ranges_r1);
-  if (entry_r1 != NULL) { Entry_destroy(entry_r1);}
-  if (entry_r2 != NULL) { Entry_destroy(entry_r2);}
+  //if (entry_r1 != NULL) { Entry_destroy(entry_r1);}
+  //if (entry_r2 != NULL) { Entry_destroy(entry_r2);}
   //Entry_destroy(entry_r2);
   return;
 }
