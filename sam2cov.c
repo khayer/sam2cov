@@ -18,7 +18,8 @@
 //#define VERSION "v0.0.4-beta - 4/29/14"
 //#define VERSION "v0.0.5.1-beta - 6/15/15"
 //#define VERSION "v0.0.5.2-beta - 6/15/15"
-#define VERSION "v0.0.5.3-beta - 6/19/15"
+//#define VERSION "v0.0.5.3-beta - 6/19/15"
+#define VERSION "v0.0.5.4-beta - 7/9/15"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
@@ -122,10 +123,13 @@ void run_sam2cov(Genome *genome, char *out_file,
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
   char line[5000];
+  char line_cpy[5000];
   char line_mate[5000];
   char mate_cpy[5000];
   char *sep = "\t";
   char *splitted_line;
+  char last_read_name[5000];
+  strcpy(last_read_name,"");
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
     //char *dummy = malloc(strlen("@"));
@@ -142,31 +146,66 @@ void run_sam2cov(Genome *genome, char *out_file,
     //fputs (line,stdout);
     Entry *entry = NULL;
     Entry *entry_mate = NULL;
-    char *line_cpy = malloc(strlen(line)+1);
-
+    //char *line_cpy = malloc(strlen(line)+1);
+    int hit = 0;
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
     if (!StartsWith(line,"@")) {
       //exit(1);
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
-      fgets( line_mate, sizeof(line_mate), file_handler);
-      //char *mate_cpy = malloc(strlen(line_mate)+1);
-      strcpy(mate_cpy, line_mate);
-      entry_mate = make_entry_for_read(mate_cpy,genome);
+
+      if (strcmp(last_read_name,"")==0) {
+        strcpy(last_read_name,entry->read_name);
+      }
+      //log_info("READNAME %s",last_read_name);
+      while (hit != 1) {
+
+        if (fgets( line_mate, sizeof(line_mate), file_handler) == NULL) {
+          log_err("Where is the line_mate?");
+          //free(line_cpy);
+          if (entry != NULL) Entry_destroy(entry);
+          //free(mate_cpy);
+          if (entry_mate != NULL) Entry_destroy(entry_mate);
+
+          return;
+        }
+        //char *mate_cpy = malloc(strlen(line_mate)+1);
+        strcpy(mate_cpy, line_mate);
+        if (entry_mate != NULL) Entry_destroy(entry_mate);
+        entry_mate = make_entry_for_read(mate_cpy,genome);
+
+        if (strcmp(entry_mate->read_name,entry->read_name) != 0) {
+          // Treat entry TODO
+          if (entry != NULL) Entry_destroy(entry);
+          strcpy(mate_cpy, line_mate);
+          strcpy(line, mate_cpy);
+          strcpy(line_cpy, line);
+          entry = make_entry_for_read(mate_cpy,genome);
+
+        } else {
+          hit = 1;
+        }
+      }
+
       if (rum != 1 && (entry->chr_num != -1 || entry_mate->chr_num != -1)) {
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
-        splitted_line = strtok(ptr,"\t");
-        if (splitted_line == NULL) {
+        //log_info("entry: %s, entry_mate: %s", entry->read_name, entry_mate->read_name);
+        //log_info("PTRRRR %s",ptr);
+        //log_info("LINEEEEE %s",line);
+        //splitted_line = strtok(ptr,"\t");
+        if (ptr == NULL) {
           ptr = strstr(line_mate,sep);
+          splitted_line = strtok(ptr,"\t");
+        } else {
           splitted_line = strtok(ptr,"\t");
         }
         //log_info("splitted_line %s" , splitted_line);
         if ((strcmp(splitted_line,"NH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"NH:i:1")!=0 && unique_mode!=1)) {
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          add_reads_to_cov(entry,entry_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       } else if (entry->chr_num != -1 || entry_mate->chr_num != -1) {
@@ -177,13 +216,14 @@ void run_sam2cov(Genome *genome, char *out_file,
         if ((strcmp(splitted_line,"IH:i:1")==0 && unique_mode==1) ||
           (strcmp(splitted_line,"IH:i:1")!=0 && unique_mode!=1)) {
           fgets( line_mate, sizeof(line_mate), file_handler);
-          add_reads_to_cov(line,line_mate,genome,chromo_lengths,
+          add_reads_to_cov(entry,entry_mate,genome,chromo_lengths,
             chromo_names,num_of_chr,strand);
         }
       }
     }
     //free(dummy);
-    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    //free(line_cpy);
+    if (entry != NULL) Entry_destroy(entry);
     //free(mate_cpy);
     if (entry_mate != NULL) Entry_destroy(entry_mate);
   }
@@ -204,6 +244,24 @@ void run_sam2cov(Genome *genome, char *out_file,
 
 int main(int argc, char *argv[])
 {
+  //char source[1000], destination[1000];
+//
+  //printf("Input a string\n");
+  //gets(source);
+//
+  //strcpy(destination, source);
+//
+  //printf("Source string:      \"%s\"\n", source);
+  //printf("Destination string: \"%s\"\n", destination);
+//
+  //printf("Input a string\n");
+  //gets(source);
+//
+//printf("Source string:      \"%s\"\n", source);
+  //printf("Destination string: \"%s\"\n", destination);
+//
+  //return 0;
+
   char *fai_file=malloc(5000);
   char *sam_file=malloc(5000);
   char *unique_file= malloc(5000);

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <string.h>
 
-Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar){
+Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int pos, int chr_num, char *cigar, int hi_tag){
   Entry *entry = malloc(sizeof(Entry));
   assert(entry != NULL);
 
@@ -16,6 +16,7 @@ Entry *Entry_create(char *read_name, int strand, int first, char *chr_name, int 
   entry->pos = pos-1;
   entry->chr_num = chr_num;
   entry->cigar_string = strdup(cigar);
+  entry->hi_tag = hi_tag;
 
   return entry;
 }
