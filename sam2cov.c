@@ -127,6 +127,8 @@ void run_sam2cov(Genome *genome, char *out_file,
   char mate_cpy[5000];
   char *sep = "\t";
   char *splitted_line;
+  char last_read_name[5000];
+  strcpy(last_read_name,"");
   while (fgets( line, sizeof(line), file_handler) != NULL)
   {
     //char *dummy = malloc(strlen("@"));
@@ -144,17 +146,44 @@ void run_sam2cov(Genome *genome, char *out_file,
     Entry *entry = NULL;
     Entry *entry_mate = NULL;
     char *line_cpy = malloc(strlen(line)+1);
-
+    int hit = 0;
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
     if (!StartsWith(line,"@")) {
       //exit(1);
       //log_info("Got here without prob");
       entry = make_entry_for_read(line_cpy,genome);
-      fgets( line_mate, sizeof(line_mate), file_handler);
-      //char *mate_cpy = malloc(strlen(line_mate)+1);
-      strcpy(mate_cpy, line_mate);
-      entry_mate = make_entry_for_read(mate_cpy,genome);
+
+      if (strcmp(last_read_name,"")==0) {
+        strcpy(last_read_name,entry->read_name);
+      }
+      log_info("READNAME %s",last_read_name);
+      while (hit != 1) {
+
+        if (fgets( line_mate, sizeof(line_mate), file_handler) == NULL) {
+          log_err("Where is the line_mate?");
+          free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+          //free(mate_cpy);
+          if (entry_mate != NULL) Entry_destroy(entry_mate);
+
+          return;
+        }
+        //char *mate_cpy = malloc(strlen(line_mate)+1);
+        strcpy(mate_cpy, line_mate);
+        if (entry_mate != NULL) Entry_destroy(entry_mate);
+        entry_mate = make_entry_for_read(mate_cpy,genome);
+
+        if (strcmp(entry_mate->read_name,entry->read_name) != 0) {
+          // Treat entry TODO
+          if (entry != NULL) Entry_destroy(entry);
+          strcpy(mate_cpy, line_mate);
+          entry = make_entry_for_read(mate_cpy,genome);
+
+        } else {
+          hit = 1;
+        }
+      }
+
       if (rum != 1 && (entry->chr_num != -1 || entry_mate->chr_num != -1)) {
         sep = "NH:i:";
         char *ptr;

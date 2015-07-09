@@ -25,3 +25,12 @@ raise res if $?.to_i != 0 || res != ""
 
 res = `diff probNU.cov prob2NU.cov`
 raise res if $?.to_i != 0 || res != ""
+
+res = `valgrind --leak-check=full ./sam2cov  -p gsnap2_tmp -s 0  -e 1 Pf3D7_genome_one-line-seqs.fa.fai gsnap2.sam`
+raise res if $?.to_i != 0
+
+res = `diff gsnap2_tmpNU.cov gsnap_tmpNU.cov`
+raise res if $?.to_i != 0 || res != ""
+
+res = `diff gsnap2_tmpUnique.cov probUnique.cov`
+raise res if $?.to_i != 0 || res != ""
