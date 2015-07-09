@@ -4,15 +4,16 @@ This C program creates coverage files for sam files. The sam format is specified
 
 ## Usage
 
-      Usage: sam2cov [OPTIONS] fai_file sam_file
-      Options:
-        -r  Aligned with RUM? [0/1] Default: 0
-        -s  Strand: 1 for fwd, 2 for rev [0/1/2] Default: 0
-        -e  Paired end mode [0/1] Default: 1
-        -p  Prefix for coverage files. Default: Unique.cov, NU.cov
-        -u  Print header for UCSC Genome browser? [0/1] Default: 0
-        -h  This helpful message.
-        -v  Print Version.
+        Usage: sam2cov [OPTIONS] fai_file sam_file
+        Options:
+            -r  Aligned with RUM? [0/1] Default: 0
+            -s  Strand: 1 for fwd, 2 for rev [0/1/2]. Default: 0
+                Please note: Reads are assumed to be in Illumina R2-R1 orientation!
+            -e  Paired end mode [0/1] Default: 1
+            -p  Prefix for coverage files. Default: Unique.cov, NU.cov
+            -u  Print header for UCSC Genome browser? [0/1] Default: 0
+            -h  This helpful message.
+            -v  Print Version.
 
 ### Example
 
