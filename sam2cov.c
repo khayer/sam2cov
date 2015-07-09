@@ -123,6 +123,7 @@ void run_sam2cov(Genome *genome, char *out_file,
   FILE *file_handler = fopen(sam_file,"r");
   assert(file_handler);
   char line[5000];
+  char line_cpy[5000];
   char line_mate[5000];
   char mate_cpy[5000];
   char *sep = "\t";
@@ -145,7 +146,7 @@ void run_sam2cov(Genome *genome, char *out_file,
     //fputs (line,stdout);
     Entry *entry = NULL;
     Entry *entry_mate = NULL;
-    char *line_cpy = malloc(strlen(line)+1);
+    //char *line_cpy = malloc(strlen(line)+1);
     int hit = 0;
     strcpy(line_cpy, line);
     //if (!(strcmp(&dummy[0],"@")==0)) {
@@ -162,7 +163,8 @@ void run_sam2cov(Genome *genome, char *out_file,
 
         if (fgets( line_mate, sizeof(line_mate), file_handler) == NULL) {
           log_err("Where is the line_mate?");
-          free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+          //free(line_cpy);
+          if (entry != NULL) Entry_destroy(entry);
           //free(mate_cpy);
           if (entry_mate != NULL) Entry_destroy(entry_mate);
 
@@ -177,6 +179,8 @@ void run_sam2cov(Genome *genome, char *out_file,
           // Treat entry TODO
           if (entry != NULL) Entry_destroy(entry);
           strcpy(mate_cpy, line_mate);
+          strcpy(line, mate_cpy);
+          strcpy(line_cpy, line);
           entry = make_entry_for_read(mate_cpy,genome);
 
         } else {
@@ -188,6 +192,7 @@ void run_sam2cov(Genome *genome, char *out_file,
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
+        log_info("entry: %s, entry_mate: %s", entry->read_name, entry_mate->read_name);
         log_info("PTRRRR %s",ptr);
         log_info("LINEEEEE %s",line);
         //splitted_line = strtok(ptr,"\t");
@@ -217,7 +222,8 @@ void run_sam2cov(Genome *genome, char *out_file,
       }
     }
     //free(dummy);
-    free(line_cpy); if (entry != NULL) Entry_destroy(entry);
+    //free(line_cpy);
+    if (entry != NULL) Entry_destroy(entry);
     //free(mate_cpy);
     if (entry_mate != NULL) Entry_destroy(entry_mate);
   }
@@ -238,6 +244,24 @@ void run_sam2cov(Genome *genome, char *out_file,
 
 int main(int argc, char *argv[])
 {
+  //char source[1000], destination[1000];
+//
+  //printf("Input a string\n");
+  //gets(source);
+//
+  //strcpy(destination, source);
+//
+  //printf("Source string:      \"%s\"\n", source);
+  //printf("Destination string: \"%s\"\n", destination);
+//
+  //printf("Input a string\n");
+  //gets(source);
+//
+//printf("Source string:      \"%s\"\n", source);
+  //printf("Destination string: \"%s\"\n", destination);
+//
+  //return 0;
+
   char *fai_file=malloc(5000);
   char *sam_file=malloc(5000);
   char *unique_file= malloc(5000);
