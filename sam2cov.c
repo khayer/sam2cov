@@ -19,7 +19,7 @@
 //#define VERSION "v0.0.5.1-beta - 6/15/15"
 //#define VERSION "v0.0.5.2-beta - 6/15/15"
 //#define VERSION "v0.0.5.3-beta - 6/19/15"
-#define VERSION "v0.0.5.4-beta - PLACEHOLDER"
+#define VERSION "v0.0.5.4-beta - 7/9/15"
 
 void usage() {
   printf("Usage: sam2cov [OPTIONS] fai_file sam_file\n" );
@@ -158,7 +158,7 @@ void run_sam2cov(Genome *genome, char *out_file,
       if (strcmp(last_read_name,"")==0) {
         strcpy(last_read_name,entry->read_name);
       }
-      log_info("READNAME %s",last_read_name);
+      //log_info("READNAME %s",last_read_name);
       while (hit != 1) {
 
         if (fgets( line_mate, sizeof(line_mate), file_handler) == NULL) {
@@ -192,9 +192,9 @@ void run_sam2cov(Genome *genome, char *out_file,
         sep = "NH:i:";
         char *ptr;
         ptr = strstr(line,sep);
-        log_info("entry: %s, entry_mate: %s", entry->read_name, entry_mate->read_name);
-        log_info("PTRRRR %s",ptr);
-        log_info("LINEEEEE %s",line);
+        //log_info("entry: %s, entry_mate: %s", entry->read_name, entry_mate->read_name);
+        //log_info("PTRRRR %s",ptr);
+        //log_info("LINEEEEE %s",line);
         //splitted_line = strtok(ptr,"\t");
         if (ptr == NULL) {
           ptr = strstr(line_mate,sep);

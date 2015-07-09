@@ -217,9 +217,9 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
   }
   i = 0;
   sep = "HI:i:";
-  log_info("line_cpy %s", line_cpy);
+  //log_info("line_cpy %s", line_cpy);
   ptr2 = strstr(line_cpy,sep);
-  log_info("ptr21: %s",ptr2);
+  //log_info("ptr21: %s",ptr2);
   if (ptr2 != NULL) {
     //ptr2 = strstr(line_cpy,sep);
     ptr2 = strtok(ptr2,":");
@@ -229,12 +229,12 @@ Entry *make_entry_for_read(char *line, Genome *genome) {
     //ptr2 = strtok(ptr2,":");
     //ptr2 = strtok(NULL,":");
     //splitted_line = strtok(ptr2,"\t");
-    log_info("ptr2: %s",ptr2);
+    //log_info("ptr2: %s",ptr2);
     //log_info("splitted_line: %s",splitted_line);
     if (ptr2 != NULL) {
 
       hi_tag = atoi(ptr2);
-      log_info("got here! %d", hi_tag);
+      //log_info("got here! %d", hi_tag);
     }
   }
   //free(ptr);
@@ -453,7 +453,7 @@ int *combine_ranges(int *ranges_r1, int *ranges_r2, int size_of_array) {
 }
 
 void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_array){
-  log_info("SIZE OF ARRAY %d", size_of_array);
+  //log_info("SIZE OF ARRAY %d", size_of_array);
   int *starts = malloc(size_of_array/2*sizeof(int));
   for (int l = 0; l < size_of_array/2; l++) {
     starts[l] = ranges[l*2];
@@ -472,7 +472,7 @@ void update_coverage(int *ranges, Entry *entry, Genome *genome, int size_of_arra
       Chromosome_update(genome->chromosomes[entry->chr_num], k);
     }
     i++;
-    log_info("stops i %d", stops[i]);
+    //log_info("stops i %d", stops[i]);
   }
   free(starts); free(stops);
 }
