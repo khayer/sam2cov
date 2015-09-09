@@ -162,18 +162,19 @@ void run_sam2cov(Genome *genome, char *out_file,
       while (hit != 1) {
 
         if (fgets( line_mate, sizeof(line_mate), file_handler) == NULL) {
-          log_err("Where is the line_mate?");
-          //free(line_cpy);
-          if (entry != NULL) Entry_destroy(entry);
-          //free(mate_cpy);
-          if (entry_mate != NULL) Entry_destroy(entry_mate);
+          //log_err("Where is the line_mate?");
+          ////free(line_cpy);
+          //if (entry != NULL) Entry_destroy(entry);
+          ////free(mate_cpy);
+          //if (entry_mate != NULL) Entry_destroy(entry_mate);
 
-          return;
+          //return;
+        } else {
+          //char *mate_cpy = malloc(strlen(line_mate)+1);
+          strcpy(mate_cpy, line_mate);
+          if (entry_mate != NULL) Entry_destroy(entry_mate);
+          entry_mate = make_entry_for_read(mate_cpy,genome);
         }
-        //char *mate_cpy = malloc(strlen(line_mate)+1);
-        strcpy(mate_cpy, line_mate);
-        if (entry_mate != NULL) Entry_destroy(entry_mate);
-        entry_mate = make_entry_for_read(mate_cpy,genome);
 
         if (strcmp(entry_mate->read_name,entry->read_name) != 0) {
           // Treat entry TODO
