@@ -172,6 +172,8 @@ void run_sam2cov(Genome *genome, char *out_file,
           return;
         }
         //char *mate_cpy = malloc(strlen(line_mate)+1);
+        log_info("THIS CASE")
+        log_info("line_mate: %s", line_mate);
         strcpy(mate_cpy, line_mate);
         if (entry_mate != NULL) Entry_destroy(entry_mate);
         entry_mate = make_entry_for_read(mate_cpy,genome);
